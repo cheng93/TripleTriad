@@ -7,6 +7,12 @@ namespace TripleTriad.Data
 {
     public class TripleTriadDbContext : DbContext
     {
+        public TripleTriadDbContext(DbContextOptions<TripleTriadDbContext> options)
+            : base(options)
+        {
+
+        }
+
         public DbSet<Player> Players { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
