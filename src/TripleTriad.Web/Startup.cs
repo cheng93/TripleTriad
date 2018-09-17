@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using TripleTriad.Data;
+using TripleTriad.Web.Middlewares;
 
 namespace TripleTriad.Web
 {
@@ -15,6 +18,14 @@ namespace TripleTriad.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddDbContext<TripleTriadDbContext>()
+                .AddSession(options =>
+                {
+                    options.Cookie.Name = ".TripleTriad.Session";
+                })
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -25,10 +36,11 @@ namespace TripleTriad.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseSession();
+
+            app.UseMiddleware<PlayerIdMiddleware>();
+
+            app.UseMvc();
         }
     }
 }
