@@ -31,7 +31,7 @@ namespace TripleTriad.Commands.GuestPlayer
                 var playersCount = await this.context.Players.CountAsync();
                 var player = new Player()
                 {
-                    DisplayName = $"Guest{playersCount}"
+                    DisplayName = $"Guest{playersCount + 1}"
                 };
                 await context.AddAsync(player);
                 await context.SaveChangesAsync();

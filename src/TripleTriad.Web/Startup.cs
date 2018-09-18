@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TripleTriad.Commands.GuestPlayer;
 using TripleTriad.Data;
@@ -23,7 +24,8 @@ namespace TripleTriad.Web
         {
             services
                 .AddMediatR(typeof(GuestPlayerCreate).GetTypeInfo().Assembly)
-                .AddDbContext<TripleTriadDbContext>()
+                .AddDbContextPool<TripleTriadDbContext>(options
+                    => options.UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
                 .AddSession(options =>
                 {
                     options.Cookie.Name = ".TripleTriad.Session";
