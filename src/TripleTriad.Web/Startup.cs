@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TripleTriad.Commands.GuestPlayer;
 using TripleTriad.Data;
-using TripleTriad.Web.Middlewares;
+using TripleTriad.Web.Filters;
 
 namespace TripleTriad.Web
 {
@@ -32,6 +32,8 @@ namespace TripleTriad.Web
                 })
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddScoped<EnsurePlayerIdExistsActionFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,8 +45,6 @@ namespace TripleTriad.Web
             }
 
             app.UseSession();
-
-            app.UseMiddleware<PlayerIdMiddleware>();
 
             app.UseMvc();
         }
