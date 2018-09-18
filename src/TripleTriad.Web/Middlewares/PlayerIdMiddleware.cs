@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using TripleTriad.Commands.GuestPlayer;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 
@@ -9,31 +11,25 @@ namespace TripleTriad.Web.Middlewares
 {
     public class PlayerIdMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate next;
 
         public PlayerIdMiddleware(RequestDelegate next)
         {
-            _next = next;
+            this.next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, TripleTriadDbContext context)
+        public async Task Invoke(HttpContext httpContext, IMediator mediator)
         {
             var playerId = httpContext.Session.GetString("PlayerId");
 
             if (!Guid.TryParse(playerId, out _))
             {
-                var playersCount = await context.Players.CountAsync();
-                var player = new Player()
-                {
-                    DisplayName = $"Guest{playersCount}"
-                };
-                await context.AddAsync(player);
-                await context.SaveChangesAsync();
+                var createPlayerResponse = await mediator.Send(new GuestPlayerCreate.Command());
 
-                httpContext.Session.SetString("PlayerId", player.PlayerId.ToString());
+                httpContext.Session.SetString("PlayerId", createPlayerResponse.PlayerId.ToString());
             }
 
-            await _next(httpContext);
+            await next(httpContext);
         }
     }
 }

@@ -9,11 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TripleTriad.Data\TripleTriad.Data.csproj" />
+    <ProjectReference Include="..\TripleTriad.Commands\TripleTriad.Commands.csproj" />
   </ItemGroup>
 
 </Project>

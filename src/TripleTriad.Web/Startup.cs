@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using TripleTriad.Commands.GuestPlayer;
 using TripleTriad.Data;
 using TripleTriad.Web.Middlewares;
 
@@ -19,6 +22,7 @@ namespace TripleTriad.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddMediatR(typeof(GuestPlayerCreate).GetTypeInfo().Assembly)
                 .AddDbContext<TripleTriadDbContext>()
                 .AddSession(options =>
                 {
