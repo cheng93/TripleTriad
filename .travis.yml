@@ -1,0 +1,24 @@
+language: csharp
+mono: none
+dotnet: 2.1.402
+solution: TripleTriad.sln
+
+# cache: yarn
+
+notifications:
+    email: false
+
+# services:
+#     - docker
+
+install:
+    - dotnet restore
+    # - (cd ./src/TripleTriad.Client && yarn install)
+
+script:
+    - dotnet build --no-restore -c Release
+    - dotnet test ./tests/TripleTriad.Commands.Tests/TripleTriad.Commands.Tests.csproj --no-build --no-restore -c Release -v n
+    # - (cd ./src/TripleTriad.Client && yarn run build)
+    - dotnet publish ./src/TripleTriad.Web/TripleTriad.Web.csproj --no-restore -c Release
+    # - docker build -t skyrim-tool .
+    # - bash ./scripts/travis_docker.sh
