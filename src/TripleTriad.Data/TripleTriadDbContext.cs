@@ -40,6 +40,12 @@ namespace TripleTriad.Data
                 .HasOne(g => g.PlayerTwo)
                 .WithMany()
                 .HasForeignKey(g => g.PlayerTwoId);
+
+            modelBuilder.Entity<Game>()
+                .Property(g => g.Data)
+                .HasColumnType("jsonb")
+                .HasDefaultValue("{}")
+                .IsRequired();
         }
     }
 }

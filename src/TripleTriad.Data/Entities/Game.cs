@@ -10,6 +10,8 @@ namespace TripleTriad.Data.Entities
 
         public Guid PlayerTwoId { get; set; }
 
+        public string Data { get; set; }
+
         public virtual Player PlayerOne { get; set; }
 
         public virtual Player PlayerTwo { get; set; }
