@@ -13,6 +13,8 @@ namespace TripleTriad.Data
 
         }
 
+        public DbSet<Game> Games { get; set; }
+
         public DbSet<Player> Players { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,6 +30,16 @@ namespace TripleTriad.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.UseSnakeCaseNamingConvention();
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.PlayerOne)
+                .WithMany()
+                .HasForeignKey(g => g.PlayerOneId);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.PlayerTwo)
+                .WithMany()
+                .HasForeignKey(g => g.PlayerTwoId);
         }
     }
 }
