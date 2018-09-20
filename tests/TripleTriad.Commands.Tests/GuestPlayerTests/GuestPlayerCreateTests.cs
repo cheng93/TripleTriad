@@ -8,7 +8,7 @@ using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using Xunit;
 
-namespace TripleTriad.Commands.Tests.GuestPlayer
+namespace TripleTriad.Commands.Tests.GuestPlayerTests
 {
     public class GuestPlayerCreateTests
     {
