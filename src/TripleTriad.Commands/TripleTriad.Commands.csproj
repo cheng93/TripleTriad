@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TripleTriad.Data\TripleTriad.Data.csproj" />
+    <ProjectReference Include="..\TripleTriad.Logic\TripleTriad.Logic.csproj" />
   </ItemGroup>
 
 </Project>
