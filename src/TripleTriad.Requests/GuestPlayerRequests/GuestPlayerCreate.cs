@@ -28,13 +28,13 @@ namespace TripleTriad.Requests.GuestPlayerRequests
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var playersCount = await this.context.Players.CountAsync();
+                var playersCount = await this.context.Players.CountAsync(cancellationToken);
                 var player = new Player()
                 {
                     DisplayName = $"Guest{playersCount + 1}"
                 };
-                await this.context.AddAsync(player);
-                await this.context.SaveChangesAsync();
+                await this.context.AddAsync(player, cancellationToken);
+                await this.context.SaveChangesAsync(cancellationToken);
 
                 return new Response
                 {

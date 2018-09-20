@@ -48,8 +48,8 @@ namespace TripleTriad.Requests.GameRequests
                     Data = JsonConvert.SerializeObject(new GameData())
                 };
 
-                await this.context.AddAsync(game);
-                await this.context.SaveChangesAsync();
+                await this.context.AddAsync(game, cancellationToken);
+                await this.context.SaveChangesAsync(cancellationToken);
 
                 return new Response
                 {
