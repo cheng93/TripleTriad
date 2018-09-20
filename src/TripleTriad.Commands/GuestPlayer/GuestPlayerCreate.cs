@@ -15,18 +15,18 @@ namespace TripleTriad.Commands.GuestPlayer
             public Guid PlayerId { get; set; }
         }
 
-        public class Command : IRequest<Response> { }
+        public class Request : IRequest<Response> { }
 
-        public class CommandHandler : IRequestHandler<Command, Response>
+        public class RequestHandler : IRequestHandler<Request, Response>
         {
             private readonly TripleTriadDbContext context;
 
-            public CommandHandler(TripleTriadDbContext context)
+            public RequestHandler(TripleTriadDbContext context)
             {
                 this.context = context;
             }
 
-            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 var playersCount = await this.context.Players.CountAsync();
                 var player = new Player()

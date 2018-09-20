@@ -22,7 +22,7 @@ namespace TripleTriad.Web.Filters
 
             if (!Guid.TryParse(playerId, out _))
             {
-                var createPlayerResponse = await this.mediator.Send(new GuestPlayerCreate.Command());
+                var createPlayerResponse = await this.mediator.Send(new GuestPlayerCreate.Request());
 
                 context.HttpContext.Session.SetString("PlayerId", createPlayerResponse.PlayerId.ToString());
             }

@@ -21,8 +21,8 @@ namespace TripleTriad.Commands.Tests.GuestPlayer
         public async Task Should_create_player()
         {
             var context = new TripleTriadDbContext(this.contextOptions);
-            var command = new GuestPlayerCreate.Command();
-            var subject = new GuestPlayerCreate.CommandHandler(context);
+            var command = new GuestPlayerCreate.Request();
+            var subject = new GuestPlayerCreate.RequestHandler(context);
 
             var response = await subject.Handle(command, default(CancellationToken));
 
@@ -35,8 +35,8 @@ namespace TripleTriad.Commands.Tests.GuestPlayer
         public async Task Created_player_should_have_guest_name()
         {
             var context = new TripleTriadDbContext(this.contextOptions);
-            var command = new GuestPlayerCreate.Command();
-            var subject = new GuestPlayerCreate.CommandHandler(context);
+            var command = new GuestPlayerCreate.Request();
+            var subject = new GuestPlayerCreate.RequestHandler(context);
 
             var response = await subject.Handle(command, default(CancellationToken));
 
@@ -49,8 +49,8 @@ namespace TripleTriad.Commands.Tests.GuestPlayer
         public async Task Created_player_should_have_player_count_suffix()
         {
             var context = new TripleTriadDbContext(this.contextOptions);
-            var command = new GuestPlayerCreate.Command();
-            var subject = new GuestPlayerCreate.CommandHandler(context);
+            var command = new GuestPlayerCreate.Request();
+            var subject = new GuestPlayerCreate.RequestHandler(context);
 
             await context.Players.AddRangeAsync(new[] {
                 new Player(),
