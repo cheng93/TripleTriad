@@ -33,8 +33,8 @@ namespace TripleTriad.Commands.GuestPlayer
                 {
                     DisplayName = $"Guest{playersCount + 1}"
                 };
-                await context.AddAsync(player);
-                await context.SaveChangesAsync();
+                await this.context.AddAsync(player);
+                await this.context.SaveChangesAsync();
 
                 return new Response
                 {
