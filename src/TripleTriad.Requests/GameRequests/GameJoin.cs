@@ -66,6 +66,13 @@ namespace TripleTriad.Requests.GameRequests
                     throw new CannotJoinGameException(request.GameId);
                 }
 
+                if (game.PlayerOneId == request.PlayerId)
+                {
+                    throw new CannotPlayYourselfException(
+                        request.GameId,
+                        request.PlayerId);
+                }
+
                 game.PlayerTwoId = request.PlayerId;
 
                 await this.context.SaveChangesAsync(cancellationToken);

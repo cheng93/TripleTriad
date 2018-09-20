@@ -105,5 +105,27 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 
             act.Should().Throw<CannotJoinGameException>();
         }
+
+        [Fact]
+        public async Task Should_throw_CannotPlayYourselfException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = this.CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameJoin.Request()
+            {
+                GameId = game.GameId,
+                PlayerId = game.PlayerOneId
+            };
+
+            var subject = new GameJoin.RequestHandler(context);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should().Throw<CannotPlayYourselfException>();
+        }
     }
 }
