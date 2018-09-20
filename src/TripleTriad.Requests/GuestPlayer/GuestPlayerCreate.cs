@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 
-namespace TripleTriad.Commands.GuestPlayer
+namespace TripleTriad.Requests.GuestPlayer
 {
     public static class GuestPlayerCreate
     {

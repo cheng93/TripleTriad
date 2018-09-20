@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using TripleTriad.Commands.GuestPlayer;
+using TripleTriad.Requests.GuestPlayer;
 
 namespace TripleTriad.Web.Filters
 {

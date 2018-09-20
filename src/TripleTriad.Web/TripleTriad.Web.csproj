@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TripleTriad.Commands\TripleTriad.Commands.csproj" />
+    <ProjectReference Include="..\TripleTriad.Requests\TripleTriad.Requests.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,12 +4,12 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TripleTriad.Commands.Game;
-using TripleTriad.Commands.Tests.Utils;
+using TripleTriad.Requests.Game;
+using TripleTriad.Requests.Tests.Utils;
 using TripleTriad.Logic.Entities;
 using Xunit;
 
-namespace TripleTriad.Commands.Tests.GameTests.GameCreateTests
+namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
     using Game = TripleTriad.Data.Entities.Game;
 

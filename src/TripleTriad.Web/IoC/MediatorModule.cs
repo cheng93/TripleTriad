@@ -2,7 +2,7 @@ using System.Reflection;
 using Autofac;
 using MediatR;
 using MediatR.Pipeline;
-using TripleTriad.Commands.GuestPlayer;
+using TripleTriad.Requests.GuestPlayer;
 
 namespace TripleTriad.Web.IoC
 {

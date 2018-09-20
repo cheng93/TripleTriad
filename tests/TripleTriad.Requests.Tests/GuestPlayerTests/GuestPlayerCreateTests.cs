@@ -2,12 +2,12 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using TripleTriad.Commands.GuestPlayer;
-using TripleTriad.Commands.Tests.Utils;
+using TripleTriad.Requests.GuestPlayer;
+using TripleTriad.Requests.Tests.Utils;
 using TripleTriad.Data.Entities;
 using Xunit;
 
-namespace TripleTriad.Commands.Tests.GuestPlayerTests
+namespace TripleTriad.Requests.Tests.GuestPlayerTests
 {
     public class GuestPlayerCreateTests
     {

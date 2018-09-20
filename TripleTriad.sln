@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Web", "src\Trip
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Data", "src\TripleTriad.Data\TripleTriad.Data.csproj", "{D12E43B1-9161-491A-ADE2-D8791499F11A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Commands", "src\TripleTriad.Commands\TripleTriad.Commands.csproj", "{69682F61-B104-4FDF-AA8E-FAED253C6B7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Requests", "src\TripleTriad.Requests\TripleTriad.Requests.csproj", "{69682F61-B104-4FDF-AA8E-FAED253C6B7E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{465A1B22-5D2A-488B-94A9-B9DC54EF0D7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Commands.Tests", "tests\TripleTriad.Commands.Tests\TripleTriad.Commands.Tests.csproj", "{177BC5C1-43F0-4DB4-B366-DBFE689D53E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Requests.Tests", "tests\TripleTriad.Requests.Tests\TripleTriad.Requests.Tests.csproj", "{177BC5C1-43F0-4DB4-B366-DBFE689D53E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripleTriad.Logic", "src\TripleTriad.Logic\TripleTriad.Logic.csproj", "{53E8ECF2-78CF-459F-923C-A6867CC3A7DE}"
 EndProject

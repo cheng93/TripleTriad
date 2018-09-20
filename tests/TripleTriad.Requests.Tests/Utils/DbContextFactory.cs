@@ -2,7 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using TripleTriad.Data;
 
-namespace TripleTriad.Commands.Tests.Utils
+namespace TripleTriad.Requests.Tests.Utils
 {
     public static class DbContextFactory
     {

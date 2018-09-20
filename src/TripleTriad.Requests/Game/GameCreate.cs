@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Newtonsoft.Json;
-using TripleTriad.Commands.Pipeline;
+using TripleTriad.Requests.Pipeline;
 using TripleTriad.Data;
 using TripleTriad.Logic.Entities;
 
-namespace TripleTriad.Commands.Game
+namespace TripleTriad.Requests.Game
 {
     using Game = TripleTriad.Data.Entities.Game;
 

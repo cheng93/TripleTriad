@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using TripleTriad.Commands.Game;
+using TripleTriad.Requests.Game;
 using Xunit;
 
-namespace TripleTriad.Commands.Tests.GameTests.GameCreateTests
+namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
     public class GameCreateValidatorTests
     {

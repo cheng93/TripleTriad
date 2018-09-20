@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR.Pipeline;
 
-namespace TripleTriad.Commands.Pipeline
+namespace TripleTriad.Requests.Pipeline
 {
     public abstract class ValidationPreProcessor<TRequest> : AbstractValidator<TRequest>, IRequestPreProcessor<TRequest>
     {
