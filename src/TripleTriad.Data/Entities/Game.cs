@@ -8,7 +8,7 @@ namespace TripleTriad.Data.Entities
 
         public Guid PlayerOneId { get; set; }
 
-        public Guid PlayerTwoId { get; set; }
+        public Guid? PlayerTwoId { get; set; }
 
         public string Data { get; set; }
 
