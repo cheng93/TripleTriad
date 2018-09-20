@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using TripleTriad.Requests.GuestPlayer;
+using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.Requests.Tests.Utils;
 using TripleTriad.Data.Entities;
 using Xunit;

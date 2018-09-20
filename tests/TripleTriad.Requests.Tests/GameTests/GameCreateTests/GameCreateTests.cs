@@ -4,15 +4,14 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TripleTriad.Requests.Game;
+using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.Tests.Utils;
 using TripleTriad.Logic.Entities;
 using Xunit;
+using TripleTriad.Data.Entities;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
-    using Game = TripleTriad.Data.Entities.Game;
-
     public class GameCreateTests
     {
         private readonly Guid playerId = Guid.NewGuid();

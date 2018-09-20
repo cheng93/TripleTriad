@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using TripleTriad.Requests.Game;
+using TripleTriad.Requests.GameRequests;
 using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests

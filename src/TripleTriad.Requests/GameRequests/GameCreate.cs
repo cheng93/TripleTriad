@@ -7,11 +7,10 @@ using Newtonsoft.Json;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Data;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Data.Entities;
 
-namespace TripleTriad.Requests.Game
+namespace TripleTriad.Requests.GameRequests
 {
-    using Game = TripleTriad.Data.Entities.Game;
-
     public static class GameCreate
     {
         public class Response
