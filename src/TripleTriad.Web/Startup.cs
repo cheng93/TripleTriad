@@ -41,6 +41,8 @@ namespace TripleTriad.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new MainModule());
+            builder.RegisterModule(new LogicModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
