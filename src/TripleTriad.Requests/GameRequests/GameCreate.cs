@@ -8,6 +8,7 @@ using TripleTriad.Requests.Pipeline;
 using TripleTriad.Data;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Data.Entities;
+using TripleTriad.Logic.Extensions;
 
 namespace TripleTriad.Requests.GameRequests
 {
@@ -45,7 +46,7 @@ namespace TripleTriad.Requests.GameRequests
                 var game = new Game
                 {
                     PlayerOneId = request.PlayerId,
-                    Data = JsonConvert.SerializeObject(new GameData())
+                    Data = new GameData().ToJson()
                 };
 
                 await this.context.AddAsync(game, cancellationToken);

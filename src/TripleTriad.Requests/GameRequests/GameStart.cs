@@ -13,6 +13,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.CoinToss;
 using TripleTriad.Requests.GameRequests.Exceptions;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Logic.Extensions;
 
 namespace TripleTriad.Requests.GameRequests
 {
@@ -75,7 +76,7 @@ namespace TripleTriad.Requests.GameRequests
                 gameData = this.coinTossStep.TossCoin(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
 
                 game.Status = GameStatus.InProgress;
-                game.Data = JsonConvert.SerializeObject(gameData);
+                game.Data = gameData.ToJson();
 
                 await this.context.SaveChangesAsync(cancellationToken);
 
