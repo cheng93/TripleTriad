@@ -1,4 +1,4 @@
-namespace TripleTriad.Logic.Entities
+namespace TripleTriad.Data.Enums
 {
     public enum GameStatus
     {

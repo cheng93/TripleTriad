@@ -1,12 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System;
+using System.Linq;
 using TripleTriad.Data.Entities;
+using TripleTriad.Data.Enums;
 using TripleTriad.Data.Extensions;
 
 namespace TripleTriad.Data
 {
     public class TripleTriadDbContext : DbContext
     {
+        static TripleTriadDbContext()
+            => NpgsqlConnection.GlobalTypeMapper
+                .MapEnum<GameStatus>(nameof(GameStatus).ToSnakeCase());
+
         public TripleTriadDbContext(DbContextOptions<TripleTriadDbContext> options)
             : base(options)
         {
@@ -30,6 +37,13 @@ namespace TripleTriad.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.UseSnakeCaseNamingConvention();
+
+            modelBuilder.ForNpgsqlHasEnum(
+                nameof(GameStatus).ToSnakeCase(),
+                Enum.GetValues(typeof(GameStatus))
+                    .Cast<GameStatus>()
+                    .Select(x => x.ToString().ToSnakeCase())
+                    .ToArray());
 
             modelBuilder.Entity<Game>()
                 .HasOne(g => g.PlayerOne)

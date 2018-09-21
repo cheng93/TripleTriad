@@ -9,6 +9,7 @@ using TripleTriad.Requests.Tests.Utils;
 using TripleTriad.Logic.Entities;
 using Xunit;
 using TripleTriad.Data.Entities;
+using TripleTriad.Data.Enums;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
@@ -64,11 +65,28 @@ namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 
             var game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
-            var expectedGameData = JsonConvert.SerializeObject(new GameData());
+            var expectedGameData = "{'Log':[]}";
 
             JToken.DeepEquals(JObject.Parse(game.Data), JObject.Parse(expectedGameData))
                 .Should()
                 .BeTrue();
+        }
+
+        [Fact]
+        public async Task Should_have_correct_status()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var command = new GameCreate.Request()
+            {
+                PlayerId = this.playerId
+            };
+            var subject = new GameCreate.RequestHandler(context);
+
+            var response = await subject.Handle(command, default);
+
+            var game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
+
+            game.Status.Should().Be(GameStatus.Waiting);
         }
     }
 }

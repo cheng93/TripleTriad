@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TripleTriad.Data;
@@ -10,9 +11,10 @@ using TripleTriad.Data.Enums;
 namespace TripleTriad.Data.Migrations
 {
     [DbContext(typeof(TripleTriadDbContext))]
-    partial class TripleTriadDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180921211321_GameStatusEnum")]
+    partial class GameStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,4 +1,5 @@
 using System;
+using TripleTriad.Data.Enums;
 
 namespace TripleTriad.Data.Entities
 {
@@ -11,6 +12,8 @@ namespace TripleTriad.Data.Entities
         public Guid? PlayerTwoId { get; set; }
 
         public string Data { get; set; }
+
+        public GameStatus Status { get; set; }
 
         public virtual Player PlayerOne { get; set; }
 
