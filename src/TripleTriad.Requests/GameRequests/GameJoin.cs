@@ -61,7 +61,7 @@ namespace TripleTriad.Requests.GameRequests
                         && x.PlayerTwoId == null,
                     cancellationToken);
                 }
-                catch (Exception)
+                catch (InvalidOperationException)
                 {
                     throw new CannotJoinGameException(request.GameId);
                 }
