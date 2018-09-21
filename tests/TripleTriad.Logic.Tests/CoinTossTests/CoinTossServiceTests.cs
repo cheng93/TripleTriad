@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using TripleTriad.Logic.ToinCoss;
+using TripleTriad.Logic.CoinToss;
 using Xunit;
 
-namespace TripleTriad.Logic.Tests.ToinCossTests
+namespace TripleTriad.Logic.Tests.CoinTossTests
 {
-    public class ToinCossServiceTests
+    public class CoinTossServiceTests
     {
         public static IEnumerable<object[]> HeadInputs
             => Enumerable.Range(0, 50)
@@ -25,7 +25,7 @@ namespace TripleTriad.Logic.Tests.ToinCossTests
             random
                 .Setup(x => x.Next(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(input);
-            var subject = new ToinCossService(random.Object);
+            var subject = new CoinTossService(random.Object);
 
             var actual = subject.IsHeads();
             actual.Should().BeTrue();
@@ -39,7 +39,7 @@ namespace TripleTriad.Logic.Tests.ToinCossTests
             random
                 .Setup(x => x.Next(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(input);
-            var subject = new ToinCossService(random.Object);
+            var subject = new CoinTossService(random.Object);
 
             var actual = subject.IsHeads();
             actual.Should().BeFalse();

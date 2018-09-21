@@ -1,10 +1,10 @@
-namespace TripleTriad.Logic.ToinCoss
+namespace TripleTriad.Logic.CoinToss
 {
-    public class ToinCossService : IToinCossService
+    public class CoinTossService : ICoinTossService
     {
         private readonly IRandomWrapper random;
 
-        public ToinCossService(IRandomWrapper random)
+        public CoinTossService(IRandomWrapper random)
         {
             this.random = random;
         }

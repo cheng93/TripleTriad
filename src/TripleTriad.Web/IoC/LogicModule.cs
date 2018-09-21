@@ -1,5 +1,5 @@
 using Autofac;
-using TripleTriad.Logic.ToinCoss;
+using TripleTriad.Logic.CoinToss;
 
 namespace TripleTriad.Web.IoC
 {

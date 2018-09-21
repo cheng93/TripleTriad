@@ -1,6 +1,6 @@
 using System;
 
-namespace TripleTriad.Logic.ToinCoss
+namespace TripleTriad.Logic.CoinToss
 {
     public class RandomWrapper : Random, IRandomWrapper
     {

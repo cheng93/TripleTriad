@@ -1,4 +1,4 @@
-namespace TripleTriad.Logic.ToinCoss
+namespace TripleTriad.Logic.CoinToss
 {
     public interface IRandomWrapper
     {
