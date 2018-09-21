@@ -17,6 +17,7 @@ install:
 
 script:
     - dotnet build --no-restore -c Release
+    - dotnet test ./tests/TripleTriad.Logic.Tests/TripleTriad.Logic.Tests.csproj --no-build --no-restore -c Release -v n
     - dotnet test ./tests/TripleTriad.Requests.Tests/TripleTriad.Requests.Tests.csproj --no-build --no-restore -c Release -v n
     # - (cd ./src/TripleTriad.Client && yarn run build)
     - dotnet publish ./src/TripleTriad.Web/TripleTriad.Web.csproj --no-restore -c Release
