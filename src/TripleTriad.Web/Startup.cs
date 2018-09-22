@@ -15,6 +15,7 @@ using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.Data;
 using TripleTriad.Web.Filters;
 using TripleTriad.Web.IoC;
+using TripleTriad.BackgroundTasks;
 
 namespace TripleTriad.Web
 {
@@ -32,16 +33,16 @@ namespace TripleTriad.Web
                 {
                     options.Cookie.Name = ".TripleTriad.Session";
                 })
+                .AddHostedService<QueueHostedService>()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddScoped<EnsurePlayerIdExistsActionFilter>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new MediatorModule());
             builder.RegisterModule(new MainModule());
+            builder.RegisterModule(new BackgroundTasksModule());
             builder.RegisterModule(new LogicModule());
         }
 
