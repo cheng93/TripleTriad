@@ -108,9 +108,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         }
 
         [Theory]
+        [InlineData(GameStatus.Waiting)]
         [InlineData(GameStatus.InProgress)]
         [InlineData(GameStatus.Finished)]
-        public async Task Should_throw_GameHasStartedException(GameStatus status)
+        public async Task Should_throw_GameHasInvalidStatusException(GameStatus status)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = this.CreateGame();
@@ -130,31 +131,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
-            act.Should().Throw<GameHasStartedException>();
-        }
-
-        [Fact]
-        public async Task GameNotReadyToStartException()
-        {
-            var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
-            game.Status = GameStatus.Waiting;
-
-            await context.Games.AddAsync(game);
-            await context.SaveChangesAsync();
-
-            var command = new GameStart.Request()
-            {
-                GameId = game.GameId
-            };
-
-            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
-
-            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
-
-            Func<Task> act = async () => await subject.Handle(command, default);
-
-            act.Should().Throw<GameNotReadyToStartException>();
+            act.Should()
+                .Throw<GameHasInvalidStatusException>()
+                .Where(x => x.GameId == GameId
+                    && x.Status == status);
         }
 
         public static IEnumerable<object[]> PlayersStillSelecting = new[]

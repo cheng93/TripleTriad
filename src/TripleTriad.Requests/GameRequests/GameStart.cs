@@ -59,13 +59,9 @@ namespace TripleTriad.Requests.GameRequests
             {
                 var game = await this.context.Games.GetGameOrThrowAsync(request.GameId, cancellationToken);
 
-                if (game.Status == GameStatus.InProgress || game.Status == GameStatus.Finished)
+                if (game.Status != GameStatus.ChooseCards)
                 {
-                    throw new GameHasStartedException(request.GameId);
-                }
-                else if (game.Status == GameStatus.Waiting)
-                {
-                    throw new GameNotReadyToStartException(request.GameId);
+                    throw new GameHasInvalidStatusException(request.GameId, game.Status);
                 }
 
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
