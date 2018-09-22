@@ -12,7 +12,7 @@ using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 {
-    public class GameJoinTests
+    public class RequestHandlerTests
     {
         private readonly Guid playerId = Guid.NewGuid();
 

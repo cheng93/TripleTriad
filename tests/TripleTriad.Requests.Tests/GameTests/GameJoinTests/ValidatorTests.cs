@@ -8,7 +8,7 @@ using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 {
-    public class GameJoinValidatorTests
+    public class ValidatorTests
     {
         public static IEnumerable<object[]> BadRequests => new[]
         {

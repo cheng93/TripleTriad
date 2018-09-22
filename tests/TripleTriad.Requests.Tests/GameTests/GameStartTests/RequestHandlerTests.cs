@@ -16,7 +16,7 @@ using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
-    public class GameStartTests
+    public class RequestHandlerTests
     {
         private static readonly Guid PlayerOneId = Guid.NewGuid();
         private static readonly Guid PlayerTwoId = Guid.NewGuid();

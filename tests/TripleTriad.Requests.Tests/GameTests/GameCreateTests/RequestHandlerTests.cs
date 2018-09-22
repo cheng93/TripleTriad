@@ -13,7 +13,7 @@ using TripleTriad.Data.Enums;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
-    public class GameCreateTests
+    public class RequestHandlerTests
     {
         private readonly Guid playerId = Guid.NewGuid();
 
