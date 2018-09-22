@@ -104,7 +104,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
-            act.Should().Throw<GameNotFoundException>();
+            act.Should()
+                .Throw<GameNotFoundException>()
+                .Where(e => e.GameId == GameId);
         }
 
         [Theory]

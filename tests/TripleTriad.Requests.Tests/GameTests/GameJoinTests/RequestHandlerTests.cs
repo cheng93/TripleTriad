@@ -15,11 +15,13 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 {
     public class RequestHandlerTests
     {
-        private readonly Guid playerId = Guid.NewGuid();
+        private static readonly int GameId = 2;
+        private static readonly Guid PlayerId = Guid.NewGuid();
 
-        private Game CreateGame() => new Game()
+        private static Game CreateGame(Guid? playerOneId = null) => new Game()
         {
-            PlayerOneId = Guid.NewGuid(),
+            GameId = GameId,
+            PlayerOneId = playerOneId ?? Guid.NewGuid(),
             Data = JsonConvert.SerializeObject(new GameData())
         };
 
@@ -27,36 +29,36 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         public async Task Should_return_joined_game()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame();
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
             var command = new GameJoin.Request()
             {
-                GameId = game.GameId,
-                PlayerId = this.playerId
+                GameId = GameId,
+                PlayerId = PlayerId
             };
             var subject = new GameJoin.RequestHandler(context);
 
             var response = await subject.Handle(command, default);
 
-            response.GameId.Should().Be(game.GameId);
+            response.GameId.Should().Be(GameId);
         }
 
         [Fact]
         public async Task Should_have_correct_player_two_id()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame();
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
             var command = new GameJoin.Request()
             {
-                GameId = game.GameId,
-                PlayerId = this.playerId
+                GameId = GameId,
+                PlayerId = PlayerId
             };
             var subject = new GameJoin.RequestHandler(context);
 
@@ -64,22 +66,22 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 
             game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
-            game.PlayerTwoId.Should().Be(this.playerId);
+            game.PlayerTwoId.Should().Be(PlayerId);
         }
 
         [Fact]
         public async Task Should_set_game_status_to_choose_cards()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame();
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
             var command = new GameJoin.Request()
             {
-                GameId = game.GameId,
-                PlayerId = this.playerId
+                GameId = GameId,
+                PlayerId = PlayerId
             };
             var subject = new GameJoin.RequestHandler(context);
 
@@ -93,25 +95,28 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         [Fact]
         public void Should_throw_GameNotFoundException()
         {
+            var gameId = 1;
             var context = DbContextFactory.CreateTripleTriadContext();
 
             var command = new GameJoin.Request()
             {
-                GameId = 1,
-                PlayerId = this.playerId
+                GameId = gameId,
+                PlayerId = PlayerId
             };
             var subject = new GameJoin.RequestHandler(context);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
-            act.Should().Throw<GameNotFoundException>();
+            act.Should()
+                .Throw<GameNotFoundException>()
+                .Where(e => e.GameId == gameId);
         }
 
         [Fact]
         public async Task Should_throw_CannotJoinGameException()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame();
             game.PlayerTwoId = Guid.NewGuid();
 
             await context.Games.AddAsync(game);
@@ -119,37 +124,40 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 
             var command = new GameJoin.Request()
             {
-                GameId = game.GameId,
-                PlayerId = this.playerId
+                GameId = GameId,
+                PlayerId = PlayerId
             };
 
             var subject = new GameJoin.RequestHandler(context);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
-            act.Should().Throw<CannotJoinGameException>();
+            act.Should()
+                .Throw<CannotJoinGameException>()
+                .Where(e => e.GameId == GameId);
         }
 
         [Fact]
         public async Task Should_throw_CannotPlayYourselfException()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame(PlayerId);
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
             var command = new GameJoin.Request()
             {
-                GameId = game.GameId,
-                PlayerId = game.PlayerOneId
+                GameId = GameId,
+                PlayerId = PlayerId
             };
 
             var subject = new GameJoin.RequestHandler(context);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
-            act.Should().Throw<CannotPlayYourselfException>();
+            act.Should().Throw<CannotPlayYourselfException>()
+                .Where(e => e.GameId == GameId && e.PlayerId == PlayerId);
         }
     }
 }
