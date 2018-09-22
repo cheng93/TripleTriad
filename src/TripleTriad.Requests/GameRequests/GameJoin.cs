@@ -47,7 +47,6 @@ namespace TripleTriad.Requests.GameRequests
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                Game game;
                 var gameExists = await this.context.Games.AnyAsync(
                     x => x.GameId == request.GameId,
                     cancellationToken);
@@ -55,14 +54,10 @@ namespace TripleTriad.Requests.GameRequests
                 {
                     throw new GameNotFoundException(request.GameId);
                 }
-                try
-                {
-                    game = await this.context.Games.SingleAsync(
-                    x => x.GameId == request.GameId
-                        && x.PlayerTwoId == null,
-                    cancellationToken);
-                }
-                catch (InvalidOperationException)
+                var game = await this.context.Games
+                    .SingleAsync(x => x.GameId == request.GameId, cancellationToken);
+
+                if (game.PlayerTwoId != null)
                 {
                     throw new CannotJoinGameException(request.GameId);
                 }
