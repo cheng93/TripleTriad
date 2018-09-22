@@ -14,6 +14,7 @@ using TripleTriad.Logic.CoinToss;
 using TripleTriad.Requests.GameRequests.Exceptions;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Logic.Extensions;
+using TripleTriad.Logic.Steps.Strategies;
 
 namespace TripleTriad.Requests.GameRequests
 {
@@ -42,12 +43,14 @@ namespace TripleTriad.Requests.GameRequests
         public class RequestHandler : IRequestHandler<Request, Response>
         {
             private readonly TripleTriadDbContext context;
-            private readonly ICoinTossStep coinTossStep;
+            private readonly IStepStrategy<CoinTossStep> coinTossStrategy;
 
-            public RequestHandler(TripleTriadDbContext context, ICoinTossStep coinTossStep)
+            public RequestHandler(
+                TripleTriadDbContext context,
+                IStepStrategy<CoinTossStep> coinTossStrategy)
             {
                 this.context = context;
-                this.coinTossStep = coinTossStep;
+                this.coinTossStrategy = coinTossStrategy;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -73,7 +76,7 @@ namespace TripleTriad.Requests.GameRequests
                 }
 
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
-                gameData = this.coinTossStep.TossCoin(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
+                gameData = this.coinTossStrategy.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
 
                 game.Status = GameStatus.InProgress;
                 game.Data = gameData.ToJson();

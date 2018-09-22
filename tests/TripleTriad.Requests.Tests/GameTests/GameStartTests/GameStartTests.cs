@@ -8,6 +8,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
+using TripleTriad.Logic.Steps.Strategies;
 using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.GameRequests.Exceptions;
 using TripleTriad.Requests.Tests.Utils;
@@ -61,12 +62,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = game.GameId
             };
 
-            var coinTossStep = new Mock<ICoinTossStep>();
+            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
             coinTossStep
-                .Setup(x => x.TossCoin(
-                    It.IsAny<GameData>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>()))
+                .Setup(x => x.Run(It.IsAny<CoinTossStep>()))
                 .Returns(new GameData
                 {
                     PlayerOneWonCoinToss = coinTossIsHeads,
@@ -90,7 +88,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = GameId
             };
 
-            var coinTossStep = new Mock<ICoinTossStep>();
+            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
 
             var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
 
@@ -119,7 +117,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = game.GameId
             };
 
-            var coinTossStep = new Mock<ICoinTossStep>();
+            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
 
             var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
 
