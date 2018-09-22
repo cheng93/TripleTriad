@@ -31,15 +31,20 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             yield return new object[] { new CardSelect.Request() { GameId = 1, PlayerId = Guid.Empty, Cards = Cards.Take(5) } };
             yield return new object[] { new CardSelect.Request() { GameId = 0, PlayerId = Guid.NewGuid(), Cards = Cards.Take(5) } };
 
-            foreach (var cardSize in Enumerable.Range(-1, 5).Concat(new[] { 6 }))
+            foreach (var cardSize in Enumerable.Range(-1, 7))
             {
+                var cards = cardSize == -1
+                    ? null
+                    : cardSize != 5
+                        ? Cards.Take(cardSize)
+                        : Cards.Take(4).Concat(new[] { "InvalidName" });
                 yield return new object[]
                 {
                     new CardSelect.Request()
                     {
                         GameId = 0,
                         PlayerId = Guid.NewGuid(),
-                        Cards = cardSize == -1 ? null : Cards.Take(cardSize)
+                        Cards = cards
                     }
                 };
                 yield return new object[]
@@ -48,7 +53,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                     {
                         GameId = 1,
                         PlayerId = Guid.Empty,
-                        Cards = cardSize == -1 ? null : Cards.Take(cardSize)
+                        Cards = cards
                     }
                 };
                 yield return new object[]
@@ -57,7 +62,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                     {
                         GameId = 0,
                         PlayerId = Guid.Empty,
-                        Cards = cardSize == -1 ? null : Cards.Take(cardSize)
+                        Cards = cards
                     }
                 };
             }
