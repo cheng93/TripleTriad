@@ -45,7 +45,8 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 
             var response = new CardSelect.Response
             {
-                GameId = GameId
+                GameId = GameId,
+                QueueTask = true
             };
 
             await subject.Process(request, response);
@@ -53,6 +54,41 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             mediator.Verify(x => x.Send(
                 It.Is<GameStart.Request>(y => y.GameId == GameId),
                 It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task Should_not_queue_request()
+        {
+            var mediator = new Mock<IMediator>();
+
+            var backgroundTaskQueue = new Mock<IBackgroundTaskQueue>();
+            backgroundTaskQueue
+                .Setup(x => x.QueueBackgroundTask(
+                    It.IsAny<Func<CancellationToken, Task>>()))
+                .Verifiable();
+
+            var subject = new CardSelect.GameStartBackgroundQueue(
+                backgroundTaskQueue.Object,
+                mediator.Object);
+
+            var request = new CardSelect.Request
+            {
+                GameId = GameId,
+                PlayerId = PlayerId
+            };
+
+            var response = new CardSelect.Response
+            {
+                GameId = GameId,
+                QueueTask = false
+            };
+
+            await subject.Process(request, response);
+
+            backgroundTaskQueue.Verify(
+                x => x.QueueBackgroundTask(
+                    It.IsAny<Func<CancellationToken, Task>>()),
+                Times.Never);
         }
     }
 }

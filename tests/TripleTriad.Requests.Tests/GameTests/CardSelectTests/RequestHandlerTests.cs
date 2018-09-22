@@ -98,10 +98,10 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 
         [Theory]
         [MemberData(nameof(Requests))]
-        public async Task Should_return_correct_CanStartGame(
+        public async Task Should_return_correct_queue_task(
             bool isPlayerOne,
             IEnumerable<Card> opponentCards,
-            bool canStart)
+            bool queueTask)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -130,7 +130,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 
             var response = await subject.Handle(request, default);
 
-            response.CanStartGame.Should().Be(canStart);
+            response.QueueTask.Should().Be(queueTask);
         }
 
         public static IEnumerable<object[]> InvalidStatuses()

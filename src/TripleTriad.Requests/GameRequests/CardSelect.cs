@@ -22,13 +22,13 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class CardSelect
     {
-        public class Response
+        public class Response : IBackgroundQueueResponse
         {
             public int GameId { get; set; }
 
             public IEnumerable<Card> Cards { get; set; }
 
-            public bool CanStartGame { get; set; }
+            public bool QueueTask { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -103,7 +103,7 @@ namespace TripleTriad.Requests.GameRequests
                 {
                     GameId = request.GameId,
                     Cards = isPlayerOne ? gameData.PlayerOneCards : gameData.PlayerTwoCards,
-                    CanStartGame = ((isPlayerOne ? gameData.PlayerTwoCards : gameData.PlayerOneCards)
+                    QueueTask = ((isPlayerOne ? gameData.PlayerTwoCards : gameData.PlayerOneCards)
                         ?.Count() ?? 0) == 5
                 };
             }

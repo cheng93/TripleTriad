@@ -7,9 +7,15 @@ using TripleTriad.BackgroundTasks.Queue;
 
 namespace TripleTriad.Requests.Pipeline
 {
+    public interface IBackgroundQueueResponse
+    {
+        bool QueueTask { get; set; }
+    }
+
     public abstract class BackgroundQueuePostProcessor<TRequest, TResponse, TQueueRequest, TQueueResponse>
         : IRequestPostProcessor<TRequest, TResponse>
         where TQueueRequest : IRequest<TQueueResponse>
+        where TResponse : IBackgroundQueueResponse
     {
         private readonly IBackgroundTaskQueue queue;
         private readonly IMediator mediator;
@@ -22,8 +28,11 @@ namespace TripleTriad.Requests.Pipeline
 
         public Task Process(TRequest request, TResponse response)
         {
-            var task = this.CreateTask(request, response);
-            this.queue.QueueBackgroundTask(task);
+            if (response.QueueTask)
+            {
+                var task = this.CreateTask(request, response);
+                this.queue.QueueBackgroundTask(task);
+            }
             return Task.CompletedTask;
         }
 
