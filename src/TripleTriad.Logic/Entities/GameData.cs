@@ -11,5 +11,9 @@ namespace TripleTriad.Logic.Entities
         public bool? PlayerOneWonCoinToss { get; set; }
 
         public bool? PlayerOneTurn { get; set; }
+
+        public IEnumerable<string> PlayerOneCards { get; set; }
+
+        public IEnumerable<string> PlayerTwoCards { get; set; }
     }
 }

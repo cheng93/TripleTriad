@@ -23,13 +23,23 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
         private static readonly int GameId = 2;
 
-        private Game CreateGame() => new Game()
+        private Game CreateGame(GameData gameData = null)
         {
-            GameId = GameId,
-            PlayerOneId = PlayerOneId,
-            PlayerTwoId = PlayerTwoId,
-            Data = JsonConvert.SerializeObject(new GameData())
-        };
+            gameData = gameData ?? new GameData
+            {
+                PlayerOneCards = new[] { "a", "b", "c", "d", "e" },
+                PlayerTwoCards = new[] { "a", "b", "c", "d", "e" }
+            };
+
+            return new Game()
+            {
+                GameId = GameId,
+                PlayerOneId = PlayerOneId,
+                PlayerTwoId = PlayerTwoId,
+                Status = GameStatus.ChooseCards,
+                Data = JsonConvert.SerializeObject(gameData)
+            };
+        }
 
         private Player CreatePlayer(Guid playerId, bool isPlayerOne) => new Player()
         {
@@ -121,6 +131,74 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             Func<Task> act = async () => await subject.Handle(command, default);
 
             act.Should().Throw<GameHasStartedException>();
+        }
+
+        [Fact]
+        public async Task GameNotReadyToStartException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = this.CreateGame();
+            game.Status = GameStatus.Waiting;
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameStart.Request()
+            {
+                GameId = game.GameId
+            };
+
+            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
+
+            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should().Throw<GameNotReadyToStartException>();
+        }
+
+        public static IEnumerable<object[]> PlayersStillSelecting = new[]
+        {
+            new object[]{null, null, true, true},
+            new object[]{new[] { "a", "b", "c", "d", "e" }, null, false, true},
+            new object[]{null, new[] { "a", "b", "c", "d", "e" }, true, false}
+        };
+
+        [Theory]
+        [MemberData(nameof(PlayersStillSelecting))]
+        public async Task Should_throw_PlayerStillSelectingCardsException(
+            IEnumerable<string> playerOneCards,
+            IEnumerable<string> playerTwoCards,
+            bool playerOneStillSelecting,
+            bool playerTwoStillSelecting)
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = this.CreateGame(new GameData
+            {
+                PlayerOneCards = playerOneCards,
+                PlayerTwoCards = playerTwoCards
+            });
+            game.Status = GameStatus.ChooseCards;
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameStart.Request()
+            {
+                GameId = game.GameId
+            };
+
+            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
+
+            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should()
+                .Throw<PlayerStillSelectingCardsException>()
+                .Where(e => e.GameId == GameId
+                    && e.PlayerOne == playerOneStillSelecting
+                    && e.PlayerTwo == playerTwoStillSelecting);
         }
     }
 }

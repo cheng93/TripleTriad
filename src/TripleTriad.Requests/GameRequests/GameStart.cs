@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -55,7 +56,6 @@ namespace TripleTriad.Requests.GameRequests
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                Game game;
                 var gameExists = await this.context.Games.AnyAsync(
                     x => x.GameId == request.GameId,
                     cancellationToken);
@@ -63,19 +63,33 @@ namespace TripleTriad.Requests.GameRequests
                 {
                     throw new GameNotFoundException(request.GameId);
                 }
-                try
-                {
-                    game = await this.context.Games.SingleAsync(
-                    x => x.GameId == request.GameId
-                        && x.Status == GameStatus.Waiting,
-                    cancellationToken);
-                }
-                catch (InvalidOperationException)
+
+                var game = await this.context.Games
+                        .SingleAsync(x => x.GameId == request.GameId, cancellationToken);
+
+                if (game.Status == GameStatus.InProgress || game.Status == GameStatus.Finished)
                 {
                     throw new GameHasStartedException(request.GameId);
                 }
+                else if (game.Status == GameStatus.Waiting)
+                {
+                    throw new GameNotReadyToStartException(request.GameId);
+                }
 
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
+
+                var playerOneNotSelectedCards = (gameData.PlayerOneCards?.Count() ?? 0) != 5;
+                var playerTwoNotSelectedCards = (gameData.PlayerTwoCards?.Count() ?? 0) != 5;
+
+                if (playerOneNotSelectedCards || playerTwoNotSelectedCards)
+                {
+                    throw new PlayerStillSelectingCardsException(
+                        request.GameId,
+                        playerOneNotSelectedCards,
+                        playerTwoNotSelectedCards);
+                }
+
+
                 gameData = this.coinTossStrategy.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
 
                 game.Status = GameStatus.InProgress;
