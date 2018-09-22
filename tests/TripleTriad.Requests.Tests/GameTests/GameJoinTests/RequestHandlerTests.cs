@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TripleTriad.Data.Entities;
+using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.GameRequests.Exceptions;
@@ -64,6 +65,29 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
             game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
             game.PlayerTwoId.Should().Be(this.playerId);
+        }
+
+        [Fact]
+        public async Task Should_set_game_status_to_choose_cards()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = this.CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameJoin.Request()
+            {
+                GameId = game.GameId,
+                PlayerId = this.playerId
+            };
+            var subject = new GameJoin.RequestHandler(context);
+
+            var response = await subject.Handle(command, default);
+
+            game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
+
+            game.Status.Should().Be(GameStatus.ChooseCards);
         }
 
         [Fact]

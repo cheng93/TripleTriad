@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
+using TripleTriad.Data.Enums;
 using TripleTriad.Requests.GameRequests.Exceptions;
 using TripleTriad.Requests.Pipeline;
 
@@ -70,6 +71,7 @@ namespace TripleTriad.Requests.GameRequests
                 }
 
                 game.PlayerTwoId = request.PlayerId;
+                game.Status = GameStatus.ChooseCards;
 
                 await this.context.SaveChangesAsync(cancellationToken);
 
