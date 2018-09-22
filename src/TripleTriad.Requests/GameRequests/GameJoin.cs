@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
@@ -73,20 +72,6 @@ namespace TripleTriad.Requests.GameRequests
                     GameId = game.GameId
                 };
             }
-        }
-
-        public class GameStartBackgroundQueue : BackgroundQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
-        {
-            public GameStartBackgroundQueue(IBackgroundTaskQueue queue, IMediator mediator)
-                : base(queue, mediator)
-            {
-            }
-
-            protected override GameStart.Request CreateQueueRequest(Request request, Response response)
-                => new GameStart.Request
-                {
-                    GameId = response.GameId
-                };
         }
     }
 }

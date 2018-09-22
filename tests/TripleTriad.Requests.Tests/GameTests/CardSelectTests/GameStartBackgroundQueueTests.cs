@@ -7,7 +7,7 @@ using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.GameRequests;
 using Xunit;
 
-namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
+namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 {
     public class GameStartBackgroundQueueTests
     {
@@ -33,17 +33,17 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
                     await x(default);
                 });
 
-            var subject = new GameJoin.GameStartBackgroundQueue(
+            var subject = new CardSelect.GameStartBackgroundQueue(
                 backgroundTaskQueue.Object,
                 mediator.Object);
 
-            var request = new GameJoin.Request
+            var request = new CardSelect.Request
             {
                 GameId = GameId,
                 PlayerId = PlayerId
             };
 
-            var response = new GameJoin.Response
+            var response = new CardSelect.Response
             {
                 GameId = GameId
             };
