@@ -4,8 +4,6 @@ namespace TripleTriad.Logic.Steps
 {
     public class CoinTossStep : Step
     {
-        private readonly string playerOneDisplay;
-        private readonly string playerTwoDisplay;
 
         public CoinTossStep(
             GameData data,
@@ -13,8 +11,12 @@ namespace TripleTriad.Logic.Steps
             string playerTwoDisplay)
             : base(data)
         {
-            this.playerOneDisplay = playerOneDisplay;
-            this.playerTwoDisplay = playerTwoDisplay;
+            PlayerOneDisplay = playerOneDisplay;
+            PlayerTwoDisplay = playerTwoDisplay;
         }
+
+        public string PlayerOneDisplay { get; }
+
+        public string PlayerTwoDisplay { get; }
     }
 }

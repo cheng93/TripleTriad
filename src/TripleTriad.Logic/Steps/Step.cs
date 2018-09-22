@@ -9,6 +9,6 @@ namespace TripleTriad.Logic.Steps
             this.Data = data;
         }
 
-        protected GameData Data { get; }
+        public GameData Data { get; }
     }
 }
