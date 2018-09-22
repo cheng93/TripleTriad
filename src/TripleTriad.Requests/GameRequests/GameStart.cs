@@ -12,7 +12,7 @@ using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.CoinToss;
-using TripleTriad.Requests.GameRequests.Exceptions;
+using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps.Strategies;

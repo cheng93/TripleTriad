@@ -1,6 +1,6 @@
 using System;
 
-namespace TripleTriad.Requests.GameRequests.Exceptions
+namespace TripleTriad.Requests.Exceptions
 {
     public class GameNotReadyToStartException : Exception
     {

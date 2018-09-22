@@ -10,7 +10,7 @@ using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Strategies;
 using TripleTriad.Requests.GameRequests;
-using TripleTriad.Requests.GameRequests.Exceptions;
+using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Tests.Utils;
 using Xunit;
 

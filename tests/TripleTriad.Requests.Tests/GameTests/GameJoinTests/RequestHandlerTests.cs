@@ -7,7 +7,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Requests.GameRequests;
-using TripleTriad.Requests.GameRequests.Exceptions;
+using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Tests.Utils;
 using Xunit;
 
