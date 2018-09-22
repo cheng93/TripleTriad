@@ -16,6 +16,7 @@ using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps.Strategies;
+using TripleTriad.Requests.Extensions;
 
 namespace TripleTriad.Requests.GameRequests
 {
@@ -56,16 +57,7 @@ namespace TripleTriad.Requests.GameRequests
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var gameExists = await this.context.Games.AnyAsync(
-                    x => x.GameId == request.GameId,
-                    cancellationToken);
-                if (!gameExists)
-                {
-                    throw new GameNotFoundException(request.GameId);
-                }
-
-                var game = await this.context.Games
-                        .SingleAsync(x => x.GameId == request.GameId, cancellationToken);
+                var game = await this.context.Games.GetGameOrThrowAsync(request.GameId, cancellationToken);
 
                 if (game.Status == GameStatus.InProgress || game.Status == GameStatus.Finished)
                 {
