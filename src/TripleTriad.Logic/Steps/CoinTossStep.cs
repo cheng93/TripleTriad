@@ -4,7 +4,6 @@ namespace TripleTriad.Logic.Steps
 {
     public class CoinTossStep : Step
     {
-
         public CoinTossStep(
             GameData data,
             string playerOneDisplay,

@@ -6,6 +6,7 @@ using Moq;
 using Newtonsoft.Json;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
+using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -23,12 +24,21 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
         private static readonly int GameId = 2;
 
+        private static readonly IEnumerable<Card> Cards = new[]
+        {
+            AllCards.Squall,
+            AllCards.Seifer,
+            AllCards.Edea,
+            AllCards.Rinoa,
+            AllCards.Quistis
+        };
+
         private Game CreateGame(GameData gameData = null)
         {
             gameData = gameData ?? new GameData
             {
-                PlayerOneCards = new[] { "a", "b", "c", "d", "e" },
-                PlayerTwoCards = new[] { "a", "b", "c", "d", "e" }
+                PlayerOneCards = Cards,
+                PlayerTwoCards = Cards
             };
 
             return new Game()
@@ -142,15 +152,15 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         public static IEnumerable<object[]> PlayersStillSelecting = new[]
         {
             new object[]{null, null, true, true},
-            new object[]{new[] { "a", "b", "c", "d", "e" }, null, false, true},
-            new object[]{null, new[] { "a", "b", "c", "d", "e" }, true, false}
+            new object[]{Cards, null, false, true},
+            new object[]{null, Cards, true, false}
         };
 
         [Theory]
         [MemberData(nameof(PlayersStillSelecting))]
         public async Task Should_throw_PlayerStillSelectingCardsException(
-            IEnumerable<string> playerOneCards,
-            IEnumerable<string> playerTwoCards,
+            IEnumerable<Card> playerOneCards,
+            IEnumerable<Card> playerTwoCards,
             bool playerOneStillSelecting,
             bool playerTwoStillSelecting)
         {
