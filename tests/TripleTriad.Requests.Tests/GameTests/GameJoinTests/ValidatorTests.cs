@@ -13,8 +13,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         public static IEnumerable<object[]> BadRequests => new[]
         {
             new object[] { new GameJoin.Request() },
-            new object[] { new GameJoin.Request() { PlayerId = Guid.Empty } },
-            new object[] { new GameJoin.Request() { GameId = 0 } },
+            new object[] { new GameJoin.Request() { GameId = 1, PlayerId = Guid.Empty } },
+            new object[] { new GameJoin.Request() { GameId = 0, PlayerId = Guid.NewGuid() } },
             new object[] { new GameJoin.Request() { GameId = 0, PlayerId = Guid.Empty } }
         };
 
