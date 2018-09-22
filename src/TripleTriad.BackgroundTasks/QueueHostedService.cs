@@ -9,8 +9,6 @@ namespace TripleTriad.BackgroundTasks
     public class QueueHostedService : BackgroundService
     {
         private readonly IBackgroundTaskQueue queue;
-        private CancellationTokenSource shutdown = new CancellationTokenSource();
-        private Task backgroundTask;
 
         public QueueHostedService(IBackgroundTaskQueue queue)
         {
@@ -19,12 +17,12 @@ namespace TripleTriad.BackgroundTasks
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!this.shutdown.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var task = await this.queue.DequeueAsync(this.shutdown.Token);
+                var task = await this.queue.DequeueAsync(stoppingToken);
                 try
                 {
-                    await task(this.shutdown.Token);
+                    await task(stoppingToken);
 
                 }
                 catch (Exception)
