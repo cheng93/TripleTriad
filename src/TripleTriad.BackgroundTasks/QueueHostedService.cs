@@ -20,15 +20,7 @@ namespace TripleTriad.BackgroundTasks
             while (!stoppingToken.IsCancellationRequested)
             {
                 var task = await this.queue.DequeueAsync(stoppingToken);
-                try
-                {
-                    await task(stoppingToken);
-
-                }
-                catch (Exception)
-                {
-                    // Maybe I should log something here...
-                }
+                await task(stoppingToken);
             }
         }
     }
