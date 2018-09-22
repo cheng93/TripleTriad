@@ -49,10 +49,16 @@ namespace TripleTriad.Requests.GameRequests
                 base.RuleFor(x => x.Cards).NotNull();
                 base.RuleFor(x => x.Cards.Count())
                     .Equal(5)
-                    .When(x => x.Cards != null);
+                    .When(x => x.Cards != null)
+                    .WithMessage("Select five unique cards.");
+                base.RuleFor(x => x.Cards.Distinct().Count())
+                    .Equal(5)
+                    .When(x => (x.Cards?.Count() ?? 0) == 5)
+                    .WithMessage("Cards should be unique.");
                 base.RuleForEach(x => x.Cards)
                     .Must(x => AllCards.List.Any(y => y.Name == x))
-                    .When(x => (x.Cards?.Count() ?? 0) == 5);
+                    .When(x => (x.Cards?.Distinct().Count() ?? 0) == 5)
+                    .WithMessage("Invalid card.");
             }
         }
 

@@ -31,13 +31,22 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             yield return new object[] { new CardSelect.Request() { GameId = 1, PlayerId = Guid.Empty, Cards = Cards.Take(5) } };
             yield return new object[] { new CardSelect.Request() { GameId = 0, PlayerId = Guid.NewGuid(), Cards = Cards.Take(5) } };
 
-            foreach (var cardSize in Enumerable.Range(-1, 7))
+            for (var i = -1; i < 7; i++)
             {
-                var cards = cardSize == -1
+                var cards = i == -1
                     ? null
-                    : cardSize != 5
-                        ? Cards.Take(cardSize)
+                    : i != 5
+                        ? Cards.Take(i)
                         : Cards.Take(4).Concat(new[] { "InvalidName" });
+                yield return new object[]
+                {
+                    new CardSelect.Request()
+                    {
+                        GameId = 1,
+                        PlayerId = Guid.NewGuid(),
+                        Cards = cards
+                    }
+                };
                 yield return new object[]
                 {
                     new CardSelect.Request()
@@ -65,6 +74,51 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                         Cards = cards
                     }
                 };
+
+                if (Enumerable.Range(2, 4).Contains(i))
+                {
+                    cards = Enumerable.Range(0, i)
+                        .Select(x => AllCards.Seifer.Name)
+                        .Concat(Cards.Take(5 - i));
+
+                    yield return new object[]
+                    {
+                        new CardSelect.Request()
+                        {
+                            GameId = 1,
+                            PlayerId = Guid.NewGuid(),
+                            Cards = cards
+                        }
+                    };
+
+                    yield return new object[]
+                    {
+                        new CardSelect.Request()
+                        {
+                            GameId = 0,
+                            PlayerId = Guid.NewGuid(),
+                            Cards = cards
+                        }
+                    };
+                    yield return new object[]
+                    {
+                        new CardSelect.Request()
+                        {
+                            GameId = 1,
+                            PlayerId = Guid.Empty,
+                            Cards = cards
+                        }
+                    };
+                    yield return new object[]
+                    {
+                        new CardSelect.Request()
+                        {
+                            GameId = 0,
+                            PlayerId = Guid.Empty,
+                            Cards = cards
+                        }
+                    };
+                }
             }
         }
 
