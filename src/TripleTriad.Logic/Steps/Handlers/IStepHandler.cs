@@ -1,8 +1,8 @@
 using TripleTriad.Logic.Entities;
 
-namespace TripleTriad.Logic.Steps.Strategies
+namespace TripleTriad.Logic.Steps.Handlers
 {
-    public interface IStepStrategy<TStep>
+    public interface IStepHandler<TStep>
         where TStep : Step
     {
         GameData Run(TStep step);

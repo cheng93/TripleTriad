@@ -5,12 +5,12 @@ using Moq;
 using TripleTriad.Logic.CoinToss;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
-using TripleTriad.Logic.Steps.Strategies;
+using TripleTriad.Logic.Steps.Handlers;
 using Xunit;
 
-namespace TripleTriad.Logic.Tests.StepTests.StrategyTests
+namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 {
-    public class CoinTossStrategyTests
+    public class CoinTossHandlerTests
     {
         private static readonly string PlayerOneDisplay = "PlayerOne";
 
@@ -29,7 +29,7 @@ namespace TripleTriad.Logic.Tests.StepTests.StrategyTests
                 .Setup(x => x.IsHeads())
                 .Returns(coinTossIsHeads);
 
-            var subject = new CoinTossStrategy(coinTossService.Object);
+            var subject = new CoinTossHandler(coinTossService.Object);
             var data = subject.Run(CreateStep());
 
             data.PlayerOneWonCoinToss.Should().Be(coinTossIsHeads);
@@ -45,7 +45,7 @@ namespace TripleTriad.Logic.Tests.StepTests.StrategyTests
                 .Setup(x => x.IsHeads())
                 .Returns(coinTossIsHeads);
 
-            var subject = new CoinTossStrategy(coinTossService.Object);
+            var subject = new CoinTossHandler(coinTossService.Object);
             var data = subject.Run(CreateStep());
 
             data.PlayerOneTurn.Should().Be(coinTossIsHeads);
@@ -66,7 +66,7 @@ namespace TripleTriad.Logic.Tests.StepTests.StrategyTests
                 .Setup(x => x.IsHeads())
                 .Returns(coinTossIsHeads);
 
-            var subject = new CoinTossStrategy(coinTossService.Object);
+            var subject = new CoinTossHandler(coinTossService.Object);
             var data = subject.Run(CreateStep());
 
             data.Log.Last().Should().Be(logEntry);

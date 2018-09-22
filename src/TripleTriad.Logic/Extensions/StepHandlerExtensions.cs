@@ -1,13 +1,13 @@
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
-using TripleTriad.Logic.Steps.Strategies;
+using TripleTriad.Logic.Steps.Handlers;
 
 namespace TripleTriad.Logic.Extensions
 {
-    public static class StepStrategyExtensions
+    public static class StepHandlerExtensions
     {
         public static GameData Run(
-            this IStepStrategy<CoinTossStep> strategy,
+            this IStepHandler<CoinTossStep> strategy,
             GameData data,
             string playerOneDispay,
             string playerTwoDisplay)

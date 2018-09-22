@@ -2,13 +2,13 @@ using TripleTriad.Logic.CoinToss;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Extensions;
 
-namespace TripleTriad.Logic.Steps.Strategies
+namespace TripleTriad.Logic.Steps.Handlers
 {
-    public class CoinTossStrategy : IStepStrategy<CoinTossStep>
+    public class CoinTossHandler : IStepHandler<CoinTossStep>
     {
         private readonly ICoinTossService coinTossService;
 
-        public CoinTossStrategy(ICoinTossService coinTossService)
+        public CoinTossHandler(ICoinTossService coinTossService)
         {
             this.coinTossService = coinTossService;
         }

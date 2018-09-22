@@ -8,7 +8,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Steps;
-using TripleTriad.Logic.Steps.Strategies;
+using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Tests.Utils;
@@ -72,8 +72,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = game.GameId
             };
 
-            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
-            coinTossStep
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
+            coinTossHandler
                 .Setup(x => x.Run(It.IsAny<CoinTossStep>()))
                 .Returns(new GameData
                 {
@@ -81,7 +81,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                     PlayerOneTurn = coinTossIsHeads
                 });
 
-            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
 
             var response = await subject.Handle(command, default);
 
@@ -98,9 +98,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = GameId
             };
 
-            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -127,9 +127,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = game.GameId
             };
 
-            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -170,9 +170,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 GameId = game.GameId
             };
 
-            var coinTossStep = new Mock<IStepStrategy<CoinTossStep>>();
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossStep.Object);
+            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
