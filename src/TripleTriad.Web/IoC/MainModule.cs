@@ -10,8 +10,8 @@ namespace TripleTriad.Web.IoC
         {
             var assemblies = new[]
             {
-                ThisAssembly,
-                typeof(ICoinTossService).GetTypeInfo().Assembly
+                ThisAssembly, // Web
+                typeof(ICoinTossService).GetTypeInfo().Assembly, //Logic
             };
 
             builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();

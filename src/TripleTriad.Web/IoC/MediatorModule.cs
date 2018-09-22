@@ -17,7 +17,8 @@ namespace TripleTriad.Web.IoC
                 typeof(IRequestHandler<,>),
                 typeof(IRequestHandler<>),
                 typeof(INotificationHandler<>),
-                typeof(IRequestPreProcessor<>)
+                typeof(IRequestPreProcessor<>),
+                typeof(IRequestPostProcessor<,>)
             };
 
             foreach (var mediatrOpenType in mediatrOpenTypes)
@@ -31,6 +32,8 @@ namespace TripleTriad.Web.IoC
 
             builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+
+            builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
 
             builder.Register<ServiceFactory>(ctx =>
             {
