@@ -8,7 +8,7 @@ namespace TripleTriad.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:game_status", "waiting,in_progress,forfeit,player_one_win,player_two_win,tie");
+                .Annotation("Npgsql:Enum:game_status", "waiting,choose_cards,in_progress,finished");
 
             migrationBuilder.AddColumn<GameStatus>(
                 name: "status",
@@ -24,7 +24,7 @@ namespace TripleTriad.Data.Migrations
                 table: "games");
 
             migrationBuilder.AlterDatabase()
-                .OldAnnotation("Npgsql:Enum:game_status", "waiting,in_progress,forfeit,player_one_win,player_two_win,tie");
+                .OldAnnotation("Npgsql:Enum:game_status", "waiting,choose_cards,in_progress,finished");
         }
     }
 }

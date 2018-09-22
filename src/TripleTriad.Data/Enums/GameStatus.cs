@@ -3,10 +3,8 @@ namespace TripleTriad.Data.Enums
     public enum GameStatus
     {
         Waiting = 0,
-        InProgress = 1,
-        Forfeit = 2,
-        PlayerOneWin = 3,
-        PlayerTwoWin = 4,
-        Tie = 5
+        ChooseCards = 1,
+        InProgress = 2,
+        Finished = 3
     }
 }

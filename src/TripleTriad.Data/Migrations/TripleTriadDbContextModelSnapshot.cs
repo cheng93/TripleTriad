@@ -16,7 +16,7 @@ namespace TripleTriad.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:Enum:game_status", "waiting,in_progress,forfeit,player_one_win,player_two_win,tie")
+                .HasAnnotation("Npgsql:Enum:game_status", "waiting,choose_cards,in_progress,finished")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);

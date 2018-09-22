@@ -99,10 +99,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
         [Theory]
         [InlineData(GameStatus.InProgress)]
-        [InlineData(GameStatus.Forfeit)]
-        [InlineData(GameStatus.PlayerOneWin)]
-        [InlineData(GameStatus.PlayerTwoWin)]
-        [InlineData(GameStatus.Tie)]
+        [InlineData(GameStatus.Finished)]
         public async Task Should_throw_GameHasStartedException(GameStatus status)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
