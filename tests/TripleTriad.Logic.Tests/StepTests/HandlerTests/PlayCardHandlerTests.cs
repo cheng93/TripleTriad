@@ -131,7 +131,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(Result.PlayerOneWin, "Player One has won.")]
         [InlineData(Result.PlayerTwoWin, "Player Two has won.")]
-        [InlineData(Result.Tie, "Their was a tie.")]
+        [InlineData(Result.Tie, "There was a tie.")]
         public void Should_have_correct_result_log_entry(Result result, string message)
         {
             var gameData = CreateData();

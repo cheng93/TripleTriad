@@ -16,7 +16,7 @@ namespace TripleTriad.Logic.Steps.Handlers
             {
                 {Result.PlayerOneWin, "Player One has won."},
                 {Result.PlayerTwoWin, "Player Two has won."},
-                {Result.Tie, "Their was a tie."}
+                {Result.Tie, "There was a tie."}
             };
 
         private readonly IGameResultService gameResultService;
