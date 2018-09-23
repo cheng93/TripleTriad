@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TripleTriad.Logic.Entities;
 
 namespace TripleTriad.Logic.Extensions
@@ -9,6 +10,7 @@ namespace TripleTriad.Logic.Extensions
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            serializerSettings.Converters.Add(new StringEnumConverter());
             return JsonConvert.SerializeObject(data, serializerSettings);
         }
     }

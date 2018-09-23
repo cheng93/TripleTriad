@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using TripleTriad.Logic.Enums;
 
 namespace TripleTriad.Logic.Entities
 {
@@ -17,5 +18,7 @@ namespace TripleTriad.Logic.Entities
         public IEnumerable<Card> PlayerTwoCards { get; set; }
 
         public IEnumerable<Tile> Tiles { get; set; }
+
+        public Result? Result { get; set; }
     }
 }
