@@ -31,6 +31,11 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public void ValidateAndThrow(CoinTossStep step)
         {
+            if (step.Data.PlayerOneWonCoinToss != null)
+            {
+                throw new CoinTossAlreadyHappenedException(step.Data, step.Data.PlayerOneWonCoinToss.Value);
+            }
+
             var playerOneNotSelectedCards = (step.Data.PlayerOneCards?.Count() ?? 0) != 5;
             var playerTwoNotSelectedCards = (step.Data.PlayerTwoCards?.Count() ?? 0) != 5;
 

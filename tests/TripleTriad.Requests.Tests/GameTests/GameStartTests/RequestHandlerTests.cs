@@ -261,5 +261,45 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 .Where(e => e.GameId == GameId)
                 .WithInnerException<BoardExistsException>();
         }
+
+        [Fact]
+        public async Task Should_throw_inner_exception_CoinTossAlreadyHappenedException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+            var playerOne = CreatePlayer(PlayerOneId, true);
+            var playerTwo = CreatePlayer(PlayerTwoId, false);
+
+            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(playerTwo);
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameStart.Request()
+            {
+                GameId = game.GameId
+            };
+
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
+            coinTossHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<CoinTossStep>()))
+                .Throws(new CoinTossAlreadyHappenedException(
+                    new GameData(),
+                    true));
+
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should()
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<CoinTossAlreadyHappenedException>();
+        }
     }
 }
