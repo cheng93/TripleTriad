@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Newtonsoft.Json;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
@@ -43,7 +43,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                 PlayerOneId = PlayerOneId,
                 PlayerTwoId = PlayerTwoId,
                 Status = GameStatus.ChooseCards,
-                Data = JsonConvert.SerializeObject(gameData)
+                Data = gameData.ToJson()
             };
         }
 
