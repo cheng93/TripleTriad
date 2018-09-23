@@ -384,5 +384,37 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .WithInnerException<TileUnavailableException>()
                 .Where(e => e.TileId == TileId);
         }
+
+        [Fact]
+        public async Task Should_throw_inner_exception_NotPlayerTurnException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<PlayCardStep>()))
+                .Throws(new NotPlayerTurnException(new GameData(), true));
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(request, default);
+
+            act.Should()
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<NotPlayerTurnException>();
+        }
     }
 }

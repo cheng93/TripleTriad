@@ -45,8 +45,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                     tileId,
                     isPlayerOne);
 
-        private static GameData CreateData() => new GameData
+        private static GameData CreateData(bool isPlayerOne = true) => new GameData
         {
+            PlayerOneTurn = isPlayerOne,
             PlayerOneCards = PlayerOneCards,
             PlayerTwoCards = PlayerTwoCards,
             Tiles = Enumerable.Range(0, 9)
@@ -59,9 +60,27 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
+        public void Should_throw_NotPlayerTurnException(bool isPlayerOne)
+        {
+            var gameData = CreateData(!isPlayerOne);
+
+            var gameResultService = new Mock<IGameResultService>();
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isPlayerOne: isPlayerOne, cardName: MissingCardName));
+
+            act.Should()
+                .Throw<NotPlayerTurnException>()
+                .Where(x => x.GameData == gameData
+                    && x.IsPlayerOne == isPlayerOne);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         public void Should_throw_CardNotInHandException(bool isPlayerOne)
         {
-            var gameData = CreateData();
+            var gameData = CreateData(isPlayerOne);
 
             var gameResultService = new Mock<IGameResultService>();
             var subject = new PlayCardHandler(gameResultService.Object);
@@ -159,7 +178,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [MemberData(nameof(Moves))]
         public void Should_have_correct_move_log_entry(bool isPlayerOne, int tileId, string message)
         {
-            var gameData = CreateData();
+            var gameData = CreateData(isPlayerOne);
             var gameResultService = new Mock<IGameResultService>();
 
             var subject = new PlayCardHandler(gameResultService.Object);
@@ -173,7 +192,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [InlineData(false)]
         public void Should_have_remove_card_from_hand(bool isPlayerOne)
         {
-            var gameData = CreateData();
+            var gameData = CreateData(isPlayerOne);
             var gameResultService = new Mock<IGameResultService>();
 
             var subject = new PlayCardHandler(gameResultService.Object);

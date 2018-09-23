@@ -66,6 +66,11 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public void ValidateAndThrow(PlayCardStep step)
         {
+            if (step.IsPlayerOne != step.Data.PlayerOneTurn)
+            {
+                throw new NotPlayerTurnException(step.Data, step.IsPlayerOne);
+            }
+
             var cards = step.IsPlayerOne ? step.Data.PlayerOneCards : step.Data.PlayerTwoCards;
 
             if (cards.All(x => x.Name != step.Card))
