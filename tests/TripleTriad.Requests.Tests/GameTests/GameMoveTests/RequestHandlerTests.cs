@@ -8,6 +8,7 @@ using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Enums;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -313,6 +314,75 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Throw<GameInvalidPlayerException>()
                 .Where(x => x.GameId == GameId
                     && x.PlayerId == playerId);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Should_throw_inner_exception_CardNotInHandException(bool isPlayerOne)
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<PlayCardStep>()))
+                .Throws(new CardNotInHandException(new GameData(), isPlayerOne, Card));
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(request, default);
+
+            act.Should()
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<CardNotInHandException>()
+                .Where(e => e.IsPlayerOne == isPlayerOne
+                    && e.Card == Card);
+        }
+
+        [Fact]
+        public async Task Should_throw_inner_exception_TileUnavailableException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<PlayCardStep>()))
+                .Throws(new TileUnavailableException(new GameData(), TileId));
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(request, default);
+
+            act.Should()
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<TileUnavailableException>()
+                .Where(e => e.TileId == TileId);
         }
     }
 }

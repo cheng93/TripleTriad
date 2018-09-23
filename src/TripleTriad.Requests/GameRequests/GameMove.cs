@@ -95,7 +95,7 @@ namespace TripleTriad.Requests.GameRequests
                 }
                 catch (GameDataException ex)
                 {
-
+                    throw new GameDataInvalidException(request.GameId, ex);
                 }
 
                 game.Data = gameData.ToJson();
