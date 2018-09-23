@@ -1,5 +1,6 @@
 using System.Linq;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 
 namespace TripleTriad.Logic.Steps.Handlers
@@ -17,6 +18,14 @@ namespace TripleTriad.Logic.Steps.Handlers
             step.Log("Board initialized.");
 
             return step.Data;
+        }
+
+        public void ValidateAndThrow(CreateBoardStep step)
+        {
+            if (step.Data.Tiles != null)
+            {
+                throw new BoardExistsException(step.Data);
+            }
         }
     }
 }

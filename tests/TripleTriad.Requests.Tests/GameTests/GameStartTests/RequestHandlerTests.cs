@@ -7,6 +7,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -33,7 +34,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             AllCards.Quistis
         };
 
-        private Game CreateGame(GameData gameData = null)
+        private static Game CreateGame(GameData gameData = null)
         {
             gameData = gameData ?? new GameData
             {
@@ -51,7 +52,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             };
         }
 
-        private Player CreatePlayer(Guid playerId, bool isPlayerOne) => new Player()
+        private static Player CreatePlayer(Guid playerId, bool isPlayerOne) => new Player()
         {
             PlayerId = playerId,
             DisplayName = $"Guest{(isPlayerOne ? "1" : "2")}"
@@ -68,9 +69,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         public async Task Should_return_correct_starting_player_id(bool coinTossIsHeads, Guid expectedStartingPlayerId)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
-            var playerOne = this.CreatePlayer(PlayerOneId, true);
-            var playerTwo = this.CreatePlayer(PlayerTwoId, false);
+            var game = CreateGame();
+            var playerOne = CreatePlayer(PlayerOneId, true);
+            var playerTwo = CreatePlayer(PlayerTwoId, false);
 
             await context.Players.AddAsync(playerOne);
             await context.Players.AddAsync(playerTwo);
@@ -139,7 +140,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         public async Task Should_throw_GameHasInvalidStatusException(GameStatus status)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame();
+            var game = CreateGame();
             game.Status = status;
 
             await context.Games.AddAsync(game);
@@ -169,27 +170,24 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
         public static IEnumerable<object[]> PlayersStillSelecting = new[]
         {
-            new object[]{null, null, true, true},
-            new object[]{Cards, null, false, true},
-            new object[]{null, Cards, true, false}
+            new object[]{true, true},
+            new object[]{false, true},
+            new object[]{true, false}
         };
 
         [Theory]
         [MemberData(nameof(PlayersStillSelecting))]
-        public async Task Should_throw_PlayerStillSelectingCardsException(
-            IEnumerable<Card> playerOneCards,
-            IEnumerable<Card> playerTwoCards,
+        public async Task Should_throw_inner_exception_PlayerStillSelectingCardsException(
             bool playerOneStillSelecting,
             bool playerTwoStillSelecting)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = this.CreateGame(new GameData
-            {
-                PlayerOneCards = playerOneCards,
-                PlayerTwoCards = playerTwoCards
-            });
-            game.Status = GameStatus.ChooseCards;
+            var game = CreateGame();
+            var playerOne = CreatePlayer(PlayerOneId, true);
+            var playerTwo = CreatePlayer(PlayerTwoId, false);
 
+            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(playerTwo);
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
@@ -199,6 +197,12 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             };
 
             var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
+            coinTossHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<CoinTossStep>()))
+                .Throws(new PlayerStillSelectingCardsException(
+                    new GameData(),
+                    playerOneStillSelecting,
+                    playerTwoStillSelecting));
 
             var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
 
@@ -210,10 +214,52 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             Func<Task> act = async () => await subject.Handle(command, default);
 
             act.Should()
-                .Throw<PlayerStillSelectingCardsException>()
-                .Where(e => e.GameId == GameId
-                    && e.PlayerOne == playerOneStillSelecting
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<PlayerStillSelectingCardsException>()
+                .Where(e => e.PlayerOne == playerOneStillSelecting
                     && e.PlayerTwo == playerTwoStillSelecting);
+        }
+
+        [Fact]
+        public async Task Should_throw_inner_exception_BoardExistsException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+            var playerOne = CreatePlayer(PlayerOneId, true);
+            var playerTwo = CreatePlayer(PlayerTwoId, false);
+
+            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(playerTwo);
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var command = new GameStart.Request()
+            {
+                GameId = game.GameId
+            };
+
+            var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
+            coinTossHandler
+                .Setup(x => x.Run(It.IsAny<CoinTossStep>()))
+                .Returns(new GameData());
+
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+            createBoardHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<CreateBoardStep>()))
+                .Throws(new BoardExistsException(new GameData()));
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should()
+                .Throw<GameDataInvalidException>()
+                .Where(e => e.GameId == GameId)
+                .WithInnerException<BoardExistsException>();
         }
     }
 }

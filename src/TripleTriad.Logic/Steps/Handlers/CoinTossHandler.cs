@@ -1,5 +1,7 @@
+using System.Linq;
 using TripleTriad.Logic.CoinToss;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 
 namespace TripleTriad.Logic.Steps.Handlers
@@ -26,5 +28,19 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         private static string LogTemplate(string playerDisplay)
             => $"{playerDisplay} won the coin toss.";
+
+        public void ValidateAndThrow(CoinTossStep step)
+        {
+            var playerOneNotSelectedCards = (step.Data.PlayerOneCards?.Count() ?? 0) != 5;
+            var playerTwoNotSelectedCards = (step.Data.PlayerTwoCards?.Count() ?? 0) != 5;
+
+            if (playerOneNotSelectedCards || playerTwoNotSelectedCards)
+            {
+                throw new PlayerStillSelectingCardsException(
+                    step.Data,
+                    playerOneNotSelectedCards,
+                    playerTwoNotSelectedCards);
+            }
+        }
     }
 }

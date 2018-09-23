@@ -7,6 +7,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -231,21 +232,13 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Should_throw_CardsAlreadySelectedException(bool isPlayerOne)
+        public async Task Should_throw_inner_exception_CardsAlreadySelectedException(bool isPlayerOne)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
 
-            var gameData = new GameData();
-            if (isPlayerOne)
-            {
-                gameData.PlayerOneCards = Cards;
-            }
-            else
-            {
-                gameData.PlayerTwoCards = Cards;
-            }
-            var game = CreateGame(gameData);
-
+            await context.Players.AddAsync(CreatePlayer(true));
+            await context.Players.AddAsync(CreatePlayer(false));
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
@@ -258,15 +251,18 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             };
 
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
+            selectCardsHandler
+                .Setup(x => x.ValidateAndThrow(It.IsAny<SelectCardsStep>()))
+                .Throws(new CardsAlreadySelectedException(new GameData(), isPlayerOne));
 
             var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
             act.Should()
-                .Throw<CardsAlreadySelectedException>()
-                .Where(x => x.GameId == GameId
-                    && x.PlayerId == playerId);
+                .Throw<GameDataInvalidException>()
+                .Where(x => x.GameId == GameId)
+                .WithInnerException<CardsAlreadySelectedException>();
         }
     }
 }

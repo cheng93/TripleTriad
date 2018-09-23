@@ -7,6 +7,15 @@ namespace TripleTriad.Logic.Extensions
 {
     public static class StepHandlerExtensions
     {
+        public static GameData ValidateAndRun<TStep>(
+            this IStepHandler<TStep> handler,
+            TStep step)
+            where TStep : Step
+        {
+            handler.ValidateAndThrow(step);
+            return handler.Run(step);
+        }
+
         public static GameData Run(
             this IStepHandler<CoinTossStep> handler,
             GameData data,
@@ -14,7 +23,7 @@ namespace TripleTriad.Logic.Extensions
             string playerTwoDisplay)
         {
             var step = new CoinTossStep(data, playerOneDispay, playerTwoDisplay);
-            return handler.Run(step);
+            return handler.ValidateAndRun(step);
         }
 
         public static GameData Run(
@@ -25,7 +34,7 @@ namespace TripleTriad.Logic.Extensions
             IEnumerable<string> cards)
         {
             var step = new SelectCardsStep(data, isPlayerOne, playerDisplay, cards);
-            return handler.Run(step);
+            return handler.ValidateAndRun(step);
         }
 
         public static GameData Run(
@@ -33,7 +42,7 @@ namespace TripleTriad.Logic.Extensions
             GameData data)
         {
             var step = new CreateBoardStep(data);
-            return handler.Run(step);
+            return handler.ValidateAndRun(step);
         }
     }
 }

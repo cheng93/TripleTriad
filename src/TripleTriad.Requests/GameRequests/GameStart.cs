@@ -11,6 +11,7 @@ using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.CoinToss;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -68,21 +69,16 @@ namespace TripleTriad.Requests.GameRequests
                 }
 
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
-
-                var playerOneNotSelectedCards = (gameData.PlayerOneCards?.Count() ?? 0) != 5;
-                var playerTwoNotSelectedCards = (gameData.PlayerTwoCards?.Count() ?? 0) != 5;
-
-                if (playerOneNotSelectedCards || playerTwoNotSelectedCards)
+                try
                 {
-                    throw new PlayerStillSelectingCardsException(
-                        request.GameId,
-                        playerOneNotSelectedCards,
-                        playerTwoNotSelectedCards);
+
+                    gameData = this.coinTossHandler.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
+                    gameData = this.createBoardHandler.Run(gameData);
                 }
-
-
-                gameData = this.coinTossHandler.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
-                gameData = this.createBoardHandler.Run(gameData);
+                catch (GameDataException ex)
+                {
+                    throw new GameDataInvalidException(request.GameId, ex);
+                }
 
                 game.Status = GameStatus.InProgress;
                 game.Data = gameData.ToJson();

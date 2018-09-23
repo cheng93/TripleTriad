@@ -11,6 +11,7 @@ using TripleTriad.Data;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
@@ -92,15 +93,17 @@ namespace TripleTriad.Requests.GameRequests
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
 
                 var isPlayerOne = game.PlayerOneId == request.PlayerId;
-                var cards = isPlayerOne ? gameData.PlayerOneCards : gameData.PlayerTwoCards;
 
-                if ((cards?.Count() ?? 0) == 5)
+                try
                 {
-                    throw new CardsAlreadySelectedException(request.GameId, request.PlayerId);
+                    var displayName = isPlayerOne ? game.PlayerOne.DisplayName : game.PlayerTwo.DisplayName;
+                    gameData = this.selectCardHandler.Run(gameData, isPlayerOne, displayName, request.Cards);
+                }
+                catch (GameDataException ex)
+                {
+                    throw new GameDataInvalidException(request.GameId, ex);
                 }
 
-                var displayName = isPlayerOne ? game.PlayerOne.DisplayName : game.PlayerTwo.DisplayName;
-                gameData = this.selectCardHandler.Run(gameData, isPlayerOne, displayName, request.Cards);
                 game.Data = gameData.ToJson();
 
                 await this.context.SaveChangesAsync(cancellationToken);
