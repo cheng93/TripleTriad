@@ -91,7 +91,15 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                     PlayerOneTurn = coinTossIsHeads
                 });
 
-            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+            createBoardHandler
+                .Setup(x => x.Run(It.IsAny<CreateBoardStep>()))
+                .Returns<CreateBoardStep>(x => x.Data);
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
 
             var response = await subject.Handle(command, default);
 
@@ -110,7 +118,12 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -139,7 +152,12 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -182,7 +200,12 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var coinTossHandler = new Mock<IStepHandler<CoinTossStep>>();
 
-            var subject = new GameStart.RequestHandler(context, coinTossHandler.Object);
+            var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
+
+            var subject = new GameStart.RequestHandler(
+                context,
+                coinTossHandler.Object,
+                createBoardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 

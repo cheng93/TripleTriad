@@ -9,14 +9,14 @@ using Newtonsoft.Json;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
-using TripleTriad.Logic.Entities;
-using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.CoinToss;
-using TripleTriad.Requests.Exceptions;
-using TripleTriad.Requests.Pipeline;
+using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Extensions;
+using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
+using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
+using TripleTriad.Requests.Pipeline;
 
 namespace TripleTriad.Requests.GameRequests
 {
@@ -46,13 +46,16 @@ namespace TripleTriad.Requests.GameRequests
         {
             private readonly TripleTriadDbContext context;
             private readonly IStepHandler<CoinTossStep> coinTossHandler;
+            private readonly IStepHandler<CreateBoardStep> createBoardHandler;
 
             public RequestHandler(
                 TripleTriadDbContext context,
-                IStepHandler<CoinTossStep> coinTossHandler)
+                IStepHandler<CoinTossStep> coinTossHandler,
+                IStepHandler<CreateBoardStep> createBoardHandler)
             {
                 this.context = context;
                 this.coinTossHandler = coinTossHandler;
+                this.createBoardHandler = createBoardHandler;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -79,6 +82,7 @@ namespace TripleTriad.Requests.GameRequests
 
 
                 gameData = this.coinTossHandler.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
+                gameData = this.createBoardHandler.Run(gameData);
 
                 game.Status = GameStatus.InProgress;
                 game.Data = gameData.ToJson();
