@@ -228,5 +228,36 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
             tile.Card.Should().BeEquivalentTo(Card, options => options.ExcludingMissingMembers());
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Should_have_player_assigned_to_card(bool isPlayerOne)
+        {
+            var gameData = CreateData(isPlayerOne);
+            var gameResultService = new Mock<IGameResultService>();
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
+            var tile = data.Tiles.Single(x => x.TileId == 0);
+
+            tile.Card.IsPlayerOne.Should().Be(isPlayerOne);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Should_switch_turn(bool isPlayerOne)
+        {
+            var gameData = CreateData(isPlayerOne);
+            var gameResultService = new Mock<IGameResultService>();
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
+
+            data.PlayerOneTurn.Should().Be(!isPlayerOne);
+        }
     }
 }

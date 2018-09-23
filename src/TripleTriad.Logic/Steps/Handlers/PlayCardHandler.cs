@@ -52,6 +52,7 @@ namespace TripleTriad.Logic.Steps.Handlers
             }
 
             var player = $"Player {(step.IsPlayerOne ? "One" : "Two")}";
+            step.Data.PlayerOneTurn = !step.Data.PlayerOneTurn;
             step.Log($"{player} played {step.Card} on tile {step.TileId}");
 
             var result = this.gameResultService.GetResult(step.Data);
