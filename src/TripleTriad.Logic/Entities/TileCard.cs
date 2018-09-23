@@ -10,6 +10,11 @@ namespace TripleTriad.Logic.Entities
             IsPlayerOne = isPlayerOne;
         }
 
+        public TileCard(bool isPlayerOne, string name, int level, Rank rank, Element? element = null)
+            : this(new Card(name, level, rank, element), isPlayerOne)
+        {
+        }
+
         public bool IsPlayerOne { get; }
     }
 }
