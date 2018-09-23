@@ -27,8 +27,18 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public GameData Run(PlayCardStep step)
         {
-            var player = $"Player {(step.IsPlayerOne ? "One" : "Two")}";
+            if (step.IsPlayerOne)
+            {
+                step.Data.PlayerOneCards = step.Data.PlayerOneCards
+                    .Where(x => x.Name != step.Card);
+            }
+            else
+            {
+                step.Data.PlayerTwoCards = step.Data.PlayerTwoCards
+                    .Where(x => x.Name != step.Card);
+            }
 
+            var player = $"Player {(step.IsPlayerOne ? "One" : "Two")}";
             step.Log($"{player} played {step.Card} on tile {step.TileId}");
 
             var result = this.gameResultService.GetResult(step.Data);
