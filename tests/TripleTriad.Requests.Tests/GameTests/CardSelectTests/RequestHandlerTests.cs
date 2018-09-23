@@ -133,6 +133,28 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             response.QueueTask.Should().Be(queueTask);
         }
 
+        [Fact]
+        public void Should_throw_GameNotFoundException()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+
+            var command = new CardSelect.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId
+            };
+
+            var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
+
+            var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
+
+            Func<Task> act = async () => await subject.Handle(command, default);
+
+            act.Should()
+                .Throw<GameNotFoundException>()
+                .Where(e => e.GameId == GameId);
+        }
+
         public static IEnumerable<object[]> InvalidStatuses()
         {
             var badStatuses = new[]
