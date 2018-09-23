@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Extensions;
+using TripleTriad.Logic.Steps;
+using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.Tests.Utils;
@@ -21,6 +25,29 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
         private static readonly int GameId = 2;
         private static readonly string Card = AllCards.Seifer.Name;
         private static readonly int TileId = 3;
+
+        private static Tile CreateTile(bool isPlayerOne = true)
+            => new Tile
+            {
+                TileId = TileId,
+                Card = new TileCard(AllCards.Seifer, isPlayerOne)
+            };
+
+        private static readonly IEnumerable<Card> PlayerOneCards = new[]
+        {
+            AllCards.Squall,
+            AllCards.Zell,
+            AllCards.Edea,
+            AllCards.Rinoa
+        };
+
+        private static readonly IEnumerable<Card> PlayerTwoCards = new[]
+        {
+            AllCards.Laguna,
+            AllCards.Kiros,
+            AllCards.Ward,
+            AllCards.Quistis
+        };
 
         private static Game CreateGame(GameData gameData = null)
         {
@@ -37,6 +64,155 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
         }
 
         [Fact]
+        public async Task Should_return_game_id()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
+                .Returns(new GameData
+                {
+                    PlayerOneCards = PlayerOneCards,
+                    PlayerTwoCards = PlayerTwoCards,
+                    Tiles = new[] { CreateTile() }
+                });
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            var response = await subject.Handle(request, default);
+
+            response.GameId.Should().Be(GameId);
+        }
+
+        [Fact]
+        public async Task Should_return_board()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var tile = CreateTile();
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
+                .Returns(new GameData
+                {
+                    PlayerOneCards = PlayerOneCards,
+                    PlayerTwoCards = PlayerTwoCards,
+                    Tiles = new[] { tile }
+                });
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            var response = await subject.Handle(request, default);
+
+            response.Tiles.Should().BeEquivalentTo(new[] { tile });
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Should_return_correct_cards(bool isPlayerOne)
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
+                .Returns(new GameData
+                {
+                    PlayerOneCards = PlayerOneCards,
+                    PlayerTwoCards = PlayerTwoCards,
+                    Tiles = new[] { CreateTile(isPlayerOne) }
+                });
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            var response = await subject.Handle(request, default);
+
+            var cards = isPlayerOne ? PlayerOneCards : PlayerTwoCards;
+
+            response.Cards.Should().BeEquivalentTo(cards);
+        }
+
+        [Theory]
+        [InlineData(Result.PlayerOneWin)]
+        [InlineData(Result.PlayerTwoWin)]
+        [InlineData(Result.Tie)]
+        [InlineData(Result.Cancelled)]
+        public async Task Should_set_status_to_finshed(Result result)
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+            var game = CreateGame();
+
+            await context.Games.AddAsync(game);
+            await context.SaveChangesAsync();
+
+            var request = new GameMove.Request()
+            {
+                GameId = GameId,
+                PlayerId = PlayerOneId,
+                Card = Card,
+                TileId = TileId
+            };
+
+            var tile = CreateTile();
+
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
+            playCardHandler
+                .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
+                .Returns(new GameData
+                {
+                    PlayerOneCards = PlayerOneCards,
+                    PlayerTwoCards = PlayerTwoCards,
+                    Tiles = new[] { tile },
+                    Result = result
+                });
+
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
+
+            var response = await subject.Handle(request, default);
+
+            game.Status.Should().Be(GameStatus.Finished);
+        }
+
+        [Fact]
         public void Should_throw_GameNotFoundException()
         {
             var context = DbContextFactory.CreateTripleTriadContext();
@@ -49,10 +225,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 TileId = TileId
             };
 
-            // var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
 
-            // var subject = new GameMove.RequestHandler(context, selectCardsHandler.Object);
-            var subject = new GameMove.RequestHandler(context);
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -97,10 +272,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 TileId = TileId
             };
 
-            // var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
 
-            // var subject = new GameMove.RequestHandler(context, selectCardsHandler.Object);
-            var subject = new GameMove.RequestHandler(context);
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 
@@ -129,10 +303,9 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 TileId = TileId
             };
 
-            // var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
+            var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
 
-            // var subject = new GameMove.RequestHandler(context, selectCardsHandler.Object);
-            var subject = new GameMove.RequestHandler(context);
+            var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
 
             Func<Task> act = async () => await subject.Handle(command, default);
 

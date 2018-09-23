@@ -44,5 +44,16 @@ namespace TripleTriad.Logic.Extensions
             var step = new CreateBoardStep(data);
             return handler.ValidateAndRun(step);
         }
+
+        public static GameData Run(
+            this IStepHandler<PlayCardStep> handler,
+            GameData data,
+            string card,
+            int tileId,
+            bool isPlayerOne)
+        {
+            var step = new PlayCardStep(data, card, tileId, isPlayerOne);
+            return handler.ValidateAndRun(step);
+        }
     }
 }

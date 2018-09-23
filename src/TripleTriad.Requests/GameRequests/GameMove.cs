@@ -5,10 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using Newtonsoft.Json;
 using TripleTriad.Data;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Exceptions;
+using TripleTriad.Logic.Extensions;
+using TripleTriad.Logic.Steps;
+using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
@@ -53,10 +58,14 @@ namespace TripleTriad.Requests.GameRequests
         public class RequestHandler : IRequestHandler<Request, Response>
         {
             private readonly TripleTriadDbContext context;
+            private readonly IStepHandler<PlayCardStep> playCardHandler;
 
-            public RequestHandler(TripleTriadDbContext context)
+            public RequestHandler(
+                TripleTriadDbContext context,
+                IStepHandler<PlayCardStep> playCardHandler)
             {
                 this.context = context;
+                this.playCardHandler = playCardHandler;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -74,9 +83,34 @@ namespace TripleTriad.Requests.GameRequests
                     throw new GameHasInvalidStatusException(request.GameId, game.Status);
                 }
 
-                return new Response
+                var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
+                var isPlayerOne = request.PlayerId == game.PlayerOneId;
+                try
+                {
+                    gameData = this.playCardHandler.Run(
+                        gameData,
+                        request.Card,
+                        request.TileId,
+                        isPlayerOne);
+                }
+                catch (GameDataException ex)
                 {
 
+                }
+
+                game.Data = gameData.ToJson();
+                if (gameData.Result != null)
+                {
+                    game.Status = GameStatus.Finished;
+                }
+
+                await this.context.SaveChangesAsync(cancellationToken);
+
+                return new Response
+                {
+                    GameId = request.GameId,
+                    Cards = isPlayerOne ? gameData.PlayerOneCards : gameData.PlayerTwoCards,
+                    Tiles = gameData.Tiles
                 };
             }
         }
