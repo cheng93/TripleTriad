@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Exceptions;
@@ -27,6 +28,18 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public GameData Run(PlayCardStep step)
         {
+            var card = AllCards.List.Single(x => x.Name == step.Card);
+
+            step.Data.Tiles = step.Data.Tiles
+                .Select(x =>
+                {
+                    if (x.TileId == step.TileId)
+                    {
+                        x.Card = new TileCard(card, step.IsPlayerOne);
+                    }
+                    return x;
+                });
+
             if (step.IsPlayerOne)
             {
                 step.Data.PlayerOneCards = step.Data.PlayerOneCards

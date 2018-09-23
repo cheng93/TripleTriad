@@ -48,7 +48,12 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         private static GameData CreateData() => new GameData
         {
             PlayerOneCards = PlayerOneCards,
-            PlayerTwoCards = PlayerTwoCards
+            PlayerTwoCards = PlayerTwoCards,
+            Tiles = Enumerable.Range(0, 9)
+                .Select(x => new Tile
+                {
+                    TileId = x
+                })
         };
 
         [Theory]
@@ -179,6 +184,30 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 .Where(x => x.Name != Card.Name);
 
             cards.Should().BeEquivalentTo(expectedCards);
+        }
+
+        public static IEnumerable<object[]> AssignCard()
+        {
+            for (var i = 0; i < 9; i++)
+            {
+                yield return new object[] { true, i };
+                yield return new object[] { false, i };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(TileIds))]
+        public void Should_assign_card_to_tile(int tileId)
+        {
+            var gameData = CreateData();
+            var gameResultService = new Mock<IGameResultService>();
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(gameData, tileId: tileId));
+            var tile = data.Tiles.Single(x => x.TileId == tileId);
+
+            tile.Card.Should().BeEquivalentTo(Card, options => options.ExcludingMissingMembers());
         }
     }
 }
