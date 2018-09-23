@@ -154,7 +154,6 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             }
         };
 
-
         [Theory]
         [MemberData(nameof(GoodRequests))]
         public void Good_request_should_not_throw(CardSelect.Request request)
