@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using TripleTriad.Logic.Cards;
 using TripleTriad.Logic.Entities;
+using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Exceptions;
+using TripleTriad.Logic.GameResult;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using Xunit;
@@ -24,6 +27,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         public static string CardName = AllCards.Squall.Name;
 
+        private static PlayCardStep CreateStep(bool isPlayerOne = true, int tileId = 0, GameData gameData = null)
+            => new PlayCardStep(gameData ?? new GameData(), CardName, tileId, isPlayerOne);
+
         private static PlayCardStep CreateStep(bool isPlayerOne = true, GameData gameData = null)
             => new PlayCardStep(gameData ?? new GameData(), CardName, 0, isPlayerOne);
 
@@ -41,7 +47,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 PlayerTwoCards = Cards
             };
 
-            var subject = new PlayCardHandler();
+            var gameResultService = new Mock<IGameResultService>();
+            var subject = new PlayCardHandler(gameResultService.Object);
+
             Action act = () => subject.ValidateAndThrow(CreateStep(isPlayerOne, gameData));
 
             act.Should()
@@ -77,13 +85,74 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                     })
             };
 
-            var subject = new PlayCardHandler();
+            var gameResultService = new Mock<IGameResultService>();
+            var subject = new PlayCardHandler(gameResultService.Object);
+
             Action act = () => subject.ValidateAndThrow(CreateStep(tileId, gameData));
 
             act.Should()
                 .Throw<TileUnavailableException>()
                 .Where(x => x.GameData == gameData
                     && x.TileId == tileId);
+        }
+
+        [Theory]
+        [InlineData(Result.PlayerOneWin, "Player One has won.")]
+        [InlineData(Result.PlayerTwoWin, "Player Two has won.")]
+        [InlineData(Result.Tie, "Their was a tie.")]
+        public void Should_have_correct_result_log_entry(Result result, string message)
+        {
+            var gameData = new GameData();
+            var gameResultService = new Mock<IGameResultService>();
+            gameResultService
+                .Setup(x => x.GetResult(It.IsAny<GameData>()))
+                .Returns(result);
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(true, 0, gameData: gameData));
+            data.Log.Last().Should().Be(message);
+        }
+
+        [Theory]
+        [InlineData(Result.PlayerOneWin)]
+        [InlineData(Result.PlayerTwoWin)]
+        [InlineData(Result.Tie)]
+        [InlineData(null)]
+        public void Should_have_correct_result(Result? result)
+        {
+            var gameData = new GameData();
+            var gameResultService = new Mock<IGameResultService>();
+            gameResultService
+                .Setup(x => x.GetResult(It.IsAny<GameData>()))
+                .Returns(result);
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(true, gameData: gameData));
+            data.Result.Should().Be(result);
+        }
+
+        public static IEnumerable<object[]> Moves()
+        {
+            for (var i = 0; i < 9; i++)
+            {
+                yield return new object[] { true, i, $"Player One played {CardName} on tile {i}" };
+                yield return new object[] { false, i, $"Player Two played {CardName} on tile {i}" };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(Moves))]
+        public void Should_have_correct_move_log_entry(bool isPlayerOne, int tileId, string message)
+        {
+            var gameData = new GameData();
+            var gameResultService = new Mock<IGameResultService>();
+
+            var subject = new PlayCardHandler(gameResultService.Object);
+
+            var data = subject.Run(CreateStep(isPlayerOne, tileId, gameData));
+            data.Log.Should().Contain(message);
         }
     }
 }
