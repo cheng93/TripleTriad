@@ -15,5 +15,7 @@ namespace TripleTriad.Logic.Entities
         public IEnumerable<Card> PlayerOneCards { get; set; }
 
         public IEnumerable<Card> PlayerTwoCards { get; set; }
+
+        public IEnumerable<Tile> Tiles { get; set; }
     }
 }
