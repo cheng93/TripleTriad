@@ -65,7 +65,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 
             var game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
-            var expectedGameData = "{'Log':[]}";
+            var expectedGameData = "{'Log':[],'Rules':[]}";
 
             JToken.DeepEquals(JObject.Parse(game.Data), JObject.Parse(expectedGameData))
                 .Should()

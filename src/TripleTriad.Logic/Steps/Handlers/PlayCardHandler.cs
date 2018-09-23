@@ -6,6 +6,7 @@ using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.Extensions;
 using TripleTriad.Logic.GameResult;
+using TripleTriad.Logic.Rules;
 
 namespace TripleTriad.Logic.Steps.Handlers
 {
@@ -20,10 +21,14 @@ namespace TripleTriad.Logic.Steps.Handlers
             };
 
         private readonly IGameResultService gameResultService;
+        private readonly IRuleStrategyFactory ruleStrategyFactory;
 
-        public PlayCardHandler(IGameResultService gameResultService)
+        public PlayCardHandler(
+            IGameResultService gameResultService,
+            IRuleStrategyFactory ruleStrategyFactory)
         {
             this.gameResultService = gameResultService;
+            this.ruleStrategyFactory = ruleStrategyFactory;
         }
 
         public GameData Run(PlayCardStep step)
@@ -39,6 +44,10 @@ namespace TripleTriad.Logic.Steps.Handlers
                     }
                     return x;
                 });
+
+            step.Data.Tiles = this.ruleStrategyFactory
+                .Create(step.Data.Rules)
+                .Apply(step.Data.Tiles, step.TileId);
 
             if (step.IsPlayerOne)
             {

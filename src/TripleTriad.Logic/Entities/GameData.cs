@@ -9,6 +9,8 @@ namespace TripleTriad.Logic.Entities
     {
         public ICollection<string> Log { get; set; } = new List<string>();
 
+        public IEnumerable<Rule> Rules { get; set; } = new List<Rule>();
+
         public bool? PlayerOneWonCoinToss { get; set; }
 
         public bool? PlayerOneTurn { get; set; }

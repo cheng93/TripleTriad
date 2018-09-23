@@ -8,6 +8,7 @@ using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Exceptions;
 using TripleTriad.Logic.GameResult;
+using TripleTriad.Logic.Rules;
 using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using Xunit;
@@ -57,6 +58,18 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 })
         };
 
+        private static IRuleStrategy CreateRuleStrategy()
+        {
+            var mock = new Mock<IRuleStrategy>();
+            mock
+                .Setup(x => x.Apply(
+                    It.IsAny<IEnumerable<Tile>>(),
+                    It.IsAny<int>()))
+                .Returns<IEnumerable<Tile>, int>((x, y) => x);
+
+            return mock.Object;
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -65,7 +78,10 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             var gameData = CreateData(!isPlayerOne);
 
             var gameResultService = new Mock<IGameResultService>();
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isPlayerOne: isPlayerOne, cardName: MissingCardName));
 
@@ -83,7 +99,10 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             var gameData = CreateData(isPlayerOne);
 
             var gameResultService = new Mock<IGameResultService>();
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isPlayerOne: isPlayerOne, cardName: MissingCardName));
 
@@ -118,7 +137,10 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 });
 
             var gameResultService = new Mock<IGameResultService>();
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             Action act = () => subject.ValidateAndThrow(CreateStep(gameData, tileId: tileId));
 
@@ -135,12 +157,20 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_have_correct_result_log_entry(Result result, string message)
         {
             var gameData = CreateData();
+
             var gameResultService = new Mock<IGameResultService>();
             gameResultService
                 .Setup(x => x.GetResult(It.IsAny<GameData>()))
                 .Returns(result);
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData));
             data.Log.Last().Should().Be(message);
@@ -154,12 +184,20 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_have_correct_result(Result? result)
         {
             var gameData = CreateData();
+
             var gameResultService = new Mock<IGameResultService>();
             gameResultService
                 .Setup(x => x.GetResult(It.IsAny<GameData>()))
                 .Returns(result);
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData));
             data.Result.Should().Be(result);
@@ -179,9 +217,17 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_have_correct_move_log_entry(bool isPlayerOne, int tileId, string message)
         {
             var gameData = CreateData(isPlayerOne);
+
             var gameResultService = new Mock<IGameResultService>();
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne, tileId: tileId));
             data.Log.Should().Contain(message);
@@ -193,9 +239,17 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_have_remove_card_from_hand(bool isPlayerOne)
         {
             var gameData = CreateData(isPlayerOne);
+
             var gameResultService = new Mock<IGameResultService>();
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
             var cards = isPlayerOne ? data.PlayerOneCards : data.PlayerTwoCards;
@@ -219,9 +273,17 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_assign_card_to_tile(int tileId)
         {
             var gameData = CreateData();
+
             var gameResultService = new Mock<IGameResultService>();
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, tileId: tileId));
             var tile = data.Tiles.Single(x => x.TileId == tileId);
@@ -235,9 +297,17 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_have_player_assigned_to_card(bool isPlayerOne)
         {
             var gameData = CreateData(isPlayerOne);
+
             var gameResultService = new Mock<IGameResultService>();
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
             var tile = data.Tiles.Single(x => x.TileId == 0);
@@ -251,13 +321,56 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public void Should_switch_turn(bool isPlayerOne)
         {
             var gameData = CreateData(isPlayerOne);
+
             var gameResultService = new Mock<IGameResultService>();
 
-            var subject = new PlayCardHandler(gameResultService.Object);
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(CreateRuleStrategy());
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
 
             data.PlayerOneTurn.Should().Be(!isPlayerOne);
+        }
+
+        [Fact]
+        public void Should_update_tiles_after_processing_rules()
+        {
+            var gameData = CreateData();
+
+            var gameResultService = new Mock<IGameResultService>();
+
+            var tiles = Enumerable.Range(0, 9)
+                .Select(x => new Tile
+                {
+                    TileId = x,
+                    Element = Element.Fire
+                });
+
+            var ruleStrategy = new Mock<IRuleStrategy>();
+            ruleStrategy
+                .Setup(x => x.Apply(
+                    It.IsAny<IEnumerable<Tile>>(),
+                    It.IsAny<int>()))
+                .Returns(tiles);
+
+            var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
+            ruleStrategyFactory
+                .Setup(x => x.Create(It.IsAny<IEnumerable<Rule>>()))
+                .Returns(ruleStrategy.Object);
+
+            var subject = new PlayCardHandler(
+                gameResultService.Object,
+                ruleStrategyFactory.Object);
+
+            var data = subject.Run(CreateStep(gameData));
+
+            data.Tiles.Should().BeEquivalentTo(tiles);
         }
     }
 }
