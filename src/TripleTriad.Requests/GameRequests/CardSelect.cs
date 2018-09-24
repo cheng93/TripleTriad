@@ -24,7 +24,7 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class CardSelect
     {
-        public class Response : IBackgroundQueueResponse
+        public class Response : IBackgroundQueueResponse, IGameResponse
         {
             public int GameId { get; set; }
 

@@ -17,12 +17,13 @@ using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameMove
     {
-        public class Response
+        public class Response : IGameResponse
         {
             public int GameId { get; set; }
 

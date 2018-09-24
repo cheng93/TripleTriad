@@ -10,12 +10,13 @@ using TripleTriad.Data.Enums;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameJoin
     {
-        public class Response
+        public class Response : IGameResponse
         {
             public int GameId { get; set; }
         }
