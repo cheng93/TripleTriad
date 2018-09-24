@@ -12,18 +12,15 @@ namespace TripleTriad.Requests.Pipeline
         bool QueueTask { get; set; }
     }
 
-    public abstract class BackgroundQueuePostProcessor<TRequest, TResponse, TQueueRequest, TQueueResponse>
+    public abstract class BackgroundQueuePostProcessor<TRequest, TResponse>
         : IRequestPostProcessor<TRequest, TResponse>
-        where TQueueRequest : IRequest<TQueueResponse>
         where TResponse : IBackgroundQueueResponse
     {
         private readonly IBackgroundTaskQueue queue;
-        private readonly IMediator mediator;
 
-        public BackgroundQueuePostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
+        public BackgroundQueuePostProcessor(IBackgroundTaskQueue queue)
         {
             this.queue = queue;
-            this.mediator = mediator;
         }
 
         public Task Process(TRequest request, TResponse response)
@@ -36,14 +33,6 @@ namespace TripleTriad.Requests.Pipeline
             return Task.CompletedTask;
         }
 
-        protected abstract TQueueRequest CreateQueueRequest(TRequest request, TResponse response);
-
-        private Func<CancellationToken, Task> CreateTask(TRequest request, TResponse response)
-        {
-            return (cancellationToken)
-                => this.mediator.Send(
-                    this.CreateQueueRequest(request, response),
-                    cancellationToken);
-        }
+        protected abstract Func<CancellationToken, Task> CreateTask(TRequest request, TResponse response);
     }
 }
