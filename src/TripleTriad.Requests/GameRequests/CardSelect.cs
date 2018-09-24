@@ -18,6 +18,7 @@ using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.GameRequests
 {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using MediatR.Pipeline;
 using TripleTriad.BackgroundTasks.Queue;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.Pipeline
 {
