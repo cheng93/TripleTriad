@@ -13,6 +13,7 @@
     <ProjectReference Include="..\TripleTriad.Data\TripleTriad.Data.csproj" />
     <ProjectReference Include="..\TripleTriad.Logic\TripleTriad.Logic.csproj" />
     <ProjectReference Include="..\TripleTriad.BackgroundTasks\TripleTriad.BackgroundTasks.csproj" />
+    <ProjectReference Include="..\TripleTriad.SignalR\TripleTriad.SignalR.csproj" />
   </ItemGroup>
 
 </Project>

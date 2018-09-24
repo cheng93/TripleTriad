@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TripleTriad.Requests.GuestPlayerRequests;
+using TripleTriad.BackgroundTasks;
 using TripleTriad.Data;
+using TripleTriad.Requests.GuestPlayerRequests;
+using TripleTriad.SignalR;
 using TripleTriad.Web.Filters;
 using TripleTriad.Web.IoC;
-using TripleTriad.BackgroundTasks;
 
 namespace TripleTriad.Web
 {
@@ -34,6 +35,7 @@ namespace TripleTriad.Web
                     options.Cookie.Name = ".TripleTriad.Session";
                 })
                 .AddHostedService<QueueHostedService>()
+                .AddSignalR().Services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -56,6 +58,11 @@ namespace TripleTriad.Web
             }
 
             app.UseSession();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<GameHub>("/gameHub");
+            });
 
             app.UseMvc();
         }
