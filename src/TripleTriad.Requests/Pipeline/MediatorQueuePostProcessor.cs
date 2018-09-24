@@ -22,12 +22,14 @@ namespace TripleTriad.Requests.Pipeline
 
         protected abstract TQueueRequest CreateQueueRequest(TRequest request, TResponse response);
 
-        protected override Func<CancellationToken, Task> CreateTask(TRequest request, TResponse response)
+        protected override Task<Func<CancellationToken, Task>> CreateTaskAsync(TRequest request, TResponse response)
         {
-            return (cancellationToken)
+            Func<CancellationToken, Task> task = (cancellationToken)
                 => this.mediator.Send(
                     this.CreateQueueRequest(request, response),
                     cancellationToken);
+
+            return Task.FromResult(task);
         }
     }
 }

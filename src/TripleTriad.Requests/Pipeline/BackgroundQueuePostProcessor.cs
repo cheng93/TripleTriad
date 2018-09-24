@@ -23,16 +23,15 @@ namespace TripleTriad.Requests.Pipeline
             this.queue = queue;
         }
 
-        public Task Process(TRequest request, TResponse response)
+        public async Task Process(TRequest request, TResponse response)
         {
             if (response.QueueTask)
             {
-                var task = this.CreateTask(request, response);
+                var task = await this.CreateTaskAsync(request, response);
                 this.queue.QueueBackgroundTask(task);
             }
-            return Task.CompletedTask;
         }
 
-        protected abstract Func<CancellationToken, Task> CreateTask(TRequest request, TResponse response);
+        protected abstract Task<Func<CancellationToken, Task>> CreateTaskAsync(TRequest request, TResponse response);
     }
 }
