@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
@@ -19,16 +21,19 @@ using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
+using TripleTriad.SignalR;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameStart
     {
-        public class Response : IGameResponse
+        public class Response : IGameResponse, IBackgroundQueueResponse
         {
             public int GameId { get; set; }
 
             public Guid StartPlayerId { get; set; }
+
+            public bool QueueTask => true;
         }
 
         public class Request : IRequest<Response>
@@ -93,6 +98,17 @@ namespace TripleTriad.Requests.GameRequests
                         ? game.PlayerOneId
                         : game.PlayerTwoId.Value
                 };
+            }
+        }
+
+        public class GameHubQueue : GameHubQueuePostProcessor<Request, Response>
+        {
+            public GameHubQueue(
+                IBackgroundTaskQueue queue,
+                TripleTriadDbContext dbContext,
+                IHubContext<GameHub, IGameClient> hubContext)
+                : base(queue, dbContext, hubContext)
+            {
             }
         }
     }
