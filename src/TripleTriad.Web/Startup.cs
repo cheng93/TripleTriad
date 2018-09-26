@@ -35,7 +35,9 @@ namespace TripleTriad.Web
                     options.Cookie.Name = ".TripleTriad.Session";
                 })
                 .AddHostedService<QueueHostedService>()
-                .AddSignalR().Services
+                .AddSignalR()
+                .AddMessagePackProtocol()
+                .Services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
