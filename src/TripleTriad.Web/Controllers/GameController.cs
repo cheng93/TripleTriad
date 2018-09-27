@@ -2,17 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TripleTriad.Requests.GameRequests;
-using TripleTriad.Web.Filters;
+using TripleTriad.Web.Constants;
+using TripleTriad.Web.Extensions;
 using TripleTriad.Web.Models;
 
 namespace TripleTriad.Web.Controllers
 {
     [ApiController]
     [Route("api/game")]
-    [ServiceFilter(typeof(EnsurePlayerIdExistsActionFilter))]
+    [Authorize(Policy = TokenConstants.TripleTriadScheme)]
     public class GameController : Controller
     {
         private readonly IMediator mediator;
@@ -25,7 +27,7 @@ namespace TripleTriad.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index()
         {
-            var playerId = new Guid(base.HttpContext.Session.GetString("PlayerId"));
+            var playerId = base.HttpContext.GetPlayerId();
             var request = new GameCreate.Request()
             {
                 PlayerId = playerId
@@ -37,7 +39,7 @@ namespace TripleTriad.Web.Controllers
         [HttpPut("{gameId}/join")]
         public async Task<IActionResult> Join(int gameId)
         {
-            var playerId = new Guid(base.HttpContext.Session.GetString("PlayerId"));
+            var playerId = base.HttpContext.GetPlayerId();
             var request = new GameJoin.Request()
             {
                 GameId = gameId,
@@ -50,7 +52,7 @@ namespace TripleTriad.Web.Controllers
         [HttpPut("{gameId}/selectcards")]
         public async Task<IActionResult> SelectCards(int gameId, [FromBody]IEnumerable<string> cards)
         {
-            var playerId = new Guid(base.HttpContext.Session.GetString("PlayerId"));
+            var playerId = base.HttpContext.GetPlayerId();
             var request = new CardSelect.Request()
             {
                 GameId = gameId,
@@ -64,7 +66,7 @@ namespace TripleTriad.Web.Controllers
         [HttpPut("{gameId}/move")]
         public async Task<IActionResult> Move(int gameId, [FromBody]GameMoveModel move)
         {
-            var playerId = new Guid(base.HttpContext.Session.GetString("PlayerId"));
+            var playerId = base.HttpContext.GetPlayerId();
             var request = new GameMove.Request()
             {
                 GameId = gameId,

@@ -15,7 +15,7 @@ using TripleTriad.BackgroundTasks;
 using TripleTriad.Data;
 using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.SignalR;
-using TripleTriad.Web.Filters;
+using TripleTriad.Web.Extensions;
 using TripleTriad.Web.IoC;
 
 namespace TripleTriad.Web
@@ -38,6 +38,7 @@ namespace TripleTriad.Web
                 .AddSignalR()
                 .AddMessagePackProtocol()
                 .Services
+                .AddAppAuthentication()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -45,7 +46,6 @@ namespace TripleTriad.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new MainModule());
-            builder.RegisterModule(new WebModule());
             builder.RegisterModule(new BackgroundTasksModule());
             builder.RegisterModule(new LogicModule());
             builder.RegisterModule(new MediatorModule());
@@ -58,8 +58,6 @@ namespace TripleTriad.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSession();
 
             app.UseSignalR(routes =>
             {
