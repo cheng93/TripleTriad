@@ -119,9 +119,9 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameStartBackgroundQueue : MediatorQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
+        public class GameStartPostProcessor : MediatorQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
         {
-            public GameStartBackgroundQueue(IBackgroundTaskQueue queue, IMediator mediator)
+            public GameStartPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
                 : base(queue, mediator)
             {
             }

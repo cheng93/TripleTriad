@@ -5,6 +5,6 @@ namespace TripleTriad.SignalR
 {
     public interface IGameClient
     {
-        Task Send(GameDataMessage message, CancellationToken cancellationToken);
+        Task Send(GameDataMessage message);
     }
 }
