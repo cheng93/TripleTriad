@@ -5,11 +5,12 @@ using MediatR;
 using Moq;
 using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.HubRequests;
 using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
-    public class GameNotifyGroupPostProcessorTests
+    public class GameHubGroupNotifyPostProcessorTests
     {
         private static readonly int GameId = 2;
 
@@ -33,7 +34,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             var mediator = new Mock<IMediator>();
             mediator
                 .Setup(x => x.Send(
-                    It.IsAny<GameNotifyGroup.Request>(),
+                    It.IsAny<GameHubGroupNotify.Request>(),
                     It.IsAny<CancellationToken>()))
                 .Verifiable();
 
@@ -45,14 +46,14 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var backgroundTaskQueue = CreateQueue();
 
-            var subject = new GameStart.GameNotifyGroupPostProcessor(
+            var subject = new GameStart.GameHubGroupNotifyPostProcessor(
                 backgroundTaskQueue.Object,
                 mediator.Object);
 
             await subject.Process(request, response);
 
             mediator.Verify(x => x.Send(
-                It.Is<GameNotifyGroup.Request>(y => y.GameId == GameId),
+                It.Is<GameHubGroupNotify.Request>(y => y.GameId == GameId),
                 It.IsAny<CancellationToken>()));
         }
     }

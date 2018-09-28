@@ -10,9 +10,9 @@ using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 using TripleTriad.SignalR;
 
-namespace TripleTriad.Requests.GameRequests
+namespace TripleTriad.Requests.HubRequests
 {
-    public static class GameNotify
+    public static class GameHubNotify
     {
         public class Request : IRequest
         {

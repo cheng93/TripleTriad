@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.SignalR;
 using TripleTriad.Data;
 using TripleTriad.SignalR;
 
-namespace TripleTriad.Requests.GameRequests
+namespace TripleTriad.Requests.HubRequests
 {
-    public static class GameNotifyGroup
+    public static class GameHubGroupNotify
     {
-        public class Request : GameNotify.Request
+        public class Request : GameHubNotify.Request
         {
         }
 
-        public class RequestHandler : GameNotify.RequestHandler<Request>
+        public class RequestHandler : GameHubNotify.RequestHandler<Request>
         {
             private readonly IHubContext<GameHub, IGameClient> hubContext;
 

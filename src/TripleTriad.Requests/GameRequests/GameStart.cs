@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TripleTriad.BackgroundTasks.Queue;
@@ -19,6 +18,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
+using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 using TripleTriad.SignalR;
@@ -101,15 +101,15 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameNotifyGroupPostProcessor : MediatorQueuePostProcessor<Request, Response, GameNotifyGroup.Request, Unit>
+        public class GameHubGroupNotifyPostProcessor : MediatorQueuePostProcessor<Request, Response, GameHubGroupNotify.Request, Unit>
         {
-            public GameNotifyGroupPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
+            public GameHubGroupNotifyPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
                 : base(queue, mediator)
             {
             }
 
-            protected override GameNotifyGroup.Request CreateQueueRequest(Request request, Response response)
-                => new GameNotifyGroup.Request
+            protected override GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+                => new GameHubGroupNotify.Request
                 {
                     GameId = response.GameId
                 };
