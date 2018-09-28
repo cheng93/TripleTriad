@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Newtonsoft.Json;
+using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Cards;
@@ -16,6 +17,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
+using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -23,13 +25,15 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameMove
     {
-        public class Response : IGameResponse
+        public class Response : IGameResponse, IBackgroundQueueResponse
         {
             public int GameId { get; set; }
 
             public IEnumerable<Tile> Tiles { get; set; }
 
             public IEnumerable<Card> Cards { get; set; }
+
+            public bool QueueTask => true;
         }
 
         public class Request : IRequest<Response>
@@ -114,6 +118,20 @@ namespace TripleTriad.Requests.GameRequests
                     Tiles = gameData.Tiles
                 };
             }
+        }
+
+        public class GameHubGroupNotifyPostProcessor : MediatorQueuePostProcessor<Request, Response, GameHubGroupNotify.Request, Unit>
+        {
+            public GameHubGroupNotifyPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
+                : base(queue, mediator)
+            {
+            }
+
+            protected override GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+                => new GameHubGroupNotify.Request
+                {
+                    GameId = response.GameId
+                };
         }
     }
 }
