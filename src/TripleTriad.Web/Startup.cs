@@ -30,10 +30,6 @@ namespace TripleTriad.Web
                 //.AddMediatR(typeof(GuestPlayerCreate).GetTypeInfo().Assembly) //https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection/issues/29
                 .AddDbContextPool<TripleTriadDbContext>(options
                     => options.UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
-                .AddSession(options =>
-                {
-                    options.Cookie.Name = ".TripleTriad.Session";
-                })
                 .AddHostedService<QueueHostedService>()
                 .AddSignalR()
                 .AddMessagePackProtocol()
