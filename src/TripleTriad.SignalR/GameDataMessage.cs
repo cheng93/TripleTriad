@@ -6,6 +6,8 @@ namespace TripleTriad.SignalR
 {
     public class GameDataMessage
     {
+        public int GameId { get; set; }
+
         public ICollection<string> Log { get; set; } = new List<string>();
 
         public bool? PlayerOneTurn { get; set; }

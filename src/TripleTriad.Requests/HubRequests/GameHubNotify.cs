@@ -4,6 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TripleTriad.Data;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Requests.Pipeline;
@@ -45,6 +46,7 @@ namespace TripleTriad.Requests.HubRequests
 
                 var message = new GameDataMessage
                 {
+                    GameId = request.GameId,
                     Log = gameData.Log,
                     PlayerOneTurn = gameData.PlayerOneTurn,
                     PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
@@ -52,7 +54,9 @@ namespace TripleTriad.Requests.HubRequests
                     Result = gameData.Result
                 };
 
-                await this.GetGameClient(request).Send(message);
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.Converters.Add(new StringEnumConverter());
+                await this.GetGameClient(request).Send(JsonConvert.SerializeObject(message, serializerSettings));
 
                 return new Unit();
             }

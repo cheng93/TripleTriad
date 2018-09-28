@@ -40,10 +40,12 @@ namespace Triple.Triad.SignalR.Client
                 return Task.CompletedTask;
             };
 
-            connection.On<GameDataMessage>("Send", (message) =>
+            connection.On<string>("Send", (message) =>
             {
-                Console.WriteLine(JsonConvert.SerializeObject(message));
+                Console.WriteLine(message);
             });
+
+            await connection.InvokeAsync("JoinGroup", "62");
 
             while (true) { }
         }
