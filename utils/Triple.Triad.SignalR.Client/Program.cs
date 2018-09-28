@@ -45,7 +45,9 @@ namespace Triple.Triad.SignalR.Client
                 Console.WriteLine(message);
             });
 
-            await connection.InvokeAsync("JoinGroup", "62");
+            Console.WriteLine("Enter gameId");
+            var gameId = int.Parse(Console.ReadLine());
+            await connection.InvokeAsync("ViewGame", gameId);
 
             while (true) { }
         }
