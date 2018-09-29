@@ -13,7 +13,7 @@ using TripleTriad.Web.Models;
 namespace TripleTriad.Web.Controllers
 {
     [ApiController]
-    [Route("api/game")]
+    [Route("api/games")]
     [Authorize(Policy = TokenConstants.TripleTriadScheme)]
     public class GameController : Controller
     {
@@ -25,6 +25,7 @@ namespace TripleTriad.Web.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         public async Task<IActionResult> List()
         {
             var request = new GameList.Request();
