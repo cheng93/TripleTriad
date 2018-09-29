@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TripleTriad.Requests.GuestPlayerRequests;
-using TripleTriad.Data;
-using TripleTriad.Web.Filters;
-using TripleTriad.Web.IoC;
 using TripleTriad.BackgroundTasks;
+using TripleTriad.Data;
+using TripleTriad.Requests.GuestPlayerRequests;
+using TripleTriad.SignalR;
+using TripleTriad.Web.Extensions;
+using TripleTriad.Web.IoC;
 
 namespace TripleTriad.Web
 {
@@ -29,11 +30,11 @@ namespace TripleTriad.Web
                 //.AddMediatR(typeof(GuestPlayerCreate).GetTypeInfo().Assembly) //https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection/issues/29
                 .AddDbContextPool<TripleTriadDbContext>(options
                     => options.UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
-                .AddSession(options =>
-                {
-                    options.Cookie.Name = ".TripleTriad.Session";
-                })
                 .AddHostedService<QueueHostedService>()
+                .AddSignalR()
+                .AddMessagePackProtocol()
+                .Services
+                .AddAppAuthentication()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -41,7 +42,6 @@ namespace TripleTriad.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new MainModule());
-            builder.RegisterModule(new WebModule());
             builder.RegisterModule(new BackgroundTasksModule());
             builder.RegisterModule(new LogicModule());
             builder.RegisterModule(new MediatorModule());
@@ -55,7 +55,14 @@ namespace TripleTriad.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSession();
+            app.UseStaticFiles();
+
+            app.UseDefaultFiles();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<GameHub>("/gameHub");
+            });
 
             app.UseMvc();
         }

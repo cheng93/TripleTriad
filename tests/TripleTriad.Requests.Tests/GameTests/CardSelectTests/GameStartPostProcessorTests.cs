@@ -33,7 +33,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                     await x(default);
                 });
 
-            var subject = new CardSelect.GameStartBackgroundQueue(
+            var subject = new CardSelect.GameStartPostProcessor(
                 backgroundTaskQueue.Object,
                 mediator.Object);
 
@@ -67,7 +67,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                     It.IsAny<Func<CancellationToken, Task>>()))
                 .Verifiable();
 
-            var subject = new CardSelect.GameStartBackgroundQueue(
+            var subject = new CardSelect.GameStartPostProcessor(
                 backgroundTaskQueue.Object,
                 mediator.Object);
 

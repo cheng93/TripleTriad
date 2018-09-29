@@ -18,12 +18,13 @@ using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class CardSelect
     {
-        public class Response : IBackgroundQueueResponse
+        public class Response : IBackgroundQueueResponse, IGameResponse
         {
             public int GameId { get; set; }
 
@@ -118,9 +119,9 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameStartBackgroundQueue : BackgroundQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
+        public class GameStartPostProcessor : MediatorQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
         {
-            public GameStartBackgroundQueue(IBackgroundTaskQueue queue, IMediator mediator)
+            public GameStartPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
                 : base(queue, mediator)
             {
             }

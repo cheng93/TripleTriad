@@ -6,6 +6,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
@@ -17,17 +18,22 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
+using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Pipeline;
+using TripleTriad.Requests.Response;
+using TripleTriad.SignalR;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameStart
     {
-        public class Response
+        public class Response : IGameResponse, IBackgroundQueueResponse
         {
             public int GameId { get; set; }
 
             public Guid StartPlayerId { get; set; }
+
+            public bool QueueTask => true;
         }
 
         public class Request : IRequest<Response>
@@ -93,6 +99,20 @@ namespace TripleTriad.Requests.GameRequests
                         : game.PlayerTwoId.Value
                 };
             }
+        }
+
+        public class GameHubGroupNotify : MediatorQueuePostProcessor<Request, Response, HubRequests.GameHubGroupNotify.Request, Unit>
+        {
+            public GameHubGroupNotify(IBackgroundTaskQueue queue, IMediator mediator)
+                : base(queue, mediator)
+            {
+            }
+
+            protected override HubRequests.GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+                => new HubRequests.GameHubGroupNotify.Request
+                {
+                    GameId = response.GameId
+                };
         }
     }
 }

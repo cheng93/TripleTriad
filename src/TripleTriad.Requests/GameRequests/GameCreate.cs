@@ -9,12 +9,13 @@ using TripleTriad.Data;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Data.Entities;
 using TripleTriad.Logic.Extensions;
+using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameCreate
     {
-        public class Response
+        public class Response : IGameResponse
         {
             public int GameId { get; set; }
         }

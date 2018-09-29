@@ -7,12 +7,14 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.0.100" />
     <PackageReference Include="MediatR" Version="5.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TripleTriad.Data\TripleTriad.Data.csproj" />
     <ProjectReference Include="..\TripleTriad.Logic\TripleTriad.Logic.csproj" />
     <ProjectReference Include="..\TripleTriad.BackgroundTasks\TripleTriad.BackgroundTasks.csproj" />
+    <ProjectReference Include="..\TripleTriad.SignalR\TripleTriad.SignalR.csproj" />
   </ItemGroup>
 
 </Project>
