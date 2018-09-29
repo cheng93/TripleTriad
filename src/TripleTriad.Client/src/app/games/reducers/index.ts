@@ -2,10 +2,15 @@ import {
   ActionReducer,
   ActionReducerMap,
   createFeatureSelector,
-  createSelector,
-  MetaReducer
+  createSelector
 } from '@ngrx/store';
 
-export interface GameState {}
+import * as fromLobby from './game-lobby.reducer';
 
-export const reducers: ActionReducerMap<GameState> = {};
+export interface GameState {
+  lobby: fromLobby.State;
+}
+
+export const reducers: ActionReducerMap<GameState> = {
+  lobby: fromLobby.reducer
+};
