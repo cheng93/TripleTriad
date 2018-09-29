@@ -24,8 +24,17 @@ namespace TripleTriad.Web.Controllers
             this.mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index()
+        [HttpGet("")]
+        public async Task<IActionResult> List()
+        {
+            var request = new GameList.Request();
+
+            var response = await this.mediator.Send(request, default);
+            return base.Json(new { GameIds = response.GameIds });
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Create()
         {
             var playerId = base.HttpContext.GetPlayerId();
             var request = new GameCreate.Request()
