@@ -1,11 +1,25 @@
 import { Action } from '@ngrx/store';
 
 export enum GameLobbyActionTypes {
-  LoadGameLobbys = '[GameLobby] Load GameLobbys'
+  LoadGames = '[GameLobby] Load Games',
+  LoadGamesSuccess = '[GameLobby] Load Games Success',
+  LoadGamesFail = '[GameLobby] Load Games Fail'
 }
 
-export class LoadGameLobbys implements Action {
-  readonly type = GameLobbyActionTypes.LoadGameLobbys;
+export class LoadGames implements Action {
+  readonly type = GameLobbyActionTypes.LoadGames;
 }
 
-export type GameLobbyActions = LoadGameLobbys;
+export class LoadGamesSuccess implements Action {
+  readonly type = GameLobbyActionTypes.LoadGamesSuccess;
+
+  constructor(public payload: number[]) {}
+}
+
+export class LoadGamesFail implements Action {
+  readonly type = GameLobbyActionTypes.LoadGamesFail;
+
+  constructor(public payload: any) {}
+}
+
+export type GameLobbyActions = LoadGames | LoadGamesSuccess | LoadGamesFail;
