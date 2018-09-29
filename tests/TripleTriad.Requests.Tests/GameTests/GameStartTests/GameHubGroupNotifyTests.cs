@@ -10,7 +10,7 @@ using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
-    public class GameHubGroupNotifyPostProcessorTests
+    public class GameHubGroupNotifyTests
     {
         private static readonly int GameId = 2;
 
@@ -46,7 +46,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var backgroundTaskQueue = CreateQueue();
 
-            var subject = new GameStart.GameHubGroupNotifyPostProcessor(
+            var subject = new GameStart.GameHubGroupNotify(
                 backgroundTaskQueue.Object,
                 mediator.Object);
 

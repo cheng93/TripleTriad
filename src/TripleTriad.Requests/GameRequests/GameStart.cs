@@ -101,15 +101,15 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameHubGroupNotifyPostProcessor : MediatorQueuePostProcessor<Request, Response, GameHubGroupNotify.Request, Unit>
+        public class GameHubGroupNotify : MediatorQueuePostProcessor<Request, Response, HubRequests.GameHubGroupNotify.Request, Unit>
         {
-            public GameHubGroupNotifyPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
+            public GameHubGroupNotify(IBackgroundTaskQueue queue, IMediator mediator)
                 : base(queue, mediator)
             {
             }
 
-            protected override GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
-                => new GameHubGroupNotify.Request
+            protected override HubRequests.GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+                => new HubRequests.GameHubGroupNotify.Request
                 {
                     GameId = response.GameId
                 };
