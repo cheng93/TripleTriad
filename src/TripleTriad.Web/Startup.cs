@@ -55,6 +55,10 @@ namespace TripleTriad.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
+            app.UseDefaultFiles();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<GameHub>("/gameHub");
