@@ -122,5 +122,8 @@
       }
     }
   },
-  "defaultProject": "TripleTriad"
+  "defaultProject": "TripleTriad",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
