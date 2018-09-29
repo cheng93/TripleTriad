@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -16,6 +17,7 @@ import { CoreModule } from './core/core.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    NoopAnimationsModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true }),
     StoreModule.forRoot(reducers, { metaReducers }),

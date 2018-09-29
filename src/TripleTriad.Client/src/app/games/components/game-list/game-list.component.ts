@@ -8,4 +8,6 @@ import { Component, OnInit, Input } from '@angular/core';
 export class GameListComponent {
   @Input()
   gameIds: number[];
+
+  columns: string[] = ['gameId', 'rules', 'actions'];
 }
