@@ -8,16 +8,31 @@ export interface State {
   gameIds: number[];
   loading: boolean;
   loaded: boolean;
+  creating: boolean;
+  created: boolean;
 }
 
 export const initialState: State = {
   gameIds: [],
   loading: false,
-  loaded: false
+  loaded: false,
+  creating: false,
+  created: false
 };
 
 export function reducer(state = initialState, action: GameLobbyActions): State {
   switch (action.type) {
+    case GameLobbyActionTypes.CreateGame:
+      return {
+        ...state,
+        creating: true
+      };
+    case GameLobbyActionTypes.CreateGameSuccess:
+      return {
+        ...state,
+        creating: false,
+        created: true
+      };
     case GameLobbyActionTypes.LoadGames:
       return {
         ...state,
@@ -25,7 +40,8 @@ export function reducer(state = initialState, action: GameLobbyActions): State {
       };
     case GameLobbyActionTypes.LoadGamesSuccess:
       return {
-        gameIds: action.payload,
+        ...state,
+        gameIds: <number[]>action.payload,
         loading: false,
         loaded: true
       };

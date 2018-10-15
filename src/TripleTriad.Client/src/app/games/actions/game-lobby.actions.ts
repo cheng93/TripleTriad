@@ -1,9 +1,28 @@
 import { Action } from '@ngrx/store';
 
 export enum GameLobbyActionTypes {
+  CreateGame = '[GameLobby] Create Game',
+  CreateGameSuccess = '[GameLobby] Create Game Success',
+  CreateGameFail = '[GameLobby] Create Game Fail',
   LoadGames = '[GameLobby] Load Games',
   LoadGamesSuccess = '[GameLobby] Load Games Success',
   LoadGamesFail = '[GameLobby] Load Games Fail'
+}
+
+export class CreateGame implements Action {
+  readonly type = GameLobbyActionTypes.CreateGame;
+}
+
+export class CreateGameSuccess implements Action {
+  readonly type = GameLobbyActionTypes.CreateGameSuccess;
+
+  constructor(public payload: number) {}
+}
+
+export class CreateGameFail implements Action {
+  readonly type = GameLobbyActionTypes.CreateGameFail;
+
+  constructor(public payload: any) {}
 }
 
 export class LoadGames implements Action {
@@ -22,4 +41,10 @@ export class LoadGamesFail implements Action {
   constructor(public payload: any) {}
 }
 
-export type GameLobbyActions = LoadGames | LoadGamesSuccess | LoadGamesFail;
+export type GameLobbyActions =
+  | LoadGames
+  | LoadGamesSuccess
+  | LoadGamesFail
+  | CreateGame
+  | CreateGameSuccess
+  | CreateGameFail;
