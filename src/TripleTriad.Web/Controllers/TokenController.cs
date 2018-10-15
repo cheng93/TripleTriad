@@ -22,7 +22,7 @@ namespace TripleTriad.Web.Controllers
             this.mediator = mediator;
         }
 
-        [HttpGet("generate")]
+        [HttpPost("generate")]
         public async Task<IActionResult> Generate()
         {
             Claim claim;
