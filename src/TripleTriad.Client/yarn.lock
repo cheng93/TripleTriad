@@ -208,6 +208,11 @@
   dependencies:
     tslib "^1.9.0"
 
+"@aspnet/signalr@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@aspnet/signalr/-/signalr-1.0.4.tgz#ab685e59152539e4a49c5c71bb767ce25e7d4900"
+  integrity sha512-q7HMlTZPkZCa/0UclsXvEyqNirpjRfRuwhjEeADD1i6pqe0Yx5OwuCO7+Xsc6MNKR8vE1C9MyxnSj0SecvUbTA==
+
 "@material/animation@^0.39.0":
   version "0.39.0"
   resolved "https://registry.yarnpkg.com/@material/animation/-/animation-0.39.0.tgz#d3d503c9f87ac1193dc4a5b0cccfaedb39478439"
