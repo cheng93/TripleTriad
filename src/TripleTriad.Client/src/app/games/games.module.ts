@@ -10,6 +10,7 @@ import { GameLobbyService } from './services/game-lobby.service';
 import { GameListComponent } from './components/game-list/game-list.component';
 import { GameLobbyEffects } from './effects/game-lobby.effects';
 import { MatTableModule } from '@angular/material';
+import { GameRoomComponent } from './containers/game-room/game-room.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,6 @@ import { MatTableModule } from '@angular/material';
     MatTableModule
   ],
   providers: [GameLobbyService],
-  declarations: [GameLobbyComponent, GameListComponent]
+  declarations: [GameLobbyComponent, GameListComponent, GameRoomComponent]
 })
 export class GamesModule {}
