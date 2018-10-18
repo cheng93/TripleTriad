@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TripleTriad.Data;
+using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
@@ -47,12 +48,17 @@ namespace TripleTriad.Requests.HubRequests
                 var message = new GameDataMessage
                 {
                     GameId = request.GameId,
-                    Log = gameData.Log,
-                    PlayerOneTurn = gameData.PlayerOneTurn,
-                    PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
-                    Tiles = gameData.Tiles,
-                    Result = gameData.Result
+                    Status = game.Status.ToString()
                 };
+
+                if (game.Status == GameStatus.InProgress || game.Status == GameStatus.Finished)
+                {
+                    message.Log = gameData.Log;
+                    message.PlayerOneTurn = gameData.PlayerOneTurn;
+                    message.PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss;
+                    message.Tiles = gameData.Tiles;
+                    message.Result = gameData.Result;
+                }
 
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.Converters.Add(new StringEnumConverter());
