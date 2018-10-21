@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.HubRequests;
 using TripleTriad.Web.Constants;
 using TripleTriad.Web.Extensions;
 using TripleTriad.Web.Models;
@@ -86,6 +87,19 @@ namespace TripleTriad.Web.Controllers
             };
             var response = await this.mediator.Send(request, default);
             return base.Json(new { GameId = response.GameId, Cards = response.Cards, Tiles = response.Tiles });
+        }
+
+        [HttpPut("{gameId}/view")]
+        public async Task<IActionResult> View(int gameId)
+        {
+            var playerId = base.HttpContext.GetPlayerId();
+            var request = new GameHubUserNotify.Request()
+            {
+                GameId = gameId,
+                UserId = playerId.ToString()
+            };
+            var response = await this.mediator.Send(request, default);
+            return base.Ok();
         }
     }
 }
