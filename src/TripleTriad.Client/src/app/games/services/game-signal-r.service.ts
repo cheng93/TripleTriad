@@ -7,9 +7,11 @@ import { HubConnectionBuilder, HubConnection, LogLevel } from '@aspnet/signalr';
 export class GameSignalRService {
   constructor() {}
 
-  connect() {
+  connect(accessToken: string) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('/gameHub')
+      .withUrl('/gameHub', {
+        accessTokenFactory: () => accessToken
+      })
       .configureLogging(LogLevel.Information)
       .build();
 

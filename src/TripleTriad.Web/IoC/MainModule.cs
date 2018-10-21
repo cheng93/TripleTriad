@@ -1,6 +1,7 @@
 using System.Reflection;
 using Autofac;
 using TripleTriad.Logic.CoinToss;
+using TripleTriad.SignalR;
 
 namespace TripleTriad.Web.IoC
 {
@@ -12,6 +13,7 @@ namespace TripleTriad.Web.IoC
             {
                 ThisAssembly, // Web
                 typeof(ICoinTossService).GetTypeInfo().Assembly, //Logic
+                typeof(PlayerIdUserProvider).GetTypeInfo().Assembly, //SignalR
             };
 
             builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();

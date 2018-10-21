@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.HubRequests;
-using TripleTriad.Web.Constants;
+using TripleTriad.SignalR.Constants;
 using TripleTriad.Web.Extensions;
 using TripleTriad.Web.Models;
 
@@ -15,7 +15,7 @@ namespace TripleTriad.Web.Controllers
 {
     [ApiController]
     [Route("api/games")]
-    [Authorize(Policy = TokenConstants.TripleTriadScheme)]
+    [Authorize(Policy = AuthConstants.TripleTriadScheme)]
     public class GameController : Controller
     {
         private readonly IMediator mediator;
