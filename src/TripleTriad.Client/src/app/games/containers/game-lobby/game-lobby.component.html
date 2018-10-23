@@ -1,0 +1,6 @@
+<h1>Lobby</h1>
+<button (click)="createGame()" class="mdc-button mdc-button--raised">Create</button>
+<app-game-list 
+    [gameIds]="gameIds$ | async"
+    (join)="joinGame($event)">
+</app-game-list>
