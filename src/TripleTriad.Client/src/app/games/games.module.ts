@@ -12,16 +12,18 @@ import { GameLobbyEffects } from './effects/game-lobby.effects';
 import { MatTableModule } from '@angular/material';
 import { GameRoomComponent } from './containers/game-room/game-room.component';
 import { GameSignalRService } from './services/game-signal-r.service';
+import { GameRoomService } from './services/game-room.service';
+import { GameRoomEffects } from './effects/game-room.effects';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('games', fromGames.reducers),
-    EffectsModule.forFeature([GameLobbyEffects]),
+    EffectsModule.forFeature([GameLobbyEffects, GameRoomEffects]),
     MatTableModule
   ],
-  providers: [GameLobbyService, GameSignalRService],
+  providers: [GameLobbyService, GameSignalRService, GameRoomService],
   declarations: [GameLobbyComponent, GameListComponent, GameRoomComponent]
 })
 export class GamesModule {}

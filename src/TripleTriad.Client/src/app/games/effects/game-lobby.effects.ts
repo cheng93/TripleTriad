@@ -29,7 +29,6 @@ export class GameLobbyEffects {
   createGameSuccess$ = this.actions$.pipe(
     ofType<CreateGameSuccess>(GameLobbyActionTypes.CreateGameSuccess),
     tap(action => {
-      console.log(action.payload);
       this.router.navigate([action.payload]);
     })
   );
