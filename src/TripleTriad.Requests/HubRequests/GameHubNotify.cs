@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using TripleTriad.Data;
 using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
@@ -61,6 +62,10 @@ namespace TripleTriad.Requests.HubRequests
                 }
 
                 var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
                 serializerSettings.Converters.Add(new StringEnumConverter());
                 await this.GetGameClient(request).Send(JsonConvert.SerializeObject(message, serializerSettings));
 
