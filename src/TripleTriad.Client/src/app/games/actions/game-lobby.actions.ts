@@ -6,7 +6,10 @@ export enum GameLobbyActionTypes {
   CreateGameFail = '[GameLobby] Create Game Fail',
   LoadGames = '[GameLobby] Load Games',
   LoadGamesSuccess = '[GameLobby] Load Games Success',
-  LoadGamesFail = '[GameLobby] Load Games Fail'
+  LoadGamesFail = '[GameLobby] Load Games Fail',
+  JoinGame = '[GameLobby] Join Game',
+  JoinGameSuccess = '[GameLobby] Join Game Success',
+  JoinGameFail = '[GameLobby] Join Game Fail'
 }
 
 export class CreateGame implements Action {
@@ -41,10 +44,31 @@ export class LoadGamesFail implements Action {
   constructor(public payload: any) {}
 }
 
+export class JoinGame implements Action {
+  readonly type = GameLobbyActionTypes.JoinGame;
+
+  constructor(public payload: number) {}
+}
+
+export class JoinGameSuccess implements Action {
+  readonly type = GameLobbyActionTypes.JoinGameSuccess;
+
+  constructor(public payload: number) {}
+}
+
+export class JoinGameFail implements Action {
+  readonly type = GameLobbyActionTypes.JoinGameFail;
+
+  constructor(public payload: any) {}
+}
+
 export type GameLobbyActions =
   | LoadGames
   | LoadGamesSuccess
   | LoadGamesFail
   | CreateGame
   | CreateGameSuccess
-  | CreateGameFail;
+  | CreateGameFail
+  | JoinGame
+  | JoinGameSuccess
+  | JoinGameFail;

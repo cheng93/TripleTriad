@@ -14,7 +14,7 @@
     <td mat-cell *matCellDef="let gameId">
       <div class="actions--buttons">
         <button disabled class="mdc-button mdc-button--raised">View</button>
-        <button class="mdc-button mdc-button--raised">Join</button>
+        <button (click)="join.emit(gameId)" class="mdc-button mdc-button--raised">Join</button>
       </div>
     </td>
   </ng-container>

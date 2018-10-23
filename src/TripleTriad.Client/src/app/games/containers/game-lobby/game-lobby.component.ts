@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as fromStore from '../../reducers';
-import { LoadGames, CreateGame } from '../../actions/game-lobby.actions';
+import {
+  LoadGames,
+  CreateGame,
+  JoinGame
+} from '../../actions/game-lobby.actions';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -22,5 +26,9 @@ export class GameLobbyComponent implements OnInit {
 
   createGame() {
     this.store.dispatch(new CreateGame());
+  }
+
+  joinGame(gameId: number) {
+    this.store.dispatch(new JoinGame(gameId));
   }
 }
