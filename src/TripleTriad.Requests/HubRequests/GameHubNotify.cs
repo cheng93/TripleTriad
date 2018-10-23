@@ -46,21 +46,49 @@ namespace TripleTriad.Requests.HubRequests
                 var game = await this.dbContext.Games.SingleAsync(x => x.GameId == request.GameId, cancellationToken);
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
 
-                var message = new GameDataMessage
+                var message = new
                 {
-                    GameId = request.GameId,
-                    Status = game.Status.ToString()
                 };
 
-                if (game.Status == GameStatus.InProgress || game.Status == GameStatus.Finished)
+                if (game.Status == GameStatus.InProgress)
                 {
-                    message.Log = gameData.Log;
-                    message.PlayerOneTurn = gameData.PlayerOneTurn;
-                    message.PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss;
-                    message.Tiles = gameData.Tiles;
-                    message.Result = gameData.Result;
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString(),
+                        Log = gameData.Log,
+                        PlayerOneTurn = gameData.PlayerOneTurn,
+                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                        Tiles = gameData.Tiles
+                    });
+                }
+                else if (game.Status == GameStatus.Finished)
+                {
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString(),
+                        Log = gameData.Log,
+                        PlayerOneTurn = gameData.PlayerOneTurn,
+                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                        Tiles = gameData.Tiles,
+                        Result = gameData.Result
+                    });
+                }
+                else
+                {
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString()
+                    });
                 }
 
+                return new Unit();
+            }
+
+            private async Task SendMessage(TRequest request, object message)
+            {
                 var serializerSettings = new JsonSerializerSettings();
                 serializerSettings.ContractResolver = new DefaultContractResolver
                 {
@@ -68,8 +96,6 @@ namespace TripleTriad.Requests.HubRequests
                 };
                 serializerSettings.Converters.Add(new StringEnumConverter());
                 await this.GetGameClient(request).Send(JsonConvert.SerializeObject(message, serializerSettings));
-
-                return new Unit();
             }
 
             protected abstract IGameClient GetGameClient(TRequest request);
