@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using TripleTriad.Web.Constants;
+using TripleTriad.SignalR.Constants;
 
 namespace TripleTriad.Web.Extensions
 {

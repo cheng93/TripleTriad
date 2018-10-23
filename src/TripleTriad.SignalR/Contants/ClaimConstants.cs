@@ -1,4 +1,4 @@
-namespace TripleTriad.Web.Constants
+namespace TripleTriad.SignalR.Constants
 {
     public class ClaimConstants
     {

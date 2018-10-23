@@ -36,7 +36,11 @@ namespace TripleTriad.Web
                 .Services
                 .AddAppAuthentication()
                 .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .Services.AddSpaStaticFiles(configuration =>
+                {
+                    configuration.RootPath = "../TripleTriad.Client/dist";
+                });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -56,8 +60,7 @@ namespace TripleTriad.Web
             }
 
             app.UseStaticFiles();
-
-            app.UseDefaultFiles();
+            app.UseSpaStaticFiles();
 
             app.UseSignalR(routes =>
             {
@@ -65,6 +68,16 @@ namespace TripleTriad.Web
             });
 
             app.UseMvc();
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "../TripleTriad.Client";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
+            });
         }
     }
 }

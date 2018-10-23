@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.Requests.TokenRequests;
-using TripleTriad.Web.Constants;
+using TripleTriad.SignalR.Constants;
 
 namespace TripleTriad.Web.Controllers
 {
@@ -22,7 +22,7 @@ namespace TripleTriad.Web.Controllers
             this.mediator = mediator;
         }
 
-        [HttpGet("generate")]
+        [HttpPost("generate")]
         public async Task<IActionResult> Generate()
         {
             Claim claim;

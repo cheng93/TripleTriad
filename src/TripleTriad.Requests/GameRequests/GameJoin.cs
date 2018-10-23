@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Data;
 using TripleTriad.Data.Entities;
 using TripleTriad.Data.Enums;
@@ -16,9 +17,11 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameJoin
     {
-        public class Response : IGameResponse
+        public class Response : IBackgroundQueueResponse, IGameResponse
         {
             public int GameId { get; set; }
+
+            public bool QueueTask => true;
         }
 
         public class Request : IRequest<Response>
@@ -73,6 +76,20 @@ namespace TripleTriad.Requests.GameRequests
                     GameId = game.GameId
                 };
             }
+        }
+
+        public class GameHubGroupNotify : MediatorQueuePostProcessor<Request, Response, HubRequests.GameHubGroupNotify.Request, Unit>
+        {
+            public GameHubGroupNotify(IBackgroundTaskQueue queue, IMediator mediator)
+                : base(queue, mediator)
+            {
+            }
+
+            protected override HubRequests.GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+                => new HubRequests.GameHubGroupNotify.Request
+                {
+                    GameId = response.GameId
+                };
         }
     }
 }

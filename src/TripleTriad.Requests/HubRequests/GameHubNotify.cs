@@ -5,7 +5,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using TripleTriad.Data;
+using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
@@ -44,21 +46,56 @@ namespace TripleTriad.Requests.HubRequests
                 var game = await this.dbContext.Games.SingleAsync(x => x.GameId == request.GameId, cancellationToken);
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
 
-                var message = new GameDataMessage
+                var message = new
                 {
-                    GameId = request.GameId,
-                    Log = gameData.Log,
-                    PlayerOneTurn = gameData.PlayerOneTurn,
-                    PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
-                    Tiles = gameData.Tiles,
-                    Result = gameData.Result
                 };
 
-                var serializerSettings = new JsonSerializerSettings();
-                serializerSettings.Converters.Add(new StringEnumConverter());
-                await this.GetGameClient(request).Send(JsonConvert.SerializeObject(message, serializerSettings));
+                if (game.Status == GameStatus.InProgress)
+                {
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString(),
+                        Log = gameData.Log,
+                        PlayerOneTurn = gameData.PlayerOneTurn,
+                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                        Tiles = gameData.Tiles
+                    });
+                }
+                else if (game.Status == GameStatus.Finished)
+                {
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString(),
+                        Log = gameData.Log,
+                        PlayerOneTurn = gameData.PlayerOneTurn,
+                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                        Tiles = gameData.Tiles,
+                        Result = gameData.Result
+                    });
+                }
+                else
+                {
+                    await this.SendMessage(request, new
+                    {
+                        GameId = request.GameId,
+                        Status = game.Status.ToString()
+                    });
+                }
 
                 return new Unit();
+            }
+
+            private async Task SendMessage(TRequest request, object message)
+            {
+                var serializerSettings = new JsonSerializerSettings();
+                serializerSettings.ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                };
+                serializerSettings.Converters.Add(new StringEnumConverter());
+                await this.GetGameClient(request).Send(JsonConvert.SerializeObject(message, serializerSettings));
             }
 
             protected abstract IGameClient GetGameClient(TRequest request);

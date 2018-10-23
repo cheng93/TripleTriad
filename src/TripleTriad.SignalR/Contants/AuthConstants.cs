@@ -1,6 +1,6 @@
-namespace TripleTriad.Web.Constants
+namespace TripleTriad.SignalR.Constants
 {
-    public class TokenConstants
+    public class AuthConstants
     {
         public const string TripleTriadScheme = "TripleTriad";
     }

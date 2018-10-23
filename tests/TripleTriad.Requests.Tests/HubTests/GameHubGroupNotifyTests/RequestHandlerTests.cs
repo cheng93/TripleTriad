@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Moq;
 using Newtonsoft.Json;
 using TripleTriad.Data.Entities;
+using TripleTriad.Data.Enums;
 using TripleTriad.Logic.Entities;
 using TripleTriad.Logic.Enums;
 using TripleTriad.Logic.Extensions;
@@ -27,18 +28,69 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                 Result = Result.PlayerTwoWin
             };
 
-        private static Game CreateGame()
+        private static Game CreateGame(GameStatus gameStatus)
             => new Game
             {
                 GameId = GameId,
+                Status = gameStatus,
                 Data = CreateGameData().ToJson()
             };
 
-        [Fact]
-        public async Task Should_send_message()
+        public static IEnumerable<object[]> TestData = new[]
+        {
+            new object[]
+            {
+                GameStatus.Waiting,
+                new
+                {
+                    gameId = GameId,
+                    status = GameStatus.Waiting.ToString()
+                }
+            },
+            new object[]
+            {
+                GameStatus.ChooseCards,
+                new
+                {
+                    gameId = GameId,
+                    status = GameStatus.ChooseCards.ToString()
+                }
+            },
+            new object[]
+            {
+                GameStatus.InProgress,
+                new
+                {
+                    gameId = GameId,
+                    status = GameStatus.InProgress.ToString(),
+                    log = new string[] { },
+                    playerOneTurn = true,
+                    playerOneWonCoinToss = true,
+                    tiles = (IEnumerable<Tile>)null
+                }
+            },
+            new object[]
+            {
+                GameStatus.Finished,
+                new
+                {
+                    gameId = GameId,
+                    status = GameStatus.Finished.ToString(),
+                    log = new string[] { },
+                    playerOneTurn = true,
+                    playerOneWonCoinToss = true,
+                    tiles = (IEnumerable<Tile>)null,
+                    result = "PlayerTwoWin"
+                }
+            }
+        };
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public async Task Should_send_message(GameStatus status, object message)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = CreateGame();
+            var game = CreateGame(status);
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
@@ -69,25 +121,18 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
 
             await subject.Handle(request, default);
 
-            var message = JsonConvert.SerializeObject(new
-            {
-                GameId = GameId,
-                Log = new string[] { },
-                PlayerOneTurn = true,
-                PlayerOneWonCoinToss = true,
-                Tiles = (IEnumerable<Tile>)null,
-                Result = "PlayerTwoWin"
-            });
+            var serializedMessage = JsonConvert.SerializeObject(message);
 
             gameClient.Verify(x => x.Send(
-                It.Is<string>(y => y == message)));
+                It.Is<string>(y => y == serializedMessage)));
         }
 
-        [Fact]
-        public async Task Should_choose_correct_group()
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public async Task Should_choose_correct_group(GameStatus status, object message)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
-            var game = CreateGame();
+            var game = CreateGame(status);
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
@@ -118,15 +163,7 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
 
             await subject.Handle(request, default);
 
-            var message = JsonConvert.SerializeObject(new
-            {
-                GameId = GameId,
-                Log = new string[] { },
-                PlayerOneTurn = true,
-                PlayerOneWonCoinToss = true,
-                Tiles = (IEnumerable<Tile>)null,
-                Result = "PlayerTwoWin"
-            });
+            var serializedMessage = JsonConvert.SerializeObject(message);
 
             hubClients.Verify(x => x.Group(
                 It.Is<string>(y => y == GameId.ToString())));
