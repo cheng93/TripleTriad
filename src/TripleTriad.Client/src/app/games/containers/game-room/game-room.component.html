@@ -1,3 +1,7 @@
 <p>
   Status: {{status$ | async}}
 </p>
+
+<ng-container *ngIf="chooseCardStatus$ | async">
+  <app-select-cards></app-select-cards>
+</ng-container>
