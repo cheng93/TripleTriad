@@ -14,13 +14,14 @@ import { GameRoomComponent } from './containers/game-room/game-room.component';
 import { GameSignalRService } from './services/game-signal-r.service';
 import { GameRoomService } from './services/game-room.service';
 import { GameRoomEffects } from './effects/game-room.effects';
+import { SelectCardsEffects } from './effects/select-cards.effects';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('games', fromGames.reducers),
-    EffectsModule.forFeature([GameLobbyEffects, GameRoomEffects]),
+    EffectsModule.forFeature([GameLobbyEffects, GameRoomEffects, SelectCardsEffects]),
     MatTableModule
   ],
   providers: [GameLobbyService, GameSignalRService, GameRoomService],
