@@ -15,6 +15,7 @@ import { GameSignalRService } from './services/game-signal-r.service';
 import { GameRoomService } from './services/game-room.service';
 import { GameRoomEffects } from './effects/game-room.effects';
 import { SelectCardsEffects } from './effects/select-cards.effects';
+import { SelectCardsService } from './services/select-cards.service';
 
 @NgModule({
   imports: [
@@ -24,7 +25,9 @@ import { SelectCardsEffects } from './effects/select-cards.effects';
     EffectsModule.forFeature([GameLobbyEffects, GameRoomEffects, SelectCardsEffects]),
     MatTableModule
   ],
-  providers: [GameLobbyService, GameSignalRService, GameRoomService],
+  providers: [GameLobbyService, GameSignalRService, GameRoomService,
+    SelectCardsService
+  ],
   declarations: [GameLobbyComponent, GameListComponent, GameRoomComponent]
 })
 export class GamesModule {}

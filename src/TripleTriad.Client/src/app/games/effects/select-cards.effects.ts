@@ -17,7 +17,7 @@ export class SelectCardsEffects {
     ofType<LoadAllCards>(SelectCardsActionTypes.LoadAllCards),
     switchMap(action =>
       this.selectCardsService.getAllCards().pipe(
-        map(response => new LoadAllCardsSuccess(response.Cards)),
+        map(response => new LoadAllCardsSuccess(response.cards)),
         catchError(error => of(new LoadAllCardsFail(error)))
       )
     )
