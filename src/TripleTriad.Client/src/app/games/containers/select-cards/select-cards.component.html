@@ -1,3 +1,4 @@
-  <ul *ngIf="cards$ | async as cards">
-    <li *ngFor="let card of cards">{{card.name}}</li>
-  </ul>
+<app-card-list
+    [cards]="cards$ | async"
+    [selectedCards]="selectedCards$ | async">
+</app-card-list>

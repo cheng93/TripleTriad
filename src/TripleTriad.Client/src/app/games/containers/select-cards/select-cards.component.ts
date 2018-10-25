@@ -14,9 +14,12 @@ import { Card } from '../../models/card';
 export class SelectCardsComponent implements OnInit {
   constructor(private store: Store<fromStore.GamesState>) {
     this.cards$ = store.select(fromStore.getAllCards);
+    this.selectedCards$ = store.select(fromStore.getSelectedCards);
   }
 
   cards$: Observable<Card[]>;
+
+  selectedCards$: Observable<Card[]>;
 
   ngOnInit() {
     this.store
