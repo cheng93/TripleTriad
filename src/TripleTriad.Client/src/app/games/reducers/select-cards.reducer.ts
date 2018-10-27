@@ -42,6 +42,9 @@ export const getAllCards = (state: State) => state.allCards;
 
 export const getAllCardsLoaded = (state: State) => state.allCards.length != 0;
 
+export const getLevelCards = (state: State) =>
+  state.allCards.filter(x => x.level === state.cardPage + 1);
+
 export const getSelectedCards = (state: State) => state.selectedCards;
 
 export const getCardPage = (state: State) => state.cardPage;
