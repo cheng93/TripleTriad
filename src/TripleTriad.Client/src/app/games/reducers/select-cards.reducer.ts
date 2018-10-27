@@ -21,6 +21,12 @@ export function reducer(
   action: SelectCardsActions
 ): State {
   switch (action.type) {
+    case SelectCardsActionTypes.ChangePage: {
+      return {
+        ...state,
+        cardPage: action.payload
+      };
+    }
     case SelectCardsActionTypes.LoadAllCardsSuccess: {
       return {
         ...state,

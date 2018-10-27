@@ -2,9 +2,16 @@ import { Action } from '@ngrx/store';
 import { Card } from '../models/card';
 
 export enum SelectCardsActionTypes {
+  ChangePage = '[SelectCards] Change Page',
   LoadAllCards = '[SelectCards] Load All Cards',
   LoadAllCardsSuccess = '[SelectCards] Load All Cards Success',
   LoadAllCardsFail = '[SelectCards] Load All Cards Fail'
+}
+
+export class ChangePage implements Action {
+  readonly type = SelectCardsActionTypes.ChangePage;
+
+  constructor(public payload: number) {}
 }
 
 export class LoadAllCards implements Action {
@@ -24,6 +31,7 @@ export class LoadAllCardsFail implements Action {
 }
 
 export type SelectCardsActions =
+  | ChangePage
   | LoadAllCards
   | LoadAllCardsSuccess
   | LoadAllCardsFail;
