@@ -67,6 +67,11 @@ export const getAllCardsLoaded = createSelector(
   fromSelectCards.getAllCardsLoaded
 );
 
+export const getLevelCards = createSelector(
+  getSelectCardsState,
+  fromSelectCards.getLevelCards
+);
+
 export const getSelectedCards = createSelector(
   getSelectCardsState,
   fromSelectCards.getSelectedCards

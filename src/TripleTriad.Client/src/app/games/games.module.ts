@@ -9,7 +9,7 @@ import * as fromGames from './reducers';
 import { GameLobbyService } from './services/game-lobby.service';
 import { GameListComponent } from './components/game-list/game-list.component';
 import { GameLobbyEffects } from './effects/game-lobby.effects';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule } from '@angular/material';
 import { GameRoomComponent } from './containers/game-room/game-room.component';
 import { GameSignalRService } from './services/game-signal-r.service';
 import { GameRoomService } from './services/game-room.service';
@@ -29,6 +29,7 @@ import { CardListComponent } from './components/card-list/card-list.component';
       GameRoomEffects,
       SelectCardsEffects
     ]),
+    MatPaginatorModule,
     MatTableModule
   ],
   providers: [
