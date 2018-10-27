@@ -3,22 +3,28 @@ import {
   SelectCardsActionTypes,
   SelectCardsActions
 } from '../actions/select-cards.actions';
+import {
+  GameLobbyActions,
+  GameLobbyActionTypes
+} from '../actions/game-lobby.actions';
 
 export interface State {
   allCards: Card[];
   selectedCards: Card[];
   cardPage: number;
+  cardsSubmitted: boolean;
 }
 
 export const initialState: State = {
   allCards: [],
   selectedCards: [],
-  cardPage: 0
+  cardPage: 0,
+  cardsSubmitted: false
 };
 
 export function reducer(
   state = initialState,
-  action: SelectCardsActions
+  action: SelectCardsActions | GameLobbyActions
 ): State {
   switch (action.type) {
     case SelectCardsActionTypes.ChangePage: {
@@ -47,6 +53,16 @@ export function reducer(
         )
       };
     }
+    case SelectCardsActionTypes.SubmitCardsSuccess: {
+      return {
+        ...state,
+        cardsSubmitted: true
+      };
+    }
+    case GameLobbyActionTypes.CreateGameSuccess:
+    case GameLobbyActionTypes.JoinGameSuccess: {
+      return initialState;
+    }
     default:
       return state;
   }
@@ -62,3 +78,8 @@ export const getLevelCards = (state: State) =>
 export const getSelectedCards = (state: State) => state.selectedCards;
 
 export const getCardPage = (state: State) => state.cardPage;
+
+export const hasSubmittedCards = (state: State) => state.cardsSubmitted;
+
+export const showSubmit = (state: State) =>
+  !state.cardsSubmitted && state.selectedCards.length === 5;

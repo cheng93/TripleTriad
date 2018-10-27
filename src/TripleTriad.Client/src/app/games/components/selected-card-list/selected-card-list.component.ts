@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { Card } from '../../models/card';
+import { Card, SelectedCardListCard } from '../../models/card';
 
 @Component({
   selector: 'app-selected-card-list',
@@ -10,7 +10,7 @@ export class SelectedCardListComponent {
   constructor() {}
 
   @Input()
-  cards: Card[];
+  cards: SelectedCardListCard[];
 
   @Output()
   removeCard: EventEmitter<Card> = new EventEmitter();

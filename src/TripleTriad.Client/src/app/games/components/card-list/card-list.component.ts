@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Card } from '../../models/card';
+import { Card, CardListCard } from '../../models/card';
 import { PageEvent } from '@angular/material';
 
 @Component({
@@ -11,10 +11,7 @@ export class CardListComponent {
   constructor() {}
 
   @Input()
-  cards: Card[];
-
-  @Input()
-  selectedCards: Card[];
+  cards: CardListCard[];
 
   @Output()
   selectCard: EventEmitter<Card> = new EventEmitter();
@@ -28,13 +25,6 @@ export class CardListComponent {
 
   select(card: Card) {
     this.selectCard.emit(card);
-  }
-
-  canSelect(card: Card): boolean {
-    return (
-      this.selectedCards.every(x => x.name !== card.name) &&
-      this.selectedCards.length < 5
-    );
   }
 
   columns: string[] = [
