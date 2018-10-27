@@ -1,6 +1,5 @@
 table {
   width: 100%;
-  max-width: 40em;
 }
 
 .card-list--name {
@@ -13,4 +12,8 @@ table {
 
 .card-list--element {
   min-width: 6em;
+}
+
+div {
+  max-width: 40em;
 }

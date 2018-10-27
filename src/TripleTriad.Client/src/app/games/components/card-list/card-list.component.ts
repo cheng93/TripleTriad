@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Card } from '../../models/card';
+import { PageEvent } from '@angular/material';
 
 @Component({
   selector: 'app-card-list',
@@ -15,6 +16,13 @@ export class CardListComponent {
   @Input()
   selectedCards: Card[];
 
+  @Output()
+  changePage: EventEmitter<number> = new EventEmitter<number>();
+
+  page($event: PageEvent) {
+    this.changePage.emit($event.pageIndex);
+  }
+
   isCardSelected(card: Card): boolean {
     return this.selectedCards.some(x => x.name === card.name);
   }
@@ -28,4 +36,7 @@ export class CardListComponent {
     'element',
     'actions'
   ];
+
+  length: number = 110;
+  pageSize: number = 11;
 }
