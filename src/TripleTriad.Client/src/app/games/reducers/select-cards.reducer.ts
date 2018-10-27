@@ -33,6 +33,20 @@ export function reducer(
         allCards: action.payload
       };
     }
+    case SelectCardsActionTypes.SelectCard: {
+      return {
+        ...state,
+        selectedCards: [...state.selectedCards, action.payload]
+      };
+    }
+    case SelectCardsActionTypes.RemoveCard: {
+      return {
+        ...state,
+        selectedCards: state.selectedCards.filter(
+          x => x.name !== action.payload.name
+        )
+      };
+    }
     default:
       return state;
   }

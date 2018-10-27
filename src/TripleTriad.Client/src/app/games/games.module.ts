@@ -18,6 +18,7 @@ import { SelectCardsEffects } from './effects/select-cards.effects';
 import { SelectCardsComponent } from './containers/select-cards/select-cards.component';
 import { SelectCardsService } from './services/select-cards.service';
 import { CardListComponent } from './components/card-list/card-list.component';
+import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { CardListComponent } from './components/card-list/card-list.component';
     GameListComponent,
     GameRoomComponent,
     SelectCardsComponent,
-    CardListComponent
+    CardListComponent,
+    SelectedCardListComponent
   ]
 })
 export class GamesModule {}

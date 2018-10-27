@@ -1,5 +1,11 @@
+<app-selected-card-list
+    [cards]="selectedCards$ | async"
+    (removeCard)="removeCard($event)">
+</app-selected-card-list>
+
 <app-card-list
     [cards]="cards$ | async"
     [selectedCards]="selectedCards$ | async"
-    (changePage)="changePage($event)">
+    (changePage)="changePage($event)"
+    (selectCard)="selectCard($event)">
 </app-card-list>

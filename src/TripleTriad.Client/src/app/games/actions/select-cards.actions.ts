@@ -5,7 +5,9 @@ export enum SelectCardsActionTypes {
   ChangePage = '[SelectCards] Change Page',
   LoadAllCards = '[SelectCards] Load All Cards',
   LoadAllCardsSuccess = '[SelectCards] Load All Cards Success',
-  LoadAllCardsFail = '[SelectCards] Load All Cards Fail'
+  LoadAllCardsFail = '[SelectCards] Load All Cards Fail',
+  SelectCard = '[SelectCards] Select Card',
+  RemoveCard = '[SelectCards] Remove Card'
 }
 
 export class ChangePage implements Action {
@@ -30,8 +32,22 @@ export class LoadAllCardsFail implements Action {
   constructor(public payload: any) {}
 }
 
+export class SelectCard implements Action {
+  readonly type = SelectCardsActionTypes.SelectCard;
+
+  constructor(public payload: Card) {}
+}
+
+export class RemoveCard implements Action {
+  readonly type = SelectCardsActionTypes.RemoveCard;
+
+  constructor(public payload: Card) {}
+}
+
 export type SelectCardsActions =
   | ChangePage
   | LoadAllCards
   | LoadAllCardsSuccess
-  | LoadAllCardsFail;
+  | LoadAllCardsFail
+  | SelectCard
+  | RemoveCard;

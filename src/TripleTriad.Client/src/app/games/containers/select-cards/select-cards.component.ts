@@ -2,7 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../reducers';
 import { filter, tap } from 'rxjs/operators';
-import { LoadAllCards, ChangePage } from '../../actions/select-cards.actions';
+import {
+  LoadAllCards,
+  ChangePage,
+  SelectCard,
+  RemoveCard
+} from '../../actions/select-cards.actions';
 import { Observable, Subscription } from 'rxjs';
 import { Card } from '../../models/card';
 
@@ -23,6 +28,14 @@ export class SelectCardsComponent implements OnInit, OnDestroy {
 
   changePage($event: number) {
     this.store.dispatch(new ChangePage($event));
+  }
+
+  removeCard($event: Card) {
+    this.store.dispatch(new RemoveCard($event));
+  }
+
+  selectCard($event: Card) {
+    this.store.dispatch(new SelectCard($event));
   }
 
   ngOnInit() {
