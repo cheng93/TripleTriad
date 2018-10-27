@@ -31,7 +31,10 @@ export class CardListComponent {
   }
 
   canSelect(card: Card): boolean {
-    return this.selectedCards.some(x => x.name === card.name);
+    return (
+      this.selectedCards.every(x => x.name !== card.name) &&
+      this.selectedCards.length < 5
+    );
   }
 
   columns: string[] = [
