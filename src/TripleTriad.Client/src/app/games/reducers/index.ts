@@ -81,3 +81,13 @@ export const getSelectCardPage = createSelector(
   getSelectCardsState,
   fromSelectCards.getCardPage
 );
+
+export const hasSubmittedCards = createSelector(
+  getSelectCardsState,
+  fromSelectCards.hasSubmittedCards
+);
+
+export const showSelectCardSubmit = createSelector(
+  getSelectCardsState,
+  fromSelectCards.showSubmit
+);

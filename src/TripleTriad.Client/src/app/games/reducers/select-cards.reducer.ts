@@ -8,12 +8,14 @@ export interface State {
   allCards: Card[];
   selectedCards: Card[];
   cardPage: number;
+  cardsSubmitted: boolean;
 }
 
 export const initialState: State = {
   allCards: [],
   selectedCards: [],
-  cardPage: 0
+  cardPage: 0,
+  cardsSubmitted: false
 };
 
 export function reducer(
@@ -47,6 +49,12 @@ export function reducer(
         )
       };
     }
+    case SelectCardsActionTypes.SubmitCardsSuccess: {
+      return {
+        ...state,
+        cardsSubmitted: true
+      };
+    }
     default:
       return state;
   }
@@ -62,3 +70,8 @@ export const getLevelCards = (state: State) =>
 export const getSelectedCards = (state: State) => state.selectedCards;
 
 export const getCardPage = (state: State) => state.cardPage;
+
+export const hasSubmittedCards = (state: State) => state.cardsSubmitted;
+
+export const showSubmit = (state: State) =>
+  !state.cardsSubmitted && state.selectedCards.length === 5;
