@@ -14,4 +14,9 @@ export class SelectCardsService {
   getAllCards(): Observable<GetAllCardsResponse> {
     return this.http.get<GetAllCardsResponse>(`api/cards`);
   }
+
+  submitCards(gameId: number, cards: Card[]) {
+    var body = cards.map(x => x.name);
+    return this.http.put(`api/games/${gameId}/selectCards`, body);
+  }
 }
