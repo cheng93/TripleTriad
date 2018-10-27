@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../reducers';
 import { filter, tap } from 'rxjs/operators';
 import { LoadAllCards } from '../../actions/select-cards.actions';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Card } from '../../models/card';
 
 @Component({
@@ -11,7 +11,7 @@ import { Card } from '../../models/card';
   templateUrl: './select-cards.component.html',
   styleUrls: ['./select-cards.component.scss']
 })
-export class SelectCardsComponent implements OnInit {
+export class SelectCardsComponent implements OnInit, OnDestroy {
   constructor(private store: Store<fromStore.GamesState>) {
     this.cards$ = store.select(fromStore.getAllCards);
     this.selectedCards$ = store.select(fromStore.getSelectedCards);
@@ -22,7 +22,7 @@ export class SelectCardsComponent implements OnInit {
   selectedCards$: Observable<Card[]>;
 
   ngOnInit() {
-    this.store
+    this.subscription = this.store
       .select(fromStore.getAllCardsLoaded)
       .pipe(
         filter(x => !x),
@@ -30,4 +30,10 @@ export class SelectCardsComponent implements OnInit {
       )
       .subscribe();
   }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private subscription: Subscription;
 }
