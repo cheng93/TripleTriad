@@ -45,7 +45,7 @@
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let card">
         <div class="actions--buttons">
-          <button (click)="remove(card)" class="mdc-button mdc-button--raised">Remove</button>
+          <button [attr.disabled]="!card.canRemove || null" (click)="remove(card)" class="mdc-button mdc-button--raised">Remove</button>
         </div>
       </td>
     </ng-container>
