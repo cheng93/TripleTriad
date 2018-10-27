@@ -10,9 +10,7 @@ import {
   SubmitCards
 } from '../../actions/select-cards.actions';
 import { Observable, Subscription, combineLatest } from 'rxjs';
-import { Card } from '../../models/card';
-import { CardListCard } from '../../components/card-list/card-list.component';
-import { SelectedCardListCard } from '../../components/selected-card-list/selected-card-list.component';
+import { Card, CardListCard, SelectedCardListCard } from '../../models/card';
 
 @Component({
   selector: 'app-select-cards',

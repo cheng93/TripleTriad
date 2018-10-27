@@ -1,10 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Card } from '../../models/card';
+import { Card, CardListCard } from '../../models/card';
 import { PageEvent } from '@angular/material';
-
-export interface CardListCard extends Card {
-  canSelect: boolean;
-}
 
 @Component({
   selector: 'app-card-list',

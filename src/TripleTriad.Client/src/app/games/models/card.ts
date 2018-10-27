@@ -11,3 +11,11 @@ export interface Rank {
   bottom: number;
   left: number;
 }
+
+export interface CardListCard extends Card {
+  canSelect: boolean;
+}
+
+export interface SelectedCardListCard extends Card {
+  canRemove: boolean;
+}

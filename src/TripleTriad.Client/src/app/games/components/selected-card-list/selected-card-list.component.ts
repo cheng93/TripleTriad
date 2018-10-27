@@ -1,9 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { Card } from '../../models/card';
-
-export interface SelectedCardListCard extends Card {
-  canRemove: boolean;
-}
+import { Card, SelectedCardListCard } from '../../models/card';
 
 @Component({
   selector: 'app-selected-card-list',
