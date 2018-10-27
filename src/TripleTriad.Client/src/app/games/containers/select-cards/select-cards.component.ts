@@ -6,7 +6,8 @@ import {
   LoadAllCards,
   ChangePage,
   SelectCard,
-  RemoveCard
+  RemoveCard,
+  SubmitCards
 } from '../../actions/select-cards.actions';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { Card } from '../../models/card';
@@ -47,11 +48,15 @@ export class SelectCardsComponent implements OnInit, OnDestroy {
         }))
       ])
     );
+
+    this.showSubmit$ = store.select(fromStore.showSelectCardSubmit);
   }
 
   cardListCards$: Observable<CardListCard[]>;
 
   selectedCardListCards$: Observable<SelectedCardListCard[]>;
+
+  showSubmit$: Observable<boolean>;
 
   changePage($event: number) {
     this.store.dispatch(new ChangePage($event));
@@ -63,6 +68,10 @@ export class SelectCardsComponent implements OnInit, OnDestroy {
 
   selectCard($event: Card) {
     this.store.dispatch(new SelectCard($event));
+  }
+
+  submitCards() {
+    this.store.dispatch(new SubmitCards());
   }
 
   ngOnInit() {

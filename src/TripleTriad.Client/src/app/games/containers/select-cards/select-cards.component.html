@@ -3,6 +3,12 @@
     (removeCard)="removeCard($event)">
 </app-selected-card-list>
 
+<button *ngIf="showSubmit$ | async"
+    (click)="submitCards()" 
+    class="mdc-button mdc-button--raised">
+    Submit
+</button>
+
 <app-card-list
     [cards]="cardListCards$ | async"
     (changePage)="changePage($event)"
