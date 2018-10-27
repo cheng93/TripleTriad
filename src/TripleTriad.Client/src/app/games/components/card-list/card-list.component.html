@@ -46,7 +46,7 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let card">
           <div class="actions--buttons">
-            <button disable="isCardSelected(card)" (click)="join.emit(gameId)" class="mdc-button mdc-button--raised">Select</button>
+            <button disable="isCardSelected(card)" (click)="select(card)" class="mdc-button mdc-button--raised">Select</button>
           </div>
         </td>
       </ng-container>

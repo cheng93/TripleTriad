@@ -17,13 +17,20 @@ export class CardListComponent {
   selectedCards: Card[];
 
   @Output()
+  selectCard: EventEmitter<Card> = new EventEmitter();
+
+  @Output()
   changePage: EventEmitter<number> = new EventEmitter<number>();
 
   page($event: PageEvent) {
     this.changePage.emit($event.pageIndex);
   }
 
-  isCardSelected(card: Card): boolean {
+  select(card: Card) {
+    this.selectCard.emit(card);
+  }
+
+  canSelect(card: Card): boolean {
     return this.selectedCards.some(x => x.name === card.name);
   }
 
