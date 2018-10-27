@@ -4,7 +4,7 @@ import { Card } from '../models/card';
 import { Observable } from 'rxjs';
 
 interface GetAllCardsResponse {
-  Cards: Card[];
+  cards: Card[];
 }
 
 @Injectable()

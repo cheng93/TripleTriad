@@ -1,0 +1,55 @@
+<table mat-table [dataSource]="cards">
+  <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="card-list--name">
+        Name
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.name}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="top">
+      <th mat-header-cell *matHeaderCellDef class="card-list--rank">
+        Top
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.rank.top}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="right">
+      <th mat-header-cell *matHeaderCellDef class="card-list--rank">
+        Right
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.rank.right}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="bottom">
+      <th mat-header-cell *matHeaderCellDef class="card-list--rank">
+        Bottom
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.rank.bottom}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="left">
+      <th mat-header-cell *matHeaderCellDef class="card-list--rank">
+        Left
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.rank.left}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="element">
+      <th mat-header-cell *matHeaderCellDef class="card-list--element">
+        Element
+      </th>
+      <td mat-cell *matCellDef="let card">{{card.element}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let card">
+        <div class="actions--buttons">
+          <button disable="isCardSelected(card)" (click)="join.emit(gameId)" class="mdc-button mdc-button--raised">Select</button>
+        </div>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: columns"></tr>
+</table>

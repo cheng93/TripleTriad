@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Converters;
 using TripleTriad.BackgroundTasks;
 using TripleTriad.Data;
 using TripleTriad.Requests.GuestPlayerRequests;
@@ -36,6 +37,7 @@ namespace TripleTriad.Web
                 .Services
                 .AddAppAuthentication()
                 .AddMvc()
+                .AddJsonOptions(x => x.SerializerSettings.Converters.Add(new StringEnumConverter()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .Services.AddSpaStaticFiles(configuration =>
                 {
