@@ -4,6 +4,7 @@ import {
 } from '../actions/game-room.actions';
 import { Card } from '../models/card';
 import { Tile } from '../models/tile';
+import { View } from '../models/room';
 
 export interface State {
   gameId: number;
@@ -12,6 +13,7 @@ export interface State {
   playerOneTurn: boolean;
   status: string;
   tiles: Tile[];
+  view: View;
 }
 
 export const initialState: State = {
@@ -20,7 +22,11 @@ export const initialState: State = {
   playerTwoCards: [],
   playerOneTurn: null,
   status: null,
-  tiles: []
+  tiles: [],
+  view: {
+    isPlayerOne: false,
+    isPlayerTwo: false
+  }
 };
 
 export function reducer(state = initialState, action: GameRoomActions): State {
@@ -29,6 +35,12 @@ export function reducer(state = initialState, action: GameRoomActions): State {
       return {
         ...state,
         gameId: action.payload
+      };
+    }
+    case GameRoomActionTypes.ViewGameSuccess: {
+      return {
+        ...state,
+        view: action.payload
       };
     }
     case GameRoomActionTypes.UpdateGame: {
