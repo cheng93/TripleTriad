@@ -2,6 +2,17 @@
 @import '@material/top-app-bar/mdc-top-app-bar';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+$playerOne: #8bf6ff;
+$playerTwo: #ff94c2;
+
 body {
   margin: 0;
+}
+
+.playerOne {
+  background-color: $playerOne;
+}
+
+.playerTwo {
+  background-color: $playerTwo;
 }
