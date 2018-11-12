@@ -1,0 +1,26 @@
+<div class="tile" [ngClass]="styles">
+  <div class="tile--element tile-child">
+    {{tile.element}}
+  </div>
+  <ng-container *ngIf="tile.card">
+    <div class="tile--name tile-child">
+      {{tile.card.name}}
+    </div>
+    <div *ngIf="tile.card.modifier != 0"
+      class="tile--modifier tile-child">
+      {{tile.card.modifier}}
+    </div>
+    <div class="tile--top tile-child">
+      {{tile.card.rank.top}}
+    </div>
+    <div class="tile--right tile-child">
+      {{tile.card.rank.right}}
+    </div>
+    <div class="tile--bottom tile-child">
+      {{tile.card.rank.bottom}}
+    </div>
+    <div class="tile--left tile-child">
+      {{tile.card.rank.left}}
+    </div>
+  </ng-container>
+</div>

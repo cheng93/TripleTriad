@@ -7,6 +7,7 @@ import { TokenService } from 'src/app/core/services/token.service';
 import { Observable } from 'rxjs';
 import * as fromStore from '../../reducers';
 import { map } from 'rxjs/operators';
+import { Tile } from '../../models/tile';
 
 @Component({
   selector: 'app-game-room',
@@ -21,7 +22,11 @@ export class GameRoomComponent implements OnInit {
     private tokenService: TokenService
   ) {
     this.status$ = store.pipe(select(fromStore.getRoomStatus));
+    this.tiles$ = store.pipe(select(fromStore.getRoomTiles));
     this.chooseCardStatus$ = this.status$.pipe(map(x => x === 'ChooseCards'));
+    this.showBoard$ = this.status$.pipe(
+      map(x => x === 'InProgress' || x === 'Finished')
+    );
   }
 
   ngOnInit() {
@@ -35,5 +40,7 @@ export class GameRoomComponent implements OnInit {
   }
 
   status$: Observable<string>;
+  tiles$: Observable<Tile[]>;
   chooseCardStatus$: Observable<boolean>;
+  showBoard$: Observable<boolean>;
 }
