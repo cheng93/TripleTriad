@@ -9,7 +9,11 @@ import * as fromGames from './reducers';
 import { GameLobbyService } from './services/game-lobby.service';
 import { GameListComponent } from './components/game-list/game-list.component';
 import { GameLobbyEffects } from './effects/game-lobby.effects';
-import { MatTableModule, MatPaginatorModule } from '@angular/material';
+import {
+  MatTableModule,
+  MatPaginatorModule,
+  MatCardModule
+} from '@angular/material';
 import { GameRoomComponent } from './containers/game-room/game-room.component';
 import { GameSignalRService } from './services/game-signal-r.service';
 import { GameRoomService } from './services/game-room.service';
@@ -19,6 +23,8 @@ import { SelectCardsComponent } from './containers/select-cards/select-cards.com
 import { SelectCardsService } from './services/select-cards.service';
 import { CardListComponent } from './components/card-list/card-list.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
+import { GameBoardComponent } from './components/game-board/game-board.component';
+import { GameTileComponent } from './components/game-tile/game-tile.component';
 
 @NgModule({
   imports: [
@@ -31,7 +37,8 @@ import { SelectedCardListComponent } from './components/selected-card-list/selec
       SelectCardsEffects
     ]),
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    MatCardModule
   ],
   providers: [
     GameLobbyService,
@@ -45,7 +52,9 @@ import { SelectedCardListComponent } from './components/selected-card-list/selec
     GameRoomComponent,
     SelectCardsComponent,
     CardListComponent,
-    SelectedCardListComponent
+    SelectedCardListComponent,
+    GameBoardComponent,
+    GameTileComponent
   ]
 })
 export class GamesModule {}

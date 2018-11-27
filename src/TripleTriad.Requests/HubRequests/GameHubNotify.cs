@@ -46,10 +46,6 @@ namespace TripleTriad.Requests.HubRequests
                 var game = await this.dbContext.Games.SingleAsync(x => x.GameId == request.GameId, cancellationToken);
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
 
-                var message = new
-                {
-                };
-
                 if (game.Status == GameStatus.InProgress)
                 {
                     await this.SendMessage(request, new

@@ -46,7 +46,8 @@ export function reducer(state = initialState, action: GameRoomActions): State {
     case GameRoomActionTypes.UpdateGame: {
       return {
         ...state,
-        status: action.payload.status
+        status: action.payload.status,
+        tiles: action.payload.tiles
       };
     }
     default:
@@ -57,3 +58,5 @@ export function reducer(state = initialState, action: GameRoomActions): State {
 export const getGameId = (state: State) => state.gameId;
 
 export const getGameStatus = (state: State) => state.status;
+
+export const getGameTiles = (state: State) => state.tiles;

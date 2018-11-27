@@ -52,6 +52,11 @@ export const getRoomStatus = createSelector(
   fromRoom.getGameStatus
 );
 
+export const getRoomTiles = createSelector(
+  getGameRoomState,
+  fromRoom.getGameTiles
+);
+
 export const getSelectCardsState = createSelector(
   getGameState,
   state => state.selectCards

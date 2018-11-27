@@ -1,0 +1,20 @@
+<mat-card [ngClass]="styles">
+  <mat-card-content class="tile">
+    <ng-container *ngIf="tile.card">
+      <div class="tile--main tile-child">
+        <div class="tile--name">{{ tile.card.name }}</div>
+        <div *ngIf="tile.card.element" class="tile--cardelement">
+          {{ tile.card.element }}
+        </div>
+        <div *ngIf="tile.card.modifier != 0" class="tile--modifier">
+          {{ tile.card.modifier }}
+        </div>
+      </div>
+      <div class="tile--top tile-child">{{ tile.card.rank.top }}</div>
+      <div class="tile--right tile-child">{{ tile.card.rank.right }}</div>
+      <div class="tile--bottom tile-child">{{ tile.card.rank.bottom }}</div>
+      <div class="tile--left tile-child">{{ tile.card.rank.left }}</div>
+      <div class="tile--element tile-child">{{ tile.element }}</div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
