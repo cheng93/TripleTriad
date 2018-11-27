@@ -1,6 +1,5 @@
 .board {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 35vw;
+  display: grid;
+  grid-template: repeat(3, 10vw) / repeat(3, 10vw);
+  gap: 5vw;
 }
