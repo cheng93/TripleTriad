@@ -32,7 +32,7 @@ namespace TripleTriad.Requests.TokenRequests
                     "TripleTriad",
                     "TripleTriadAudience",
                     request.ClaimsIdentity.Claims,
-                    expires: DateTime.UtcNow.AddMinutes(10),
+                    expires: DateTime.UtcNow.AddMinutes(90),
                     signingCredentials: credentials);
 
                 var tokenHandler = new JwtSecurityTokenHandler();
