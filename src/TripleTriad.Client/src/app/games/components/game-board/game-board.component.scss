@@ -1,5 +1,12 @@
+$max: 500px;
+
 .board {
   display: grid;
-  grid-template: repeat(3, 10vw) / repeat(3, 10vw);
-  gap: 5vw;
+  grid-template:
+    repeat(3, minmax(33%, $max/3)) /
+    repeat(3, minmax(33%, $max/3));
+  gap: 5px;
+  max-width: $max;
+  max-height: $max;
+  height: 76vw;
 }
