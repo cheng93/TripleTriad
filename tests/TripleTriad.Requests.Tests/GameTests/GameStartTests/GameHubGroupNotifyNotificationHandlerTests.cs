@@ -10,47 +10,29 @@ using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
-    public class GameHubGroupNotifyTests
+    public class GameHubGroupNotifyNotificationHandlerTests
     {
         private static readonly int GameId = 2;
 
-        private static Mock<IBackgroundTaskQueue> CreateQueue()
-        {
-            var backgroundTaskQueue = new Mock<IBackgroundTaskQueue>();
-            backgroundTaskQueue
-                .Setup(x => x.QueueBackgroundTask(
-                    It.IsAny<Func<CancellationToken, Task>>()))
-                .Callback<Func<CancellationToken, Task>>(async x =>
-                {
-                    await x(default);
-                });
-
-            return backgroundTaskQueue;
-        }
-
         [Fact]
-        public async Task Should_queue_request()
+        public async Task Should_send_request()
         {
             var mediator = new Mock<IMediator>();
             mediator
                 .Setup(x => x.Send(
                     It.IsAny<GameHubGroupNotify.Request>(),
                     It.IsAny<CancellationToken>()))
-                .Verifiable();
+                .ReturnsAsync(new Unit());
 
-            var request = new GameStart.Request();
             var response = new GameStart.Response
             {
                 GameId = GameId
             };
 
-            var backgroundTaskQueue = CreateQueue();
-
-            var subject = new GameStart.GameHubGroupNotify(
-                backgroundTaskQueue.Object,
+            var subject = new GameStart.GameHubGroupNotifyNotificationHandler(
                 mediator.Object);
 
-            await subject.Process(request, response);
+            await subject.Handle(response, default);
 
             mediator.Verify(x => x.Send(
                 It.Is<GameHubGroupNotify.Request>(y => y.GameId == GameId),

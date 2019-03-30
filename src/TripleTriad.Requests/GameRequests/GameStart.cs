@@ -27,7 +27,7 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameStart
     {
-        public class Response : IGameResponse, IBackgroundQueueResponse
+        public class Response : IGameResponse, IBackgroundQueueResponse, INotification
         {
             public int GameId { get; set; }
 
@@ -101,17 +101,26 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameHubGroupNotify : MediatorQueuePostProcessor<Request, Response, HubRequests.GameHubGroupNotify.Request, Unit>
+        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
         {
-            public GameHubGroupNotify(IBackgroundTaskQueue queue, IMediator mediator)
-                : base(queue, mediator)
+            public BackgroundEnqueuer(IBackgroundTaskQueue queue)
+                : base(queue)
+            {
+
+            }
+        }
+
+        public class GameHubGroupNotifyNotificationHandler : MediatorNotificationHandler<Response, HubRequests.GameHubGroupNotify.Request, Unit>
+        {
+            public GameHubGroupNotifyNotificationHandler(IMediator mediator)
+                : base(mediator)
             {
             }
 
-            protected override HubRequests.GameHubGroupNotify.Request CreateQueueRequest(Request request, Response response)
+            protected override GameHubGroupNotify.Request GetRequest(Response notification)
                 => new HubRequests.GameHubGroupNotify.Request
                 {
-                    GameId = response.GameId
+                    GameId = notification.GameId
                 };
         }
     }

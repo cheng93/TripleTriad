@@ -33,7 +33,7 @@ namespace TripleTriad.Web.IoC
             builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 
-            builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
+            builder.RegisterType<Mediator>();
 
             builder.Register<ServiceFactory>(ctx =>
             {

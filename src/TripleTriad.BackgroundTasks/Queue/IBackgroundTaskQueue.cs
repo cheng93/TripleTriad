@@ -6,8 +6,8 @@ namespace TripleTriad.BackgroundTasks.Queue
 {
     public interface IBackgroundTaskQueue
     {
-        void QueueBackgroundTask(Func<CancellationToken, Task> task);
+        void QueueBackgroundTask(object queueItem);
 
-        Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
+        Task<object> DequeueAsync(CancellationToken cancellationToken);
     }
 }

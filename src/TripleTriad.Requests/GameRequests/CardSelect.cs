@@ -24,7 +24,7 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class CardSelect
     {
-        public class Response : IBackgroundQueueResponse, IGameResponse
+        public class Response : IBackgroundQueueResponse, IGameResponse, INotification
         {
             public int GameId { get; set; }
 
@@ -119,17 +119,26 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameStartPostProcessor : MediatorQueuePostProcessor<Request, Response, GameStart.Request, GameStart.Response>
+        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
         {
-            public GameStartPostProcessor(IBackgroundTaskQueue queue, IMediator mediator)
-                : base(queue, mediator)
+            public BackgroundEnqueuer(IBackgroundTaskQueue queue)
+                : base(queue)
+            {
+
+            }
+        }
+
+        public class GameStartNotificationHandler : MediatorNotificationHandler<Response, GameStart.Request, GameStart.Response>
+        {
+            public GameStartNotificationHandler(IMediator mediator)
+                : base(mediator)
             {
             }
 
-            protected override GameStart.Request CreateQueueRequest(Request request, Response response)
+            protected override GameStart.Request GetRequest(Response notification)
                 => new GameStart.Request
                 {
-                    GameId = response.GameId
+                    GameId = notification.GameId
                 };
         }
     }
