@@ -30,7 +30,9 @@ namespace TripleTriad.Web
             services
                 //.AddMediatR(typeof(GuestPlayerCreate).GetTypeInfo().Assembly) //https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection/issues/29
                 .AddDbContextPool<TripleTriadDbContext>(options
-                    => options.UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
+                    => options
+                        .UseLazyLoadingProxies()
+                        .UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
                 .AddHostedService<QueueHostedService>()
                 .AddSignalR()
                 .AddMessagePackProtocol()
