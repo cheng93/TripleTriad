@@ -33,7 +33,7 @@ namespace TripleTriad.Web
                     => options
                         .UseLazyLoadingProxies()
                         .UseNpgsql("User ID=postgres;Host=localhost;Port=5432;Database=triple_triad"))
-                .AddHostedService<QueueHostedService>()
+                .AddHostedService<MediatorHostedService>()
                 .AddSignalR()
                 .AddMessagePackProtocol()
                 .Services

@@ -7,26 +7,25 @@ namespace TripleTriad.BackgroundTasks.Queue
 {
     public class BackgroundTaskQueue : IBackgroundTaskQueue
     {
-        private ConcurrentQueue<Func<CancellationToken, Task>> workItems
-            = new ConcurrentQueue<Func<CancellationToken, Task>>();
+        private ConcurrentQueue<object> workItems = new ConcurrentQueue<object>();
         private SemaphoreSlim signal = new SemaphoreSlim(0);
 
-        public async Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
+        public async Task<object> DequeueAsync(CancellationToken cancellationToken)
         {
             await this.signal.WaitAsync(cancellationToken);
-            this.workItems.TryDequeue(out var task);
+            this.workItems.TryDequeue(out var queueItem);
 
-            return task;
+            return queueItem;
         }
 
-        public void QueueBackgroundTask(Func<CancellationToken, Task> task)
+        public void QueueBackgroundTask(object queueItem)
         {
-            if (task == null)
+            if (queueItem == null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(queueItem));
             }
 
-            this.workItems.Enqueue(task);
+            this.workItems.Enqueue(queueItem);
             this.signal.Release();
         }
     }
