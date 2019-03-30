@@ -25,6 +25,7 @@ import { CardListComponent } from './components/card-list/card-list.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { GameTileComponent } from './components/game-tile/game-tile.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { GameTileComponent } from './components/game-tile/game-tile.component';
     CardListComponent,
     SelectedCardListComponent,
     GameBoardComponent,
-    GameTileComponent
+    GameTileComponent,
+    GameCardComponent
   ]
 })
 export class GamesModule {}

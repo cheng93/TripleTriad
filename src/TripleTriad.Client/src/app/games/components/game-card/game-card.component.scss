@@ -1,0 +1,46 @@
+:host {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-areas:
+    '. . .'
+    '. top .'
+    'left . right'
+    '. bottom .';
+
+  .card--cardelement {
+    grid-area: cardelement;
+    grid-row-start: 4;
+    grid-column-start: 1;
+  }
+  .card--name {
+    grid-area: name;
+    grid-row-start: 6;
+    grid-column-start: 1;
+  }
+  .card--top {
+    grid-area: top;
+  }
+  .card--right {
+    grid-area: right;
+    justify-self: end;
+  }
+  .card--bottom {
+    grid-area: bottom;
+  }
+  .card--left {
+    grid-area: left;
+  }
+
+  .card--top,
+  .card--left,
+  .card--right,
+  .card--bottom {
+    justify-self: center;
+  }
+
+  .card-child {
+    align-self: center;
+  }
+}
