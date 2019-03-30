@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2
+    steps:
+      - checkout
+      - run: dotnet restore
+      # - (cd ./src/TripleTriad.Client && yarn install)
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test ./tests/TripleTriad.Logic.Tests/TripleTriad.Logic.Tests.csproj --no-build --no-restore -c Release -v n
+      - run: dotnet test ./tests/TripleTriad.Requests.Tests/TripleTriad.Requests.Tests.csproj --no-build --no-restore -c Release -v n
+      # - (cd ./src/TripleTriad.Client && yarn run build)
+      - run: dotnet publish ./src/TripleTriad.Web/TripleTriad.Web.csproj --no-restore -c Release
+      # - docker build -t skyrim-tool .
+      # - bash ./scripts/travis_docker.sh
