@@ -5,16 +5,14 @@ mat-card {
 }
 
 .tile {
-  //border-style: solid;
   display: grid;
+  height: 100%;
 
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: auto 4fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 5fr;
   grid-template-areas:
-    '. top .'
-    'left main right'
-    '. bottom .'
-    'element element element';
+    'modifier element'
+    'card card';
 
   .tile--main {
     grid-area: main;
@@ -22,36 +20,19 @@ mat-card {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .tile--element {
     grid-area: element;
-    &.tile-child {
-      justify-self: start;
-    }
-  }
-  .tile--cardelement {
-    grid-area: cardelement;
-  }
-  .tile--name {
-    grid-area: name;
+    justify-self: end;
   }
   .tile--modifier {
     grid-area: modifier;
   }
-  .tile--top {
-    grid-area: top;
-  }
-  .tile--right {
-    grid-area: right;
-  }
-  .tile--bottom {
-    grid-area: bottom;
-  }
-  .tile--left {
-    grid-area: left;
+  .tile--card {
+    grid-area: card;
   }
 
   .tile-child {
-    justify-self: center;
     align-self: center;
   }
 }
