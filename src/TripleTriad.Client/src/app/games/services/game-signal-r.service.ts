@@ -16,18 +16,24 @@ export class GameSignalRService {
   }
 
   connect(accessToken: string) {
-    this.hubConnection = new HubConnectionBuilder()
-      .withUrl('/gameHub', {
-        accessTokenFactory: () => accessToken
-      })
-      .configureLogging(LogLevel.Information)
-      .build();
+    if (!this.hubConnection) {
+      this.hubConnection = new HubConnectionBuilder()
+        .withUrl('/gameHub', {
+          accessTokenFactory: () => accessToken
+        })
+        .configureLogging(LogLevel.Information)
+        .build();
 
-    this.registerOnServerEvents();
+      this.registerOnServerEvents();
+    }
 
-    return this.hubConnection
-      .start()
-      .catch(err => console.error(err.toString()));
+    if (!this.connected) {
+      return this.hubConnection
+        .start()
+        .then(() => (this.connected = true))
+        .catch(err => console.error(err.toString()));
+    }
+    return Promise.resolve();
   }
 
   viewGame(gameId: number) {
