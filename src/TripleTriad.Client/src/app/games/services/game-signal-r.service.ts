@@ -31,7 +31,7 @@ export class GameSignalRService {
   }
 
   viewGame(gameId: number) {
-    this.hubConnection.invoke('ViewGame', gameId);
+    return this.hubConnection.invoke('ViewGame', gameId);
   }
 
   private gameId$: Observable<number>;

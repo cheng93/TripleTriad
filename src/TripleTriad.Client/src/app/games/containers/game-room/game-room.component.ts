@@ -32,10 +32,10 @@ export class GameRoomComponent implements OnInit {
   ngOnInit() {
     var gameId = +this.route.snapshot.paramMap.get('gameId');
     this.tokenService.getAccessToken().subscribe(token => {
-      this.gameSignalRService.connect(token).then(() => {
-        this.gameSignalRService.viewGame(gameId);
-        this.store.dispatch(new ViewGame(gameId));
-      });
+      this.gameSignalRService
+        .connect(token)
+        .then(() => this.gameSignalRService.viewGame(gameId))
+        .then(() => this.store.dispatch(new ViewGame(gameId)));
     });
   }
 
