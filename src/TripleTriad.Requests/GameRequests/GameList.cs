@@ -32,6 +32,7 @@ namespace TripleTriad.Requests.GameRequests
                 var games = await this.context
                     .Games
                     .Where(x => x.Status == GameStatus.Waiting)
+                    .OrderBy(x => x.GameId)
                     .Select(x => x.GameId)
                     .ToListAsync(cancellationToken);
 

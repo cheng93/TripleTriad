@@ -44,6 +44,33 @@ namespace TripleTriad.Requests.Tests.GameTests.GameListTests
 
             gameStatuses.Should().AllBeEquivalentTo(GameStatus.Waiting);
         }
+
+        [Fact]
+        public async Task Should_return_ascending_game_ids()
+        {
+            var context = DbContextFactory.CreateTripleTriadContext();
+
+            for (var i = 3; i >= 0; i--)
+            {
+                var game = new Game
+                {
+                    GameId = 2 * i,
+                    Status = GameStatus.Waiting
+                };
+                await context.Games.AddAsync(game);
+            }
+
+            await context.SaveChangesAsync();
+
+            var request = new GameList.Request();
+
+            var subject = new GameList.RequestHandler(context);
+
+            var response = await subject.Handle(request, default);
+
+            response.GameIds.Should().BeInAscendingOrder();
+        }
+
         [Fact]
         public async Task Should_return_game_ids()
         {
