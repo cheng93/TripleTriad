@@ -16,11 +16,12 @@ import {
 } from '@angular/material';
 import { GameRoomComponent } from './containers/game-room/game-room.component';
 import { GameSignalRService } from './services/game-signal-r.service';
+import { GameSignalRFacade } from './services/game-signal-r.facade';
 import { GameRoomService } from './services/game-room.service';
+import { SelectCardsService } from './services/select-cards.service';
 import { GameRoomEffects } from './effects/game-room.effects';
 import { SelectCardsEffects } from './effects/select-cards.effects';
 import { SelectCardsComponent } from './containers/select-cards/select-cards.component';
-import { SelectCardsService } from './services/select-cards.service';
 import { CardListComponent } from './components/card-list/card-list.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
 import { GameBoardComponent } from './components/game-board/game-board.component';
@@ -44,6 +45,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
   providers: [
     GameLobbyService,
     GameSignalRService,
+    GameSignalRFacade,
     GameRoomService,
     SelectCardsService
   ],
