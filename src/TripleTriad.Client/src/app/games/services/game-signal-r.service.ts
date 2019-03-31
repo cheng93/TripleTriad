@@ -31,9 +31,12 @@ export class GameSignalRService {
       return this.hubConnection
         .start()
         .then(() => (this.connected = true))
-        .catch(err => console.error(err.toString()));
+        .catch(err => {
+          console.error(err.toString());
+          return this.connected;
+        });
     }
-    return Promise.resolve();
+    return Promise.resolve(this.connected);
   }
 
   viewGame(gameId: number) {
