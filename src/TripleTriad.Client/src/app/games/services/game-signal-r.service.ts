@@ -7,6 +7,7 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 import { withLatestFrom, tap, filter, map } from 'rxjs/operators';
 import { Room } from '../models/room';
 import { Message } from '../models/message';
+import { LoadGamesSuccess } from '../actions/game-lobby.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class GameSignalRService {
     return Promise.resolve(this.connected);
   }
 
+  joinLobby() {
+    return this.hubConnection.invoke('JoinLobby');
+  }
+
   viewGame(gameId: number) {
     return this.hubConnection.invoke('ViewGame', gameId);
   }
@@ -60,6 +65,8 @@ export class GameSignalRService {
             this.store.dispatch(new UpdateGame(room));
           }
         });
+      } else if (message.type == 'GameList') {
+        this.store.dispatch(new LoadGamesSuccess(message.data));
       }
       console.log(json);
     });
