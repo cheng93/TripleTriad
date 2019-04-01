@@ -9,11 +9,22 @@ export class GameSignalRFacade {
     private gameSignalRService: GameSignalRService
   ) {}
 
+  joinLobby() {
+    return this.getTokenAndConnect().then(() =>
+      this.gameSignalRService.joinLobby()
+    );
+  }
+
   viewGame(gameId: number) {
+    return this.getTokenAndConnect().then(() =>
+      this.gameSignalRService.viewGame(gameId)
+    );
+  }
+
+  private getTokenAndConnect() {
     return this.tokenService
       .getAccessToken()
       .toPromise()
-      .then(token => this.gameSignalRService.connect(token))
-      .then(() => this.gameSignalRService.viewGame(gameId));
+      .then(token => this.gameSignalRService.connect(token));
   }
 }

@@ -7,6 +7,7 @@ import {
   JoinGame
 } from '../../actions/game-lobby.actions';
 import { Observable } from 'rxjs';
+import { GameSignalRFacade } from '../../services/game-signal-r.facade';
 
 @Component({
   selector: 'app-game-lobby',
@@ -16,12 +17,16 @@ import { Observable } from 'rxjs';
 export class GameLobbyComponent implements OnInit {
   gameIds$: Observable<number[]>;
 
-  constructor(private store: Store<fromStore.GamesState>) {
+  constructor(
+    private store: Store<fromStore.GamesState>,
+    private gameSignalRFacade: GameSignalRFacade
+  ) {
     this.gameIds$ = store.pipe(select(fromStore.getLobbyGameIds));
   }
 
   ngOnInit() {
     this.store.dispatch(new LoadGames());
+    this.gameSignalRFacade.joinLobby();
   }
 
   createGame() {

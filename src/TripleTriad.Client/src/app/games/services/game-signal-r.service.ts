@@ -6,6 +6,8 @@ import { UpdateGame } from '../actions/game-room.actions';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { withLatestFrom, tap, filter, map } from 'rxjs/operators';
 import { Room } from '../models/room';
+import { Message } from '../models/message';
+import { LoadGamesSuccess } from '../actions/game-lobby.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,10 @@ export class GameSignalRService {
     return Promise.resolve(this.connected);
   }
 
+  joinLobby() {
+    return this.hubConnection.invoke('JoinLobby');
+  }
+
   viewGame(gameId: number) {
     return this.hubConnection.invoke('ViewGame', gameId);
   }
@@ -50,14 +56,19 @@ export class GameSignalRService {
   private hubConnection: HubConnection;
 
   private registerOnServerEvents() {
-    this.hubConnection.on('Send', (message: string) => {
-      this.gameId$.subscribe(gameId => {
-        var room = <Room>JSON.parse(message);
-        if (gameId == room.gameId) {
-          this.store.dispatch(new UpdateGame(room));
-        }
-      });
-      console.log(message);
+    this.hubConnection.on('Send', (json: string) => {
+      const message = <Message>JSON.parse(json);
+      if (message.type == 'UpdateGame') {
+        this.gameId$.subscribe(gameId => {
+          var room = <Room>message.data;
+          if (gameId == room.gameId) {
+            this.store.dispatch(new UpdateGame(room));
+          }
+        });
+      } else if (message.type == 'GameList') {
+        this.store.dispatch(new LoadGamesSuccess(message.data));
+      }
+      console.log(json);
     });
   }
 }

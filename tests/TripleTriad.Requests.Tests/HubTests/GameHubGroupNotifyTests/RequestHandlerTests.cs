@@ -43,8 +43,12 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                 GameStatus.Waiting,
                 new
                 {
-                    gameId = GameId,
-                    status = GameStatus.Waiting.ToString()
+                    type = "UpdateGame",
+                    data = new
+                    {
+                        gameId = GameId,
+                        status = GameStatus.Waiting.ToString()
+                    }
                 }
             },
             new object[]
@@ -52,8 +56,12 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                 GameStatus.ChooseCards,
                 new
                 {
-                    gameId = GameId,
-                    status = GameStatus.ChooseCards.ToString()
+                    type = "UpdateGame",
+                    data = new
+                    {
+                        gameId = GameId,
+                        status = GameStatus.ChooseCards.ToString()
+                    }
                 }
             },
             new object[]
@@ -61,12 +69,16 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                 GameStatus.InProgress,
                 new
                 {
-                    gameId = GameId,
-                    status = GameStatus.InProgress.ToString(),
-                    log = new string[] { },
-                    playerOneTurn = true,
-                    playerOneWonCoinToss = true,
-                    tiles = (IEnumerable<Tile>)null
+                    type = "UpdateGame",
+                    data = new
+                    {
+                        gameId = GameId,
+                        status = GameStatus.InProgress.ToString(),
+                        log = new string[] { },
+                        playerOneTurn = true,
+                        playerOneWonCoinToss = true,
+                        tiles = (IEnumerable<Tile>)null
+                    }
                 }
             },
             new object[]
@@ -74,13 +86,17 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                 GameStatus.Finished,
                 new
                 {
-                    gameId = GameId,
-                    status = GameStatus.Finished.ToString(),
-                    log = new string[] { },
-                    playerOneTurn = true,
-                    playerOneWonCoinToss = true,
-                    tiles = (IEnumerable<Tile>)null,
-                    result = "PlayerTwoWin"
+                    type = "UpdateGame",
+                    data = new
+                    {
+                        gameId = GameId,
+                        status = GameStatus.Finished.ToString(),
+                        log = new string[] { },
+                        playerOneTurn = true,
+                        playerOneWonCoinToss = true,
+                        tiles = (IEnumerable<Tile>)null,
+                        result = "PlayerTwoWin"
+                    }
                 }
             }
         };

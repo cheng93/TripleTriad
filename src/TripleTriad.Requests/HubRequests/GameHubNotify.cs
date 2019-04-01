@@ -50,33 +50,45 @@ namespace TripleTriad.Requests.HubRequests
                 {
                     await this.SendMessage(request, new
                     {
-                        GameId = request.GameId,
-                        Status = game.Status.ToString(),
-                        Log = gameData.Log,
-                        PlayerOneTurn = gameData.PlayerOneTurn,
-                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
-                        Tiles = gameData.Tiles
+                        Type = "UpdateGame",
+                        Data = new
+                        {
+                            GameId = request.GameId,
+                            Status = game.Status.ToString(),
+                            Log = gameData.Log,
+                            PlayerOneTurn = gameData.PlayerOneTurn,
+                            PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                            Tiles = gameData.Tiles
+                        }
                     });
                 }
                 else if (game.Status == GameStatus.Finished)
                 {
                     await this.SendMessage(request, new
                     {
-                        GameId = request.GameId,
-                        Status = game.Status.ToString(),
-                        Log = gameData.Log,
-                        PlayerOneTurn = gameData.PlayerOneTurn,
-                        PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
-                        Tiles = gameData.Tiles,
-                        Result = gameData.Result
+                        Type = "UpdateGame",
+                        Data = new
+                        {
+                            GameId = request.GameId,
+                            Status = game.Status.ToString(),
+                            Log = gameData.Log,
+                            PlayerOneTurn = gameData.PlayerOneTurn,
+                            PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                            Tiles = gameData.Tiles,
+                            Result = gameData.Result
+                        }
                     });
                 }
                 else
                 {
                     await this.SendMessage(request, new
                     {
-                        GameId = request.GameId,
-                        Status = game.Status.ToString()
+                        Type = "UpdateGame",
+                        Data = new
+                        {
+                            GameId = request.GameId,
+                            Status = game.Status.ToString()
+                        }
                     });
                 }
 

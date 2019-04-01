@@ -79,9 +79,9 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class BackgroundQueuePostProcessor : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
         {
-            public BackgroundQueuePostProcessor(IBackgroundTaskQueue queue)
+            public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
