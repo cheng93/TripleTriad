@@ -1,6 +1,7 @@
 using System.Reflection;
 using Autofac;
 using TripleTriad.Logic.CoinToss;
+using TripleTriad.Requests.Messages;
 using TripleTriad.SignalR;
 
 namespace TripleTriad.Web.IoC
@@ -17,6 +18,10 @@ namespace TripleTriad.Web.IoC
             };
 
             builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(
+                typeof(IMessageFactory<>).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IMessageFactory<>))
+                .AsImplementedInterfaces();
         }
     }
 }

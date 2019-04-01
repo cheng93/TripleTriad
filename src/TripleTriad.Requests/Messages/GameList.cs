@@ -16,9 +16,15 @@ namespace TripleTriad.Requests.Messages
                 this.mediator = mediator;
             }
 
-            protected async override Task<object> GetMessage(MessageData data)
+            protected async override Task<Message> GetMessage(MessageData data)
             {
-                return await this.mediator.Send(new GameRequests.GameList.Request());
+                var response = await this.mediator.Send(new GameRequests.GameList.Request());
+
+                return new Message
+                {
+                    Type = nameof(GameList),
+                    Data = response.GameIds
+                };
             }
         }
     }

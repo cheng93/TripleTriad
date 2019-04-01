@@ -14,7 +14,7 @@ namespace TripleTriad.Requests.Messages
     public abstract class MessageFactory<TMessageData> : IMessageFactory<TMessageData>
         where TMessageData : IMessageData
     {
-        protected abstract Task<object> GetMessage(TMessageData data);
+        protected abstract Task<Message> GetMessage(TMessageData data);
 
         protected virtual JsonSerializerSettings GetSerializerSettings()
         {

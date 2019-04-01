@@ -29,7 +29,6 @@ namespace TripleTriad.Web.IoC
                     .AsImplementedInterfaces();
             }
 
-
             builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
 
