@@ -50,7 +50,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameListTests
         {
             var context = DbContextFactory.CreateTripleTriadContext();
 
-            for (var i = 3; i >= 0; i--)
+            for (var i = 4; i > 0; i--)
             {
                 var game = new Game
                 {
