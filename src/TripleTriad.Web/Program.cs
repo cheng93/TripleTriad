@@ -8,6 +8,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace TripleTriad.Web
 {
@@ -21,6 +22,17 @@ namespace TripleTriad.Web
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(services => services.AddAutofac())
+                .UseSerilog((hostingContext, loggerConfiguration) =>
+                {
+                    loggerConfiguration
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console();
+
+                    if (hostingContext.HostingEnvironment.IsDevelopment())
+                    {
+                        loggerConfiguration.WriteTo.Seq("http://localhost:5341");
+                    }
+                })
                 .UseStartup<Startup>();
     }
 }
