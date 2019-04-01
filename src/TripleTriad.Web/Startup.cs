@@ -40,7 +40,7 @@ namespace TripleTriad.Web
                 .AddAppAuthentication()
                 .AddMvc()
                 .AddJsonOptions(x => x.SerializerSettings.Converters.Add(new StringEnumConverter()))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .Services.AddSpaStaticFiles(configuration =>
                 {
                     configuration.RootPath = "../TripleTriad.Client/dist";
