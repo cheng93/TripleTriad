@@ -18,6 +18,7 @@ using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.SignalR;
 using TripleTriad.Web.Extensions;
 using TripleTriad.Web.IoC;
+using TripleTriad.Web.Middlewares;
 
 namespace TripleTriad.Web
 {
@@ -62,6 +63,8 @@ namespace TripleTriad.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<SerilogMiddleware>();
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
