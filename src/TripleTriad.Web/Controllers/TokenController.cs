@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TripleTriad.Common;
 using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.Requests.TokenRequests;
-using TripleTriad.SignalR.Constants;
 
 namespace TripleTriad.Web.Controllers
 {
@@ -26,14 +26,14 @@ namespace TripleTriad.Web.Controllers
         public async Task<IActionResult> Generate()
         {
             Claim claim;
-            if (!HttpContext.User.HasClaim(c => c.Type == ClaimConstants.PlayerId))
+            if (!HttpContext.User.HasClaim(c => c.Type == Constants.Claims.PlayerId))
             {
                 var createPlayerResponse = await this.mediator.Send(new GuestPlayerCreate.Request());
-                claim = new Claim(ClaimConstants.PlayerId, createPlayerResponse.PlayerId.ToString());
+                claim = new Claim(Constants.Claims.PlayerId, createPlayerResponse.PlayerId.ToString());
             }
             else
             {
-                claim = HttpContext.User.Claims.First(x => x.Type == ClaimConstants.PlayerId);
+                claim = HttpContext.User.Claims.First(x => x.Type == Constants.Claims.PlayerId);
             }
 
             var identity = new ClaimsIdentity();

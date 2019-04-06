@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using TripleTriad.Common;
 
 namespace TripleTriad.Requests.TokenRequests
 {
@@ -29,8 +30,8 @@ namespace TripleTriad.Requests.TokenRequests
             {
                 var credentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
-                    "TripleTriad",
-                    "TripleTriadAudience",
+                    Constants.TripleTriad,
+                    Constants.TripleTriad,
                     request.ClaimsIdentity.Claims,
                     expires: DateTime.UtcNow.AddMinutes(90),
                     signingCredentials: credentials);

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using TripleTriad.Common;
 using TripleTriad.Requests.TokenRequests;
-using TripleTriad.SignalR.Constants;
 
 namespace TripleTriad.Web.Extensions
 {
@@ -14,15 +14,15 @@ namespace TripleTriad.Web.Extensions
             services
                 .AddAuthorization(options =>
                 {
-                    options.AddPolicy(AuthConstants.TripleTriadScheme, policy =>
+                    options.AddPolicy(Constants.TripleTriad, policy =>
                     {
                         policy
-                            .AddAuthenticationSchemes(AuthConstants.TripleTriadScheme)
-                            .RequireClaim(ClaimConstants.PlayerId);
+                            .AddAuthenticationSchemes(Constants.TripleTriad)
+                            .RequireClaim(Constants.Claims.PlayerId);
                     });
                 })
-                .AddAuthentication(AuthConstants.TripleTriadScheme)
-                .AddJwtBearer(AuthConstants.TripleTriadScheme, options =>
+                .AddAuthentication(Constants.TripleTriad)
+                .AddJwtBearer(Constants.TripleTriad, options =>
                 {
                     options.Events = new JwtBearerEvents
                     {

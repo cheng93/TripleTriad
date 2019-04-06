@@ -1,6 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.SignalR;
-using TripleTriad.SignalR.Constants;
+using TripleTriad.Common;
 
 namespace TripleTriad.SignalR
 {
@@ -11,7 +11,7 @@ namespace TripleTriad.SignalR
             return connection
                 .User
                 .Claims
-                .First(x => x.Type == ClaimConstants.PlayerId)
+                .First(x => x.Type == Constants.Claims.PlayerId)
                 .Value;
         }
     }
