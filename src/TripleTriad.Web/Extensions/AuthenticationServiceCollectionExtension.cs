@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using TripleTriad.Common;
@@ -44,7 +45,6 @@ namespace TripleTriad.Web.Extensions
                         ValidateAudience = true,
                         ValidateIssuer = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = TokenCreate.Key,
                         RequireExpirationTime = false,
                         ValidAudience = Constants.TripleTriad,
                         ValidIssuer = Constants.TripleTriad

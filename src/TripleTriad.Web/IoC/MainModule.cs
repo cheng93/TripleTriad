@@ -18,10 +18,6 @@ namespace TripleTriad.Web.IoC
             };
 
             builder.RegisterAssemblyTypes(assemblies).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(
-                typeof(IMessageFactory<>).GetTypeInfo().Assembly)
-                .AsClosedTypesOf(typeof(IMessageFactory<>))
-                .AsImplementedInterfaces();
         }
     }
 }

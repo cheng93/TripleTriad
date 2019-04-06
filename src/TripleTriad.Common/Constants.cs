@@ -8,5 +8,10 @@ namespace TripleTriad.Common
         {
             public const string PlayerId = "PlayerId";
         }
+
+        public static class Config
+        {
+            public const string JwtSigningKey = "Jwt.SigningKey";
+        }
     }
 }
