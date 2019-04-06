@@ -41,10 +41,13 @@ namespace TripleTriad.Web.Extensions
                     };
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateAudience = false,
-                        ValidateActor = false,
-                        ValidateIssuer = false,
-                        IssuerSigningKey = TokenCreate.Key
+                        ValidateAudience = true,
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = TokenCreate.Key,
+                        RequireExpirationTime = false,
+                        ValidAudience = Constants.TripleTriad,
+                        ValidIssuer = Constants.TripleTriad
                     };
                 });
             return services;
