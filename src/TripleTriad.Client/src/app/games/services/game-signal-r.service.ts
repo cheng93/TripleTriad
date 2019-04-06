@@ -18,7 +18,7 @@ export class GameSignalRService {
   }
 
   connect(accessToken: string) {
-    if (!this.hubConnection) {
+    if (!this.hubConnection || !this.connected) {
       this.hubConnection = new HubConnectionBuilder()
         .withUrl('/gameHub', {
           accessTokenFactory: () => accessToken
