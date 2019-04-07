@@ -6,5 +6,14 @@ services:
       - "5432:5432"
     volumes:
       - "triple_triad_postgres:/var/lib/postgresql/data"
+  seq:
+    image: "datalust/seq"
+    ports:
+      - "5341:80"
+    volumes:
+      - "triple_triad_seq:/data"
+    environment:
+      - ACCEPT_EULA=Y
 volumes:
   triple_triad_postgres:
+  triple_triad_seq:
