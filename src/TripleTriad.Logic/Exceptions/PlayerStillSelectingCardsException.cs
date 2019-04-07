@@ -5,15 +5,15 @@ namespace TripleTriad.Logic.Exceptions
 {
     public class PlayerStillSelectingCardsException : GameDataException
     {
-        public PlayerStillSelectingCardsException(GameData gameData, bool host, bool playerTwo)
+        public PlayerStillSelectingCardsException(GameData gameData, bool host, bool challenger)
             : base(gameData)
         {
             Host = host;
-            PlayerTwo = playerTwo;
+            Challenger = challenger;
         }
 
         public bool Host { get; }
 
-        public bool PlayerTwo { get; }
+        public bool Challenger { get; }
     }
 }

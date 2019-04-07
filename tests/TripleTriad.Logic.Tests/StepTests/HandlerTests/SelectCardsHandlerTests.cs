@@ -39,7 +39,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
             var cards = isHost
                 ? data.HostCards
-                : data.PlayerTwoCards;
+                : data.ChallengerCards;
 
             cards.Should().BeEquivalentTo(Cards);
         }
@@ -65,7 +65,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             }
             else
             {
-                gameData.PlayerTwoCards = Cards;
+                gameData.ChallengerCards = Cards;
             }
 
             var subject = new SelectCardsHandler();

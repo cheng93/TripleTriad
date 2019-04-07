@@ -15,7 +15,7 @@ namespace TripleTriad.Requests.GameRequests
         {
             public bool IsHost { get; set; }
 
-            public bool IsPlayerTwo { get; set; }
+            public bool IsChallenger { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -50,7 +50,7 @@ namespace TripleTriad.Requests.GameRequests
                 return new Response
                 {
                     IsHost = game.HostId == request.PlayerId,
-                    IsPlayerTwo = game.PlayerTwoId == request.PlayerId
+                    IsChallenger = game.ChallengerId == request.PlayerId
                 };
             }
         }

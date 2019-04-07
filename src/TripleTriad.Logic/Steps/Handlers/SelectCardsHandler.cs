@@ -20,7 +20,7 @@ namespace TripleTriad.Logic.Steps.Handlers
             }
             else
             {
-                step.Data.PlayerTwoCards = cards;
+                step.Data.ChallengerCards = cards;
             }
 
             step.Log($"{step.PlayerDisplay} has selected their cards.");
@@ -30,7 +30,7 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public void ValidateAndThrow(SelectCardsStep step)
         {
-            var cards = step.IsHost ? step.Data.HostCards : step.Data.PlayerTwoCards;
+            var cards = step.IsHost ? step.Data.HostCards : step.Data.ChallengerCards;
 
             if ((cards?.Count() ?? 0) == 5)
             {

@@ -51,9 +51,9 @@ namespace TripleTriad.Data
                 .HasForeignKey(g => g.HostId);
 
             modelBuilder.Entity<Game>()
-                .HasOne(g => g.PlayerTwo)
+                .HasOne(g => g.Challenger)
                 .WithMany()
-                .HasForeignKey(g => g.PlayerTwoId);
+                .HasForeignKey(g => g.ChallengerId);
 
             modelBuilder.Entity<Game>()
                 .Property(g => g.Data)

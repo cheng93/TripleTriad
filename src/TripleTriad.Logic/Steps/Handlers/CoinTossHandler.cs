@@ -21,7 +21,7 @@ namespace TripleTriad.Logic.Steps.Handlers
 
             step.Data.HostTurn = hostStarts;
             step.Data.HostWonCoinToss = hostStarts;
-            step.Log(LogTemplate(hostStarts ? step.HostDisplay : step.PlayerTwoDisplay));
+            step.Log(LogTemplate(hostStarts ? step.HostDisplay : step.ChallengerDisplay));
 
             return step.Data;
         }
@@ -37,14 +37,14 @@ namespace TripleTriad.Logic.Steps.Handlers
             }
 
             var hostNotSelectedCards = (step.Data.HostCards?.Count() ?? 0) != 5;
-            var playerTwoNotSelectedCards = (step.Data.PlayerTwoCards?.Count() ?? 0) != 5;
+            var challengerNotSelectedCards = (step.Data.ChallengerCards?.Count() ?? 0) != 5;
 
-            if (hostNotSelectedCards || playerTwoNotSelectedCards)
+            if (hostNotSelectedCards || challengerNotSelectedCards)
             {
                 throw new PlayerStillSelectingCardsException(
                     step.Data,
                     hostNotSelectedCards,
-                    playerTwoNotSelectedCards);
+                    challengerNotSelectedCards);
             }
         }
     }

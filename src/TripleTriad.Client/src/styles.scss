@@ -3,7 +3,7 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 $host: #8bf6ff;
-$playerTwo: #ff94c2;
+$challenger: #ff94c2;
 
 body {
   margin: 0;
@@ -13,6 +13,6 @@ body {
   background-color: $host;
 }
 
-.playerTwo {
-  background-color: $playerTwo;
+.challenger {
+  background-color: $challenger;
 }

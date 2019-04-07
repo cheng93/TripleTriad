@@ -26,7 +26,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             AllCards.Seifer
         };
 
-        private static readonly IEnumerable<Card> PlayerTwoCards = new[]
+        private static readonly IEnumerable<Card> ChallengerCards = new[]
         {
             AllCards.Zell,
             AllCards.Quistis,
@@ -50,7 +50,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         {
             HostTurn = isHost,
             HostCards = HostCards,
-            PlayerTwoCards = PlayerTwoCards,
+            ChallengerCards = ChallengerCards,
             Tiles = Enumerable.Range(0, 9)
                 .Select(x => new Tile
                 {
@@ -152,7 +152,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         [Theory]
         [InlineData(Result.HostWin, "Player One has won.")]
-        [InlineData(Result.PlayerTwoWin, "Player Two has won.")]
+        [InlineData(Result.ChallengerWin, "Player Two has won.")]
         [InlineData(Result.Tie, "There was a tie.")]
         public void Should_have_correct_result_log_entry(Result result, string message)
         {
@@ -178,7 +178,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         [Theory]
         [InlineData(Result.HostWin)]
-        [InlineData(Result.PlayerTwoWin)]
+        [InlineData(Result.ChallengerWin)]
         [InlineData(Result.Tie)]
         [InlineData(null)]
         public void Should_have_correct_result(Result? result)
@@ -252,8 +252,8 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 ruleStrategyFactory.Object);
 
             var data = subject.Run(CreateStep(gameData, isHost: isHost));
-            var cards = isHost ? data.HostCards : data.PlayerTwoCards;
-            var expectedCards = (isHost ? HostCards : PlayerTwoCards)
+            var cards = isHost ? data.HostCards : data.ChallengerCards;
+            var expectedCards = (isHost ? HostCards : ChallengerCards)
                 .Where(x => x.Name != Card.Name);
 
             cards.Should().BeEquivalentTo(expectedCards);

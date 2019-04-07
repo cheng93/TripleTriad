@@ -14,7 +14,7 @@ export class GameTileComponent {
     return (
       this.tile.card && {
         host: this.tile.card.isHost,
-        playerTwo: !this.tile.card.isHost
+        challenger: !this.tile.card.isHost
       }
     );
   }

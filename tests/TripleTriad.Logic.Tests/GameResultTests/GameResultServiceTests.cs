@@ -104,7 +104,7 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                                         x >= i)
                                 })
                         },
-                        Result.PlayerTwoWin
+                        Result.ChallengerWin
                     };
                 }
             }

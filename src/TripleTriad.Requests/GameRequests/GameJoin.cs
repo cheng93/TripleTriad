@@ -55,7 +55,7 @@ namespace TripleTriad.Requests.GameRequests
             {
                 var game = await this.context.Games.GetGameOrThrowAsync(request.GameId, cancellationToken);
 
-                if (game.PlayerTwoId != null)
+                if (game.ChallengerId != null)
                 {
                     throw new CannotJoinGameException(request.GameId);
                 }
@@ -67,7 +67,7 @@ namespace TripleTriad.Requests.GameRequests
                         request.PlayerId);
                 }
 
-                game.PlayerTwoId = request.PlayerId;
+                game.ChallengerId = request.PlayerId;
                 game.Status = GameStatus.ChooseCards;
 
                 await this.context.SaveChangesAsync(cancellationToken);

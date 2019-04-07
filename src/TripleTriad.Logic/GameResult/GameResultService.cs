@@ -15,21 +15,21 @@ namespace TripleTriad.Logic.GameResult
             }
 
             var host = gameData.Tiles.Count(x => x.Card.IsHost);
-            var playerTwo = gameData.Tiles.Count(x => !x.Card.IsHost);
+            var challenger = gameData.Tiles.Count(x => !x.Card.IsHost);
 
             if (gameData.HostWonCoinToss.Value)
             {
-                playerTwo += 1;
+                challenger += 1;
             }
             else
             {
                 host += 1;
             }
 
-            return host > playerTwo
+            return host > challenger
                 ? Result.HostWin
-                : host < playerTwo
-                    ? Result.PlayerTwoWin
+                : host < challenger
+                    ? Result.ChallengerWin
                     : Result.Tie;
         }
     }

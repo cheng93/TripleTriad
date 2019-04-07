@@ -14,33 +14,33 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
     {
         private static readonly int GameId = 2;
         private static readonly Guid HostId = new Guid("3ede675b-cc81-42cd-bf13-ff6e8ab78b3d");
-        private static readonly Guid PlayerTwoId = new Guid("403527f1-cdbb-4628-a9b0-25fc392fefc4");
+        private static readonly Guid ChallengerId = new Guid("403527f1-cdbb-4628-a9b0-25fc392fefc4");
         private static readonly Guid NonPlayerId = new Guid("c06c5fdd-63b5-4e6a-aa19-924bbddb6b79");
 
         private static Game CreateGame(Guid? hostId = null) => new Game()
         {
             GameId = GameId,
             HostId = HostId,
-            PlayerTwoId = PlayerTwoId
+            ChallengerId = ChallengerId
         };
 
         public static IEnumerable<object[]> PlayerIds = new[]
         {
             new object[] { HostId },
-            new object[] { PlayerTwoId },
+            new object[] { ChallengerId },
             new object[] { NonPlayerId }
         };
 
         public static IEnumerable<object[]> PlayerIdsWithResult = new[]
         {
             new object[] { HostId, true, false },
-            new object[] { PlayerTwoId, false, true },
+            new object[] { ChallengerId, false, true },
             new object[] { NonPlayerId, false, false }
         };
 
         [Theory]
         [MemberData(nameof(PlayerIdsWithResult))]
-        public async Task Should_return_response(Guid playerId, bool isHost, bool isPlayerTwo)
+        public async Task Should_return_response(Guid playerId, bool isHost, bool isChallenger)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -58,7 +58,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
             var response = await subject.Handle(command, default);
 
             response.IsHost.Should().Be(isHost);
-            response.IsPlayerTwo.Should().Be(isPlayerTwo);
+            response.IsChallenger.Should().Be(isChallenger);
         }
 
         [Theory]

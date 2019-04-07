@@ -21,7 +21,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
     public class RequestHandlerTests
     {
         private static readonly Guid HostId = Guid.NewGuid();
-        private static readonly Guid PlayerTwoId = Guid.NewGuid();
+        private static readonly Guid ChallengerId = Guid.NewGuid();
 
         private static readonly int GameId = 2;
 
@@ -42,7 +42,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             {
                 GameId = GameId,
                 HostId = HostId,
-                PlayerTwoId = PlayerTwoId,
+                ChallengerId = ChallengerId,
                 Status = GameStatus.ChooseCards,
                 Data = gameData.ToJson()
             };
@@ -52,7 +52,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
         {
             return new Player
             {
-                PlayerId = isHost ? HostId : PlayerTwoId,
+                PlayerId = isHost ? HostId : ChallengerId,
                 DisplayName = $"Player{(isHost ? 1 : 2)}"
             };
         }
@@ -115,7 +115,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             var request = new CardSelect.Request()
             {
                 GameId = GameId,
-                PlayerId = isHost ? HostId : PlayerTwoId
+                PlayerId = isHost ? HostId : ChallengerId
             };
 
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
@@ -124,7 +124,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                 .Returns(new GameData
                 {
                     HostCards = isHost ? Cards : opponentCards,
-                    PlayerTwoCards = isHost ? opponentCards : Cards
+                    ChallengerCards = isHost ? opponentCards : Cards
                 });
 
             var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
@@ -167,7 +167,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             foreach (var status in badStatuses)
             {
                 yield return new object[] { status, HostId };
-                yield return new object[] { status, PlayerTwoId };
+                yield return new object[] { status, ChallengerId };
             }
         }
 
@@ -242,7 +242,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
-            var playerId = isHost ? HostId : PlayerTwoId;
+            var playerId = isHost ? HostId : ChallengerId;
 
             var command = new CardSelect.Request()
             {

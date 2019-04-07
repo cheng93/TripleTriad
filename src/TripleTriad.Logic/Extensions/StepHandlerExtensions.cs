@@ -20,9 +20,9 @@ namespace TripleTriad.Logic.Extensions
             this IStepHandler<CoinTossStep> handler,
             GameData data,
             string hostDispay,
-            string playerTwoDisplay)
+            string challengerDisplay)
         {
-            var step = new CoinTossStep(data, hostDispay, playerTwoDisplay);
+            var step = new CoinTossStep(data, hostDispay, challengerDisplay);
             return handler.ValidateAndRun(step);
         }
 

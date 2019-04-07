@@ -17,7 +17,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
     {
         private static readonly string HostDisplay = "Host";
 
-        private static readonly string PlayerTwoDisplay = "PlayerTwo";
+        private static readonly string ChallengerDisplay = "Challenger";
 
         private static IEnumerable<Card> Cards = new[]
         {
@@ -29,7 +29,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         };
 
         private static CoinTossStep CreateStep(GameData gameData = null)
-            => new CoinTossStep(gameData ?? new GameData(), HostDisplay, PlayerTwoDisplay);
+            => new CoinTossStep(gameData ?? new GameData(), HostDisplay, ChallengerDisplay);
 
         [Theory]
         [InlineData(true)]
@@ -66,7 +66,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         public static IEnumerable<object[]> ExpectedLogEntry => new[]
         {
             new object[] { true, $"{HostDisplay} won the coin toss." },
-            new object[] { false, $"{PlayerTwoDisplay} won the coin toss." }
+            new object[] { false, $"{ChallengerDisplay} won the coin toss." }
         };
 
         [Theory]
@@ -116,14 +116,14 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [MemberData(nameof(StillSelectingCards))]
         public void Should_throw_PlayerStillSelectingCardsException(
             IEnumerable<Card> hostCards,
-            IEnumerable<Card> playerTwoCards,
+            IEnumerable<Card> challengerCards,
             bool hostStillSelecting,
-            bool playerTwoStillSelecting)
+            bool challengerStillSelecting)
         {
             var gameData = new GameData
             {
                 HostCards = hostCards,
-                PlayerTwoCards = playerTwoCards
+                ChallengerCards = challengerCards
             };
 
             var coinTossService = new Mock<ICoinTossService>();
@@ -135,7 +135,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 .Throw<PlayerStillSelectingCardsException>()
                 .Where(x => x.GameData == gameData
                     && x.Host == hostStillSelecting
-                    && x.PlayerTwo == playerTwoStillSelecting);
+                    && x.Challenger == challengerStillSelecting);
         }
     }
 }

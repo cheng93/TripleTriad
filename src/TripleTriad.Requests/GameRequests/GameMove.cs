@@ -78,7 +78,7 @@ namespace TripleTriad.Requests.GameRequests
                 var game = await this.context.Games.GetGameOrThrowAsync(request.GameId, cancellationToken);
 
                 if (game.HostId != request.PlayerId
-                    && game.PlayerTwoId != request.PlayerId)
+                    && game.ChallengerId != request.PlayerId)
                 {
                     throw new GameInvalidPlayerException(request.GameId, request.PlayerId);
                 }
@@ -114,7 +114,7 @@ namespace TripleTriad.Requests.GameRequests
                 return new Response
                 {
                     GameId = request.GameId,
-                    Cards = isHost ? gameData.HostCards : gameData.PlayerTwoCards,
+                    Cards = isHost ? gameData.HostCards : gameData.ChallengerCards,
                     Tiles = gameData.Tiles
                 };
             }

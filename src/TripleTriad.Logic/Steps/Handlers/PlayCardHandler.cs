@@ -16,7 +16,7 @@ namespace TripleTriad.Logic.Steps.Handlers
             = new Dictionary<Result, string>
             {
                 {Result.HostWin, "Player One has won."},
-                {Result.PlayerTwoWin, "Player Two has won."},
+                {Result.ChallengerWin, "Player Two has won."},
                 {Result.Tie, "There was a tie."}
             };
 
@@ -56,7 +56,7 @@ namespace TripleTriad.Logic.Steps.Handlers
             }
             else
             {
-                step.Data.PlayerTwoCards = step.Data.PlayerTwoCards
+                step.Data.ChallengerCards = step.Data.ChallengerCards
                     .Where(x => x.Name != step.Card);
             }
 
@@ -81,7 +81,7 @@ namespace TripleTriad.Logic.Steps.Handlers
                 throw new NotPlayerTurnException(step.Data, step.IsHost);
             }
 
-            var cards = step.IsHost ? step.Data.HostCards : step.Data.PlayerTwoCards;
+            var cards = step.IsHost ? step.Data.HostCards : step.Data.ChallengerCards;
 
             if (cards.All(x => x.Name != step.Card))
             {

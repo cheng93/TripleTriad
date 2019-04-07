@@ -25,7 +25,7 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
             {
                 HostTurn = true,
                 HostWonCoinToss = true,
-                Result = Result.PlayerTwoWin
+                Result = Result.ChallengerWin
             };
 
         private static Game CreateGame(GameStatus gameStatus)
@@ -95,7 +95,7 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                         hostTurn = true,
                         hostWonCoinToss = true,
                         tiles = (IEnumerable<Tile>)null,
-                        result = "PlayerTwoWin"
+                        result = "ChallengerWin"
                     }
                 }
             }

@@ -8,5 +8,5 @@ export interface Room {
 
 export interface View {
   isHost: boolean;
-  isPlayerTwo: boolean;
+  isChallenger: boolean;
 }
