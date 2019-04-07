@@ -46,9 +46,9 @@ namespace TripleTriad.Data
                     .ToArray());
 
             modelBuilder.Entity<Game>()
-                .HasOne(g => g.PlayerOne)
+                .HasOne(g => g.Host)
                 .WithMany()
-                .HasForeignKey(g => g.PlayerOneId);
+                .HasForeignKey(g => g.HostId);
 
             modelBuilder.Entity<Game>()
                 .HasOne(g => g.PlayerTwo)

@@ -20,7 +20,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
     public class RequestHandlerTests
     {
-        private static readonly Guid PlayerOneId = Guid.NewGuid();
+        private static readonly Guid HostId = Guid.NewGuid();
         private static readonly Guid PlayerTwoId = Guid.NewGuid();
 
         private static readonly int GameId = 2;
@@ -38,29 +38,29 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         {
             gameData = gameData ?? new GameData
             {
-                PlayerOneCards = Cards,
+                HostCards = Cards,
                 PlayerTwoCards = Cards
             };
 
             return new Game()
             {
                 GameId = GameId,
-                PlayerOneId = PlayerOneId,
+                HostId = HostId,
                 PlayerTwoId = PlayerTwoId,
                 Status = GameStatus.ChooseCards,
                 Data = gameData.ToJson()
             };
         }
 
-        private static Player CreatePlayer(Guid playerId, bool isPlayerOne) => new Player()
+        private static Player CreatePlayer(Guid playerId, bool isHost) => new Player()
         {
             PlayerId = playerId,
-            DisplayName = $"Guest{(isPlayerOne ? "1" : "2")}"
+            DisplayName = $"Guest{(isHost ? "1" : "2")}"
         };
 
         public static IEnumerable<object[]> ExpectedResponse = new[]
         {
-            new object[] { true, PlayerOneId },
+            new object[] { true, HostId },
             new object[] { false, PlayerTwoId }
         };
 
@@ -70,10 +70,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
-            var playerOne = CreatePlayer(PlayerOneId, true);
+            var host = CreatePlayer(HostId, true);
             var playerTwo = CreatePlayer(PlayerTwoId, false);
 
-            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(host);
             await context.Players.AddAsync(playerTwo);
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
@@ -88,8 +88,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 .Setup(x => x.Run(It.IsAny<CoinTossStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneWonCoinToss = coinTossIsHeads,
-                    PlayerOneTurn = coinTossIsHeads
+                    HostWonCoinToss = coinTossIsHeads,
+                    HostTurn = coinTossIsHeads
                 });
 
             var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
@@ -178,15 +178,15 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         [Theory]
         [MemberData(nameof(PlayersStillSelecting))]
         public async Task Should_throw_inner_exception_PlayerStillSelectingCardsException(
-            bool playerOneStillSelecting,
+            bool hostStillSelecting,
             bool playerTwoStillSelecting)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
-            var playerOne = CreatePlayer(PlayerOneId, true);
+            var host = CreatePlayer(HostId, true);
             var playerTwo = CreatePlayer(PlayerTwoId, false);
 
-            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(host);
             await context.Players.AddAsync(playerTwo);
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
@@ -201,7 +201,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 .Setup(x => x.ValidateAndThrow(It.IsAny<CoinTossStep>()))
                 .Throws(new PlayerStillSelectingCardsException(
                     new GameData(),
-                    playerOneStillSelecting,
+                    hostStillSelecting,
                     playerTwoStillSelecting));
 
             var createBoardHandler = new Mock<IStepHandler<CreateBoardStep>>();
@@ -217,7 +217,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
                 .Throw<GameDataInvalidException>()
                 .Where(e => e.GameId == GameId)
                 .WithInnerException<PlayerStillSelectingCardsException>()
-                .Where(e => e.PlayerOne == playerOneStillSelecting
+                .Where(e => e.Host == hostStillSelecting
                     && e.PlayerTwo == playerTwoStillSelecting);
         }
 
@@ -226,10 +226,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
-            var playerOne = CreatePlayer(PlayerOneId, true);
+            var host = CreatePlayer(HostId, true);
             var playerTwo = CreatePlayer(PlayerTwoId, false);
 
-            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(host);
             await context.Players.AddAsync(playerTwo);
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
@@ -267,10 +267,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
-            var playerOne = CreatePlayer(PlayerOneId, true);
+            var host = CreatePlayer(HostId, true);
             var playerTwo = CreatePlayer(PlayerTwoId, false);
 
-            await context.Players.AddAsync(playerOne);
+            await context.Players.AddAsync(host);
             await context.Players.AddAsync(playerTwo);
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();

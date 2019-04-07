@@ -27,7 +27,7 @@ namespace TripleTriad.Logic.Rules
                 {
                     if (captured.Contains(x.TileId))
                     {
-                        x.Card.IsPlayerOne = tile.Card.IsPlayerOne;
+                        x.Card.IsHost = tile.Card.IsHost;
                     }
                     return x;
                 });

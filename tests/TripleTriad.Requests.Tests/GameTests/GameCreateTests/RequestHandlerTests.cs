@@ -48,7 +48,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 
             var game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
-            game.PlayerOneId.Should().Be(this.playerId);
+            game.HostId.Should().Be(this.playerId);
         }
 
         [Fact]

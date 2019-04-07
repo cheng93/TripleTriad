@@ -7,7 +7,7 @@ namespace TripleTriad.Data.Entities
     {
         public int GameId { get; set; }
 
-        public Guid PlayerOneId { get; set; }
+        public Guid HostId { get; set; }
 
         public Guid? PlayerTwoId { get; set; }
 
@@ -15,7 +15,7 @@ namespace TripleTriad.Data.Entities
 
         public GameStatus Status { get; set; }
 
-        public virtual Player PlayerOne { get; set; }
+        public virtual Player Host { get; set; }
 
         public virtual Player PlayerTwo { get; set; }
     }

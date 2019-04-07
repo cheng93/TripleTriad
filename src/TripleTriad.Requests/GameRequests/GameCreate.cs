@@ -52,7 +52,7 @@ namespace TripleTriad.Requests.GameRequests
             {
                 var game = new Game
                 {
-                    PlayerOneId = request.PlayerId,
+                    HostId = request.PlayerId,
                     Data = new GameData().ToJson()
                 };
 

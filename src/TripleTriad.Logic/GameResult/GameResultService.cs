@@ -8,27 +8,27 @@ namespace TripleTriad.Logic.GameResult
     {
         public Result? GetResult(GameData gameData)
         {
-            if (!gameData.PlayerOneWonCoinToss.HasValue
+            if (!gameData.HostWonCoinToss.HasValue
                 || (gameData.Tiles?.Any(x => x.Card == null) ?? true))
             {
                 return null;
             }
 
-            var playerOne = gameData.Tiles.Count(x => x.Card.IsPlayerOne);
-            var playerTwo = gameData.Tiles.Count(x => !x.Card.IsPlayerOne);
+            var host = gameData.Tiles.Count(x => x.Card.IsHost);
+            var playerTwo = gameData.Tiles.Count(x => !x.Card.IsHost);
 
-            if (gameData.PlayerOneWonCoinToss.Value)
+            if (gameData.HostWonCoinToss.Value)
             {
                 playerTwo += 1;
             }
             else
             {
-                playerOne += 1;
+                host += 1;
             }
 
-            return playerOne > playerTwo
-                ? Result.PlayerOneWin
-                : playerOne < playerTwo
+            return host > playerTwo
+                ? Result.HostWin
+                : host < playerTwo
                     ? Result.PlayerTwoWin
                     : Result.Tie;
         }

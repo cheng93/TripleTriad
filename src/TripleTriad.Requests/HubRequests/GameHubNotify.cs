@@ -56,8 +56,8 @@ namespace TripleTriad.Requests.HubRequests
                             GameId = request.GameId,
                             Status = game.Status.ToString(),
                             Log = gameData.Log,
-                            PlayerOneTurn = gameData.PlayerOneTurn,
-                            PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                            HostTurn = gameData.HostTurn,
+                            HostWonCoinToss = gameData.HostWonCoinToss,
                             Tiles = gameData.Tiles
                         }
                     });
@@ -72,8 +72,8 @@ namespace TripleTriad.Requests.HubRequests
                             GameId = request.GameId,
                             Status = game.Status.ToString(),
                             Log = gameData.Log,
-                            PlayerOneTurn = gameData.PlayerOneTurn,
-                            PlayerOneWonCoinToss = gameData.PlayerOneWonCoinToss,
+                            HostTurn = gameData.HostTurn,
+                            HostWonCoinToss = gameData.HostWonCoinToss,
                             Tiles = gameData.Tiles,
                             Result = gameData.Result
                         }

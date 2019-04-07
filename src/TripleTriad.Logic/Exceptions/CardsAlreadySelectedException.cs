@@ -5,12 +5,12 @@ namespace TripleTriad.Logic.Exceptions
 {
     public class CardsAlreadySelectedException : GameDataException
     {
-        public CardsAlreadySelectedException(GameData gameData, bool isPlayerOne)
+        public CardsAlreadySelectedException(GameData gameData, bool isHost)
             : base(gameData)
         {
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
         }
 
-        public bool IsPlayerOne { get; }
+        public bool IsHost { get; }
     }
 }

@@ -6,15 +6,15 @@ namespace TripleTriad.Logic.Exceptions
     {
         public CardNotInHandException(
             GameData gameData,
-            bool isPlayerOne,
+            bool isHost,
             string card)
             : base(gameData)
         {
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
             Card = card;
         }
 
-        public bool IsPlayerOne { get; }
+        public bool IsHost { get; }
 
         public string Card { get; }
     }

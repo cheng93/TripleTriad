@@ -26,19 +26,19 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         private static string PlayerDisplay = "PlayerDisplay";
 
-        private static SelectCardsStep CreateStep(bool isPlayerOne = true, GameData gameData = null)
-            => new SelectCardsStep(gameData ?? new GameData(), isPlayerOne, PlayerDisplay, CardNames);
+        private static SelectCardsStep CreateStep(bool isHost = true, GameData gameData = null)
+            => new SelectCardsStep(gameData ?? new GameData(), isHost, PlayerDisplay, CardNames);
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_have_correct_cards(bool isPlayerOne)
+        public void Should_have_correct_cards(bool isHost)
         {
             var subject = new SelectCardsHandler();
-            var data = subject.Run(CreateStep(isPlayerOne));
+            var data = subject.Run(CreateStep(isHost));
 
-            var cards = isPlayerOne
-                ? data.PlayerOneCards
+            var cards = isHost
+                ? data.HostCards
                 : data.PlayerTwoCards;
 
             cards.Should().BeEquivalentTo(Cards);
@@ -56,12 +56,12 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_throw_CardsAlreadySelectedException(bool isPlayerOne)
+        public void Should_throw_CardsAlreadySelectedException(bool isHost)
         {
             var gameData = new GameData();
-            if (isPlayerOne)
+            if (isHost)
             {
-                gameData.PlayerOneCards = Cards;
+                gameData.HostCards = Cards;
             }
             else
             {
@@ -69,12 +69,12 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             }
 
             var subject = new SelectCardsHandler();
-            Action act = () => subject.ValidateAndThrow(CreateStep(isPlayerOne, gameData));
+            Action act = () => subject.ValidateAndThrow(CreateStep(isHost, gameData));
 
             act.Should()
                 .Throw<CardsAlreadySelectedException>()
                 .Where(x => x.GameData == gameData
-                    && x.IsPlayerOne == isPlayerOne);
+                    && x.IsHost == isHost);
         }
     }
 }

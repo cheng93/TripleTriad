@@ -18,10 +18,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         private static readonly int GameId = 2;
         private static readonly Guid PlayerId = Guid.NewGuid();
 
-        private static Game CreateGame(Guid? playerOneId = null) => new Game()
+        private static Game CreateGame(Guid? hostId = null) => new Game()
         {
             GameId = GameId,
-            PlayerOneId = playerOneId ?? Guid.NewGuid(),
+            HostId = hostId ?? Guid.NewGuid(),
             Data = JsonConvert.SerializeObject(new GameData())
         };
 

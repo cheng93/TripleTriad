@@ -2,7 +2,7 @@ namespace TripleTriad.Logic.Enums
 {
     public enum Result
     {
-        PlayerOneWin = 1,
+        HostWin = 1,
         PlayerTwoWin = 2,
         Tie = 3,
         Cancelled = 4

@@ -7,6 +7,6 @@ export interface Tile {
 }
 
 export interface TileCard extends Card {
-  isPlayerOne: boolean;
+  isHost: boolean;
   modifier: number;
 }

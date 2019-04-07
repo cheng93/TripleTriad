@@ -29,7 +29,7 @@ namespace TripleTriad.Logic.Capture
             {
                 var neighbourTile = tiles.Single(x => x.TileId == neighbourTileId);
                 if (neighbourTile.Card != null
-                    && neighbourTile.Card.IsPlayerOne != tile.Card.IsPlayerOne)
+                    && neighbourTile.Card.IsHost != tile.Card.IsHost)
                 {
                     var tileTotalValue = Neighbours[tileId][neighbourTileId](tile.Card.Rank) + tile.Card.Modifier;
                     var neighbourTotalValue = Neighbours[neighbourTileId][tileId](neighbourTile.Card.Rank) + neighbourTile.Card.Modifier;

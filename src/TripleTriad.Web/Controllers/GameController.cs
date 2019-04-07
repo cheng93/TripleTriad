@@ -110,7 +110,7 @@ namespace TripleTriad.Web.Controllers
 
             return base.Json(new
             {
-                IsPlayerOne = response.IsPlayerOne,
+                IsHost = response.IsHost,
                 IsPlayerTwo = response.IsPlayerTwo
             });
         }

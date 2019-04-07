@@ -6,15 +6,15 @@ namespace TripleTriad.Logic.Steps
     {
         public CoinTossStep(
             GameData data,
-            string playerOneDisplay,
+            string hostDisplay,
             string playerTwoDisplay)
             : base(data)
         {
-            PlayerOneDisplay = playerOneDisplay;
+            HostDisplay = hostDisplay;
             PlayerTwoDisplay = playerTwoDisplay;
         }
 
-        public string PlayerOneDisplay { get; }
+        public string HostDisplay { get; }
 
         public string PlayerTwoDisplay { get; }
     }

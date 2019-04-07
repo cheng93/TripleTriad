@@ -7,6 +7,6 @@ export interface Room {
 }
 
 export interface View {
-  isPlayerOne: boolean;
+  isHost: boolean;
   isPlayerTwo: boolean;
 }

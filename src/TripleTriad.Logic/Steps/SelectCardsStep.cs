@@ -7,17 +7,17 @@ namespace TripleTriad.Logic.Steps
     {
         public SelectCardsStep(
             GameData data,
-            bool isPlayerOne,
+            bool isHost,
             string playerDisplay,
             IEnumerable<string> cards)
             : base(data)
         {
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
             PlayerDisplay = playerDisplay;
             Cards = cards;
         }
 
-        public bool IsPlayerOne { get; }
+        public bool IsHost { get; }
 
         public string PlayerDisplay { get; }
 

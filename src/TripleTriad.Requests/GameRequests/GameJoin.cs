@@ -60,7 +60,7 @@ namespace TripleTriad.Requests.GameRequests
                     throw new CannotJoinGameException(request.GameId);
                 }
 
-                if (game.PlayerOneId == request.PlayerId)
+                if (game.HostId == request.PlayerId)
                 {
                     throw new CannotPlayYourselfException(
                         request.GameId,

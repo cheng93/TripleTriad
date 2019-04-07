@@ -4,12 +4,12 @@ namespace TripleTriad.Logic.Exceptions
 {
     public class CoinTossAlreadyHappenedException : GameDataException
     {
-        public CoinTossAlreadyHappenedException(GameData gameData, bool playerOneWonCoinToss)
+        public CoinTossAlreadyHappenedException(GameData gameData, bool hostWonCoinToss)
             : base(gameData)
         {
-            PlayerOneWonCoinToss = playerOneWonCoinToss;
+            HostWonCoinToss = hostWonCoinToss;
         }
 
-        public bool PlayerOneWonCoinToss { get; }
+        public bool HostWonCoinToss { get; }
     }
 }
