@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TripleTriad.Logic\TripleTriad.Logic.csproj" />
+    <ProjectReference Include="..\TripleTriad.Common\TripleTriad.Common.csproj" />
   </ItemGroup>
 
 </Project>

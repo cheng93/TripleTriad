@@ -53,6 +53,7 @@ namespace TripleTriad.Web
             builder.RegisterModule(new MainModule());
             builder.RegisterModule(new BackgroundTasksModule());
             builder.RegisterModule(new LogicModule());
+            builder.RegisterModule(new RequestsModule());
             builder.RegisterModule(new MediatorModule());
         }
 

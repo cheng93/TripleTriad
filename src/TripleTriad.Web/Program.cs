@@ -23,6 +23,16 @@ namespace TripleTriad.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, configuration) =>
+                {
+                    configuration
+                        .AddEnvironmentVariables()
+                        .AddJsonFile("Config/appsettings.json");
+
+                    configuration.AddJsonFile(
+                        $"Config/appsettings.{hostingContext.HostingEnvironment.EnvironmentName.ToLower()}.json",
+                        optional: true);
+                })
                 .ConfigureServices(services => services.AddAutofac())
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {

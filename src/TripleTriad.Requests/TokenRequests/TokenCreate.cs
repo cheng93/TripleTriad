@@ -3,8 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using TripleTriad.Common;
+using TripleTriad.Requests.Jwt;
+using TripleTriad.Requests.Pipeline;
 
 namespace TripleTriad.Requests.TokenRequests
 {
@@ -20,25 +24,47 @@ namespace TripleTriad.Requests.TokenRequests
 
         public class Request : IRequest<Response>
         {
-            public ClaimsIdentity ClaimsIdentity { get; set; }
+            public Guid PlayerId { get; set; }
         }
 
-        public class RequestHandler : RequestHandler<Request, Response>
+        public class Validator : ValidationPreProcessor<Request>
         {
-            protected override Response Handle(Request request)
+            public Validator()
             {
-                var credentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
+                this.RuleFor(x => x.PlayerId).NotEmpty();
+            }
+        }
+
+        public class RequestHandler : IRequestHandler<Request, Response>
+        {
+            private readonly IJwtWriter jwtWriter;
+            private readonly IJwtSigningKeyProvider jwtSigningKeyProvider;
+
+            public RequestHandler(
+                IJwtWriter jwtWriter,
+                IJwtSigningKeyProvider jwtSigningKeyProvider)
+            {
+                this.jwtWriter = jwtWriter;
+                this.jwtSigningKeyProvider = jwtSigningKeyProvider;
+            }
+
+            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            {
+                var key = await this.jwtSigningKeyProvider.GetKey(cancellationToken);
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var identity = new ClaimsIdentity();
+                identity.AddClaim(new Claim(Constants.Claims.PlayerId, request.PlayerId.ToString()));
+
                 var token = new JwtSecurityToken(
-                    "TripleTriad",
-                    "TripleTriadAudience",
-                    request.ClaimsIdentity.Claims,
-                    expires: DateTime.UtcNow.AddMinutes(90),
+                    Constants.TripleTriad,
+                    Constants.TripleTriad,
+                    identity.Claims,
                     signingCredentials: credentials);
 
-                var tokenHandler = new JwtSecurityTokenHandler();
                 return new Response
                 {
-                    Token = tokenHandler.WriteToken(token)
+                    Token = this.jwtWriter.Write(token)
                 };
             }
         }

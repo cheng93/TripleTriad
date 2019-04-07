@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using TripleTriad.SignalR.Constants;
+using TripleTriad.Common;
 
 namespace TripleTriad.Web.Extensions
 {
@@ -12,7 +12,7 @@ namespace TripleTriad.Web.Extensions
             var claim = context
                 .User
                 .Claims
-                .FirstOrDefault(x => x.Type == ClaimConstants.PlayerId);
+                .FirstOrDefault(x => x.Type == Constants.Claims.PlayerId);
 
             return new Guid(claim.Value);
         }

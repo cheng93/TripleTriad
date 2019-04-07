@@ -24,7 +24,6 @@ export class TokenService {
   }
 
   refreshToken(): Observable<string> {
-    // TODO: Use a refresh token instead of generating a new one.
     return this.http.post<TokenResponse>('api/token/generate', {}).pipe(
       map(response => response.token),
       tap(token => {

@@ -1,12 +1,14 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TripleTriad.Common;
 using TripleTriad.Requests.GuestPlayerRequests;
 using TripleTriad.Requests.TokenRequests;
-using TripleTriad.SignalR.Constants;
+using TripleTriad.Web.Extensions;
 
 namespace TripleTriad.Web.Controllers
 {
@@ -25,24 +27,21 @@ namespace TripleTriad.Web.Controllers
         [HttpPost("generate")]
         public async Task<IActionResult> Generate()
         {
-            Claim claim;
-            if (!HttpContext.User.HasClaim(c => c.Type == ClaimConstants.PlayerId))
+            Guid playerId;
+            if (!base.HttpContext.User.HasClaim(c => c.Type == Constants.Claims.PlayerId))
             {
                 var createPlayerResponse = await this.mediator.Send(new GuestPlayerCreate.Request());
-                claim = new Claim(ClaimConstants.PlayerId, createPlayerResponse.PlayerId.ToString());
+                playerId = createPlayerResponse.PlayerId;
             }
             else
             {
-                claim = HttpContext.User.Claims.First(x => x.Type == ClaimConstants.PlayerId);
+                playerId = base.HttpContext.GetPlayerId();
             }
-
-            var identity = new ClaimsIdentity();
-            identity.AddClaim(claim);
 
             var tokenCreateResponse = await this.mediator.Send(
                 new TokenCreate.Request()
                 {
-                    ClaimsIdentity = identity
+                    PlayerId = playerId
                 });
 
             return base.Json(new { Token = tokenCreateResponse.Token });

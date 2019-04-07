@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using TripleTriad.SignalR.Constants;
+using TripleTriad.Common;
 
 namespace TripleTriad.SignalR
 {
-    [Authorize(Policy = AuthConstants.TripleTriadScheme)]
+    [Authorize(Policy = Constants.TripleTriad)]
     public class GameHub : Hub<IGameClient>
     {
         public const string Lobby = "lobby";
