@@ -35,7 +35,7 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                     {
                         new GameData
                         {
-                            PlayerOneWonCoinToss = coinTossWinner,
+                            HostWonCoinToss = coinTossWinner,
                             Tiles = Enumerable.Range(0, 9)
                                 .Select(x => new Tile
                                 {
@@ -77,7 +77,7 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                     {
                         new GameData
                         {
-                            PlayerOneWonCoinToss = coinTossWinner,
+                            HostWonCoinToss = coinTossWinner,
                             Tiles = Enumerable.Range(0, 9)
                                 .Select(x => new Tile
                                 {
@@ -87,14 +87,14 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                                         x <= i)
                                 })
                         },
-                        Result.PlayerOneWin
+                        Result.HostWin
                     };
 
                     yield return new object[]
                     {
                         new GameData
                         {
-                            PlayerOneWonCoinToss = coinTossWinner,
+                            HostWonCoinToss = coinTossWinner,
                             Tiles = Enumerable.Range(0, 9)
                                 .Select(x => new Tile
                                 {
@@ -104,7 +104,7 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                                         x >= i)
                                 })
                         },
-                        Result.PlayerTwoWin
+                        Result.ChallengerWin
                     };
                 }
             }
@@ -128,7 +128,7 @@ namespace TripleTriad.Logic.Tests.GameResultTests
                 {
                     new GameData
                     {
-                        PlayerOneWonCoinToss = coinTossWinner,
+                        HostWonCoinToss = coinTossWinner,
                         Tiles = Enumerable.Range(0, 9)
                             .Select(x => new Tile
                             {

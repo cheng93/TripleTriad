@@ -8,18 +8,18 @@ namespace TripleTriad.Logic.Steps
             GameData data,
             string card,
             int tileId,
-            bool isPlayerOne)
+            bool isHost)
             : base(data)
         {
             Card = card;
             TileId = tileId;
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
         }
 
         public string Card { get; }
 
         public int TileId { get; }
 
-        public bool IsPlayerOne { get; }
+        public bool IsHost { get; }
     }
 }

@@ -20,8 +20,8 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 {
     public class RequestHandlerTests
     {
-        private static readonly Guid PlayerOneId = Guid.NewGuid();
-        private static readonly Guid PlayerTwoId = Guid.NewGuid();
+        private static readonly Guid HostId = Guid.NewGuid();
+        private static readonly Guid ChallengerId = Guid.NewGuid();
 
         private static readonly int GameId = 2;
 
@@ -41,19 +41,19 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             return new Game()
             {
                 GameId = GameId,
-                PlayerOneId = PlayerOneId,
-                PlayerTwoId = PlayerTwoId,
+                HostId = HostId,
+                ChallengerId = ChallengerId,
                 Status = GameStatus.ChooseCards,
                 Data = gameData.ToJson()
             };
         }
 
-        private static Player CreatePlayer(bool isPlayerOne)
+        private static Player CreatePlayer(bool isHost)
         {
             return new Player
             {
-                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId,
-                DisplayName = $"Player{(isPlayerOne ? 1 : 2)}"
+                PlayerId = isHost ? HostId : ChallengerId,
+                DisplayName = $"Player{(isHost ? 1 : 2)}"
             };
         }
 
@@ -71,7 +71,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             var request = new CardSelect.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId
+                PlayerId = HostId
             };
 
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
@@ -79,7 +79,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                 .Setup(x => x.Run(It.IsAny<SelectCardsStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = Cards
+                    HostCards = Cards
                 });
 
             var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
@@ -100,7 +100,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
         [Theory]
         [MemberData(nameof(Requests))]
         public async Task Should_return_correct_queue_task(
-            bool isPlayerOne,
+            bool isHost,
             IEnumerable<Card> opponentCards,
             bool queueTask)
         {
@@ -115,7 +115,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             var request = new CardSelect.Request()
             {
                 GameId = GameId,
-                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId
+                PlayerId = isHost ? HostId : ChallengerId
             };
 
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
@@ -123,8 +123,8 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
                 .Setup(x => x.Run(It.IsAny<SelectCardsStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = isPlayerOne ? Cards : opponentCards,
-                    PlayerTwoCards = isPlayerOne ? opponentCards : Cards
+                    HostCards = isHost ? Cards : opponentCards,
+                    ChallengerCards = isHost ? opponentCards : Cards
                 });
 
             var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
@@ -142,7 +142,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             var command = new CardSelect.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId
+                PlayerId = HostId
             };
 
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
@@ -166,8 +166,8 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             };
             foreach (var status in badStatuses)
             {
-                yield return new object[] { status, PlayerOneId };
-                yield return new object[] { status, PlayerTwoId };
+                yield return new object[] { status, HostId };
+                yield return new object[] { status, ChallengerId };
             }
         }
 
@@ -232,7 +232,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Should_throw_inner_exception_CardsAlreadySelectedException(bool isPlayerOne)
+        public async Task Should_throw_inner_exception_CardsAlreadySelectedException(bool isHost)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -242,7 +242,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
 
-            var playerId = isPlayerOne ? PlayerOneId : PlayerTwoId;
+            var playerId = isHost ? HostId : ChallengerId;
 
             var command = new CardSelect.Request()
             {
@@ -253,7 +253,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
             var selectCardsHandler = new Mock<IStepHandler<SelectCardsStep>>();
             selectCardsHandler
                 .Setup(x => x.ValidateAndThrow(It.IsAny<SelectCardsStep>()))
-                .Throws(new CardsAlreadySelectedException(new GameData(), isPlayerOne));
+                .Throws(new CardsAlreadySelectedException(new GameData(), isHost));
 
             var subject = new CardSelect.RequestHandler(context, selectCardsHandler.Object);
 

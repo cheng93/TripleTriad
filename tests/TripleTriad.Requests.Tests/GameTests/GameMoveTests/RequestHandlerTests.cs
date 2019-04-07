@@ -21,20 +21,20 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
 {
     public class RequestHandlerTests
     {
-        private static readonly Guid PlayerOneId = Guid.NewGuid();
-        private static readonly Guid PlayerTwoId = Guid.NewGuid();
+        private static readonly Guid HostId = Guid.NewGuid();
+        private static readonly Guid ChallengerId = Guid.NewGuid();
         private static readonly int GameId = 2;
         private static readonly string Card = AllCards.Seifer.Name;
         private static readonly int TileId = 3;
 
-        private static Tile CreateTile(bool isPlayerOne = true)
+        private static Tile CreateTile(bool isHost = true)
             => new Tile
             {
                 TileId = TileId,
-                Card = new TileCard(AllCards.Seifer, isPlayerOne)
+                Card = new TileCard(AllCards.Seifer, isHost)
             };
 
-        private static readonly IEnumerable<Card> PlayerOneCards = new[]
+        private static readonly IEnumerable<Card> HostCards = new[]
         {
             AllCards.Squall,
             AllCards.Zell,
@@ -42,7 +42,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             AllCards.Rinoa
         };
 
-        private static readonly IEnumerable<Card> PlayerTwoCards = new[]
+        private static readonly IEnumerable<Card> ChallengerCards = new[]
         {
             AllCards.Laguna,
             AllCards.Kiros,
@@ -57,8 +57,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             return new Game()
             {
                 GameId = GameId,
-                PlayerOneId = PlayerOneId,
-                PlayerTwoId = PlayerTwoId,
+                HostId = HostId,
+                ChallengerId = ChallengerId,
                 Status = GameStatus.InProgress,
                 Data = gameData.ToJson()
             };
@@ -76,7 +76,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -86,8 +86,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = PlayerOneCards,
-                    PlayerTwoCards = PlayerTwoCards,
+                    HostCards = HostCards,
+                    ChallengerCards = ChallengerCards,
                     Tiles = new[] { CreateTile() }
                 });
 
@@ -110,7 +110,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -122,8 +122,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = PlayerOneCards,
-                    PlayerTwoCards = PlayerTwoCards,
+                    HostCards = HostCards,
+                    ChallengerCards = ChallengerCards,
                     Tiles = new[] { tile }
                 });
 
@@ -137,7 +137,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Should_return_correct_cards(bool isPlayerOne)
+        public async Task Should_return_correct_cards(bool isHost)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -148,7 +148,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId,
+                PlayerId = isHost ? HostId : ChallengerId,
                 Card = Card,
                 TileId = TileId
             };
@@ -158,23 +158,23 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = PlayerOneCards,
-                    PlayerTwoCards = PlayerTwoCards,
-                    Tiles = new[] { CreateTile(isPlayerOne) }
+                    HostCards = HostCards,
+                    ChallengerCards = ChallengerCards,
+                    Tiles = new[] { CreateTile(isHost) }
                 });
 
             var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
 
             var response = await subject.Handle(request, default);
 
-            var cards = isPlayerOne ? PlayerOneCards : PlayerTwoCards;
+            var cards = isHost ? HostCards : ChallengerCards;
 
             response.Cards.Should().BeEquivalentTo(cards);
         }
 
         [Theory]
-        [InlineData(Result.PlayerOneWin)]
-        [InlineData(Result.PlayerTwoWin)]
+        [InlineData(Result.HostWin)]
+        [InlineData(Result.ChallengerWin)]
         [InlineData(Result.Tie)]
         [InlineData(Result.Cancelled)]
         public async Task Should_set_status_to_finshed(Result result)
@@ -188,7 +188,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -200,8 +200,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Setup(x => x.Run(It.IsAny<PlayCardStep>()))
                 .Returns(new GameData
                 {
-                    PlayerOneCards = PlayerOneCards,
-                    PlayerTwoCards = PlayerTwoCards,
+                    HostCards = HostCards,
+                    ChallengerCards = ChallengerCards,
                     Tiles = new[] { tile },
                     Result = result
                 });
@@ -221,7 +221,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var command = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -247,8 +247,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             };
             foreach (var status in badStatuses)
             {
-                yield return new object[] { status, PlayerOneId };
-                yield return new object[] { status, PlayerTwoId };
+                yield return new object[] { status, HostId };
+                yield return new object[] { status, ChallengerId };
             }
         }
 
@@ -268,7 +268,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var command = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -319,7 +319,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Should_throw_inner_exception_CardNotInHandException(bool isPlayerOne)
+        public async Task Should_throw_inner_exception_CardNotInHandException(bool isHost)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -330,7 +330,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = isPlayerOne ? PlayerOneId : PlayerTwoId,
+                PlayerId = isHost ? HostId : ChallengerId,
                 Card = Card,
                 TileId = TileId
             };
@@ -338,7 +338,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var playCardHandler = new Mock<IStepHandler<PlayCardStep>>();
             playCardHandler
                 .Setup(x => x.ValidateAndThrow(It.IsAny<PlayCardStep>()))
-                .Throws(new CardNotInHandException(new GameData(), isPlayerOne, Card));
+                .Throws(new CardNotInHandException(new GameData(), isHost, Card));
 
             var subject = new GameMove.RequestHandler(context, playCardHandler.Object);
 
@@ -348,7 +348,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
                 .Throw<GameDataInvalidException>()
                 .Where(e => e.GameId == GameId)
                 .WithInnerException<CardNotInHandException>()
-                .Where(e => e.IsPlayerOne == isPlayerOne
+                .Where(e => e.IsHost == isHost
                     && e.Card == Card);
         }
 
@@ -364,7 +364,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };
@@ -397,7 +397,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameMoveTests
             var request = new GameMove.Request()
             {
                 GameId = GameId,
-                PlayerId = PlayerOneId,
+                PlayerId = HostId,
                 Card = Card,
                 TileId = TileId
             };

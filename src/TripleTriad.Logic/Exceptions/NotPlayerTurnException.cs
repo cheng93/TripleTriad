@@ -4,12 +4,12 @@ namespace TripleTriad.Logic.Exceptions
 {
     public class NotPlayerTurnException : GameDataException
     {
-        public NotPlayerTurnException(GameData gameData, bool isPlayerOne)
+        public NotPlayerTurnException(GameData gameData, bool isHost)
             : base(gameData)
         {
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
         }
 
-        public bool IsPlayerOne { get; }
+        public bool IsHost { get; }
     }
 }

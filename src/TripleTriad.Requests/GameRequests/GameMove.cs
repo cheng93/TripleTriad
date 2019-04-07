@@ -77,8 +77,8 @@ namespace TripleTriad.Requests.GameRequests
             {
                 var game = await this.context.Games.GetGameOrThrowAsync(request.GameId, cancellationToken);
 
-                if (game.PlayerOneId != request.PlayerId
-                    && game.PlayerTwoId != request.PlayerId)
+                if (game.HostId != request.PlayerId
+                    && game.ChallengerId != request.PlayerId)
                 {
                     throw new GameInvalidPlayerException(request.GameId, request.PlayerId);
                 }
@@ -89,14 +89,14 @@ namespace TripleTriad.Requests.GameRequests
                 }
 
                 var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
-                var isPlayerOne = request.PlayerId == game.PlayerOneId;
+                var isHost = request.PlayerId == game.HostId;
                 try
                 {
                     gameData = this.playCardHandler.Run(
                         gameData,
                         request.Card,
                         request.TileId,
-                        isPlayerOne);
+                        isHost);
                 }
                 catch (GameDataException ex)
                 {
@@ -114,7 +114,7 @@ namespace TripleTriad.Requests.GameRequests
                 return new Response
                 {
                     GameId = request.GameId,
-                    Cards = isPlayerOne ? gameData.PlayerOneCards : gameData.PlayerTwoCards,
+                    Cards = isHost ? gameData.HostCards : gameData.ChallengerCards,
                     Tiles = gameData.Tiles
                 };
             }

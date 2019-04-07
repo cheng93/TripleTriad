@@ -17,11 +17,11 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public GameData Run(CoinTossStep step)
         {
-            var playerOneStarts = this.coinTossService.IsHeads();
+            var hostStarts = this.coinTossService.IsHeads();
 
-            step.Data.PlayerOneTurn = playerOneStarts;
-            step.Data.PlayerOneWonCoinToss = playerOneStarts;
-            step.Log(LogTemplate(playerOneStarts ? step.PlayerOneDisplay : step.PlayerTwoDisplay));
+            step.Data.HostTurn = hostStarts;
+            step.Data.HostWonCoinToss = hostStarts;
+            step.Log(LogTemplate(hostStarts ? step.HostDisplay : step.ChallengerDisplay));
 
             return step.Data;
         }
@@ -31,20 +31,20 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public void ValidateAndThrow(CoinTossStep step)
         {
-            if (step.Data.PlayerOneWonCoinToss != null)
+            if (step.Data.HostWonCoinToss != null)
             {
-                throw new CoinTossAlreadyHappenedException(step.Data, step.Data.PlayerOneWonCoinToss.Value);
+                throw new CoinTossAlreadyHappenedException(step.Data, step.Data.HostWonCoinToss.Value);
             }
 
-            var playerOneNotSelectedCards = (step.Data.PlayerOneCards?.Count() ?? 0) != 5;
-            var playerTwoNotSelectedCards = (step.Data.PlayerTwoCards?.Count() ?? 0) != 5;
+            var hostNotSelectedCards = (step.Data.HostCards?.Count() ?? 0) != 5;
+            var challengerNotSelectedCards = (step.Data.ChallengerCards?.Count() ?? 0) != 5;
 
-            if (playerOneNotSelectedCards || playerTwoNotSelectedCards)
+            if (hostNotSelectedCards || challengerNotSelectedCards)
             {
                 throw new PlayerStillSelectingCardsException(
                     step.Data,
-                    playerOneNotSelectedCards,
-                    playerTwoNotSelectedCards);
+                    hostNotSelectedCards,
+                    challengerNotSelectedCards);
             }
         }
     }

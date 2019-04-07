@@ -21,6 +21,14 @@ dotnet ef database update \
     -s src/TripleTriad.Web/TripleTriad.Web.csproj
 ```
 
+You can add database migrations by running
+
+```
+dotnet ef migrations add MigrationName \
+    -p src/TripleTriad.Data/TripleTriad.Data.csproj \
+    -s src/TripleTriad.Web/TripleTriad.Web.csproj
+```
+
 Run the front end
 
 ```

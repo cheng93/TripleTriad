@@ -23,9 +23,9 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
         private static GameData CreateGameData()
             => new GameData
             {
-                PlayerOneTurn = true,
-                PlayerOneWonCoinToss = true,
-                Result = Result.PlayerTwoWin
+                HostTurn = true,
+                HostWonCoinToss = true,
+                Result = Result.ChallengerWin
             };
 
         private static Game CreateGame(GameStatus gameStatus)
@@ -75,8 +75,8 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                         gameId = GameId,
                         status = GameStatus.InProgress.ToString(),
                         log = new string[] { },
-                        playerOneTurn = true,
-                        playerOneWonCoinToss = true,
+                        hostTurn = true,
+                        hostWonCoinToss = true,
                         tiles = (IEnumerable<Tile>)null
                     }
                 }
@@ -92,10 +92,10 @@ namespace TripleTriad.Requests.Tests.HubTests.GameHubGroupNotifyTests
                         gameId = GameId,
                         status = GameStatus.Finished.ToString(),
                         log = new string[] { },
-                        playerOneTurn = true,
-                        playerOneWonCoinToss = true,
+                        hostTurn = true,
+                        hostWonCoinToss = true,
                         tiles = (IEnumerable<Tile>)null,
-                        result = "PlayerTwoWin"
+                        result = "ChallengerWin"
                     }
                 }
             }

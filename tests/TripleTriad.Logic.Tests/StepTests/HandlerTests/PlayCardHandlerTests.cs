@@ -17,7 +17,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 {
     public class PlayCardHandlerTests
     {
-        private static readonly IEnumerable<Card> PlayerOneCards = new[]
+        private static readonly IEnumerable<Card> HostCards = new[]
         {
             AllCards.Laguna,
             AllCards.Kiros,
@@ -26,7 +26,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             AllCards.Seifer
         };
 
-        private static readonly IEnumerable<Card> PlayerTwoCards = new[]
+        private static readonly IEnumerable<Card> ChallengerCards = new[]
         {
             AllCards.Zell,
             AllCards.Quistis,
@@ -39,18 +39,18 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         public static string MissingCardName = AllCards.Squall.Name;
 
-        private static PlayCardStep CreateStep(GameData gameData, string cardName = null, int tileId = 0, bool isPlayerOne = true)
+        private static PlayCardStep CreateStep(GameData gameData, string cardName = null, int tileId = 0, bool isHost = true)
             => new PlayCardStep(
                     gameData,
                     cardName ?? AllCards.Seifer.Name,
                     tileId,
-                    isPlayerOne);
+                    isHost);
 
-        private static GameData CreateData(bool isPlayerOne = true) => new GameData
+        private static GameData CreateData(bool isHost = true) => new GameData
         {
-            PlayerOneTurn = isPlayerOne,
-            PlayerOneCards = PlayerOneCards,
-            PlayerTwoCards = PlayerTwoCards,
+            HostTurn = isHost,
+            HostCards = HostCards,
+            ChallengerCards = ChallengerCards,
             Tiles = Enumerable.Range(0, 9)
                 .Select(x => new Tile
                 {
@@ -73,9 +73,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_throw_NotPlayerTurnException(bool isPlayerOne)
+        public void Should_throw_NotPlayerTurnException(bool isHost)
         {
-            var gameData = CreateData(!isPlayerOne);
+            var gameData = CreateData(!isHost);
 
             var gameResultService = new Mock<IGameResultService>();
             var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
@@ -83,20 +83,20 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isPlayerOne: isPlayerOne, cardName: MissingCardName));
+            Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isHost: isHost, cardName: MissingCardName));
 
             act.Should()
                 .Throw<NotPlayerTurnException>()
                 .Where(x => x.GameData == gameData
-                    && x.IsPlayerOne == isPlayerOne);
+                    && x.IsHost == isHost);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_throw_CardNotInHandException(bool isPlayerOne)
+        public void Should_throw_CardNotInHandException(bool isHost)
         {
-            var gameData = CreateData(isPlayerOne);
+            var gameData = CreateData(isHost);
 
             var gameResultService = new Mock<IGameResultService>();
             var ruleStrategyFactory = new Mock<IRuleStrategyFactory>();
@@ -104,12 +104,12 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isPlayerOne: isPlayerOne, cardName: MissingCardName));
+            Action act = () => subject.ValidateAndThrow(CreateStep(gameData, isHost: isHost, cardName: MissingCardName));
 
             act.Should()
                 .Throw<CardNotInHandException>()
                 .Where(x => x.GameData == gameData
-                    && x.IsPlayerOne == isPlayerOne
+                    && x.IsHost == isHost
                     && x.Card == MissingCardName);
         }
 
@@ -151,8 +151,8 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         }
 
         [Theory]
-        [InlineData(Result.PlayerOneWin, "Player One has won.")]
-        [InlineData(Result.PlayerTwoWin, "Player Two has won.")]
+        [InlineData(Result.HostWin, "Player One has won.")]
+        [InlineData(Result.ChallengerWin, "Player Two has won.")]
         [InlineData(Result.Tie, "There was a tie.")]
         public void Should_have_correct_result_log_entry(Result result, string message)
         {
@@ -177,8 +177,8 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         }
 
         [Theory]
-        [InlineData(Result.PlayerOneWin)]
-        [InlineData(Result.PlayerTwoWin)]
+        [InlineData(Result.HostWin)]
+        [InlineData(Result.ChallengerWin)]
         [InlineData(Result.Tie)]
         [InlineData(null)]
         public void Should_have_correct_result(Result? result)
@@ -214,9 +214,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 
         [Theory]
         [MemberData(nameof(Moves))]
-        public void Should_have_correct_move_log_entry(bool isPlayerOne, int tileId, string message)
+        public void Should_have_correct_move_log_entry(bool isHost, int tileId, string message)
         {
-            var gameData = CreateData(isPlayerOne);
+            var gameData = CreateData(isHost);
 
             var gameResultService = new Mock<IGameResultService>();
 
@@ -229,16 +229,16 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne, tileId: tileId));
+            var data = subject.Run(CreateStep(gameData, isHost: isHost, tileId: tileId));
             data.Log.Should().Contain(message);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_have_remove_card_from_hand(bool isPlayerOne)
+        public void Should_have_remove_card_from_hand(bool isHost)
         {
-            var gameData = CreateData(isPlayerOne);
+            var gameData = CreateData(isHost);
 
             var gameResultService = new Mock<IGameResultService>();
 
@@ -251,9 +251,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
-            var cards = isPlayerOne ? data.PlayerOneCards : data.PlayerTwoCards;
-            var expectedCards = (isPlayerOne ? PlayerOneCards : PlayerTwoCards)
+            var data = subject.Run(CreateStep(gameData, isHost: isHost));
+            var cards = isHost ? data.HostCards : data.ChallengerCards;
+            var expectedCards = (isHost ? HostCards : ChallengerCards)
                 .Where(x => x.Name != Card.Name);
 
             cards.Should().BeEquivalentTo(expectedCards);
@@ -294,9 +294,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_have_player_assigned_to_card(bool isPlayerOne)
+        public void Should_have_player_assigned_to_card(bool isHost)
         {
-            var gameData = CreateData(isPlayerOne);
+            var gameData = CreateData(isHost);
 
             var gameResultService = new Mock<IGameResultService>();
 
@@ -309,18 +309,18 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
+            var data = subject.Run(CreateStep(gameData, isHost: isHost));
             var tile = data.Tiles.Single(x => x.TileId == 0);
 
-            tile.Card.IsPlayerOne.Should().Be(isPlayerOne);
+            tile.Card.IsHost.Should().Be(isHost);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_switch_turn(bool isPlayerOne)
+        public void Should_switch_turn(bool isHost)
         {
-            var gameData = CreateData(isPlayerOne);
+            var gameData = CreateData(isHost);
 
             var gameResultService = new Mock<IGameResultService>();
 
@@ -333,9 +333,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
                 gameResultService.Object,
                 ruleStrategyFactory.Object);
 
-            var data = subject.Run(CreateStep(gameData, isPlayerOne: isPlayerOne));
+            var data = subject.Run(CreateStep(gameData, isHost: isHost));
 
-            data.PlayerOneTurn.Should().Be(!isPlayerOne);
+            data.HostTurn.Should().Be(!isHost);
         }
 
         [Fact]

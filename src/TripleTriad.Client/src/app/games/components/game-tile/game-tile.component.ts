@@ -13,8 +13,8 @@ export class GameTileComponent {
   get styles() {
     return (
       this.tile.card && {
-        playerOne: this.tile.card.isPlayerOne,
-        playerTwo: !this.tile.card.isPlayerOne
+        host: this.tile.card.isHost,
+        challenger: !this.tile.card.isHost
       }
     );
   }

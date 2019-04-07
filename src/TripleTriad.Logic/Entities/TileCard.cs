@@ -5,20 +5,20 @@ namespace TripleTriad.Logic.Entities
 {
     public class TileCard : Card
     {
-        public TileCard(Card card, bool isPlayerOne, int modifier = 0)
+        public TileCard(Card card, bool isHost, int modifier = 0)
             : base(card.Name, card.Level, card.Rank, card.Element)
         {
-            IsPlayerOne = isPlayerOne;
+            IsHost = isHost;
             Modifier = modifier;
         }
 
         [JsonConstructor]
-        public TileCard(bool isPlayerOne, int modifier, string name, int level, Rank rank, Element? element = null)
-            : this(new Card(name, level, rank, element), isPlayerOne, modifier)
+        public TileCard(bool isHost, int modifier, string name, int level, Rank rank, Element? element = null)
+            : this(new Card(name, level, rank, element), isHost, modifier)
         {
         }
 
-        public bool IsPlayerOne { get; set; }
+        public bool IsHost { get; set; }
 
         public int Modifier { get; set; }
     }

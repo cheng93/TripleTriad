@@ -52,13 +52,13 @@ namespace TripleTriad.Logic.Tests.RuleTests
             tiles
                 .Single(x => x.TileId == 1)
                 .Card
-                .IsPlayerOne
+                .IsHost
                 .Should()
                 .Be(captured1);
             tiles
                 .Single(x => x.TileId == 3)
                 .Card
-                .IsPlayerOne
+                .IsHost
                 .Should()
                 .Be(captured3);
         }

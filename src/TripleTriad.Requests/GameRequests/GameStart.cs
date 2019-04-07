@@ -78,7 +78,7 @@ namespace TripleTriad.Requests.GameRequests
                 try
                 {
 
-                    gameData = this.coinTossHandler.Run(gameData, game.PlayerOne.DisplayName, game.PlayerTwo.DisplayName);
+                    gameData = this.coinTossHandler.Run(gameData, game.Host.DisplayName, game.Challenger.DisplayName);
                     gameData = this.createBoardHandler.Run(gameData);
                 }
                 catch (GameDataException ex)
@@ -94,9 +94,9 @@ namespace TripleTriad.Requests.GameRequests
                 return new Response
                 {
                     GameId = request.GameId,
-                    StartPlayerId = gameData.PlayerOneTurn.Value
-                        ? game.PlayerOneId
-                        : game.PlayerTwoId.Value
+                    StartPlayerId = gameData.HostTurn.Value
+                        ? game.HostId
+                        : game.ChallengerId.Value
                 };
             }
         }

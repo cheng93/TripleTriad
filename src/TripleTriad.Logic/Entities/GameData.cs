@@ -11,13 +11,13 @@ namespace TripleTriad.Logic.Entities
 
         public IEnumerable<Rule> Rules { get; set; } = new List<Rule>();
 
-        public bool? PlayerOneWonCoinToss { get; set; }
+        public bool? HostWonCoinToss { get; set; }
 
-        public bool? PlayerOneTurn { get; set; }
+        public bool? HostTurn { get; set; }
 
-        public IEnumerable<Card> PlayerOneCards { get; set; }
+        public IEnumerable<Card> HostCards { get; set; }
 
-        public IEnumerable<Card> PlayerTwoCards { get; set; }
+        public IEnumerable<Card> ChallengerCards { get; set; }
 
         public IEnumerable<Tile> Tiles { get; set; }
 

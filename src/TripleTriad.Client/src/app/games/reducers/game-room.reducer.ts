@@ -8,9 +8,9 @@ import { View } from '../models/room';
 
 export interface State {
   gameId: number;
-  playerOneCards: Card[];
-  playerTwoCards: Card[];
-  playerOneTurn: boolean;
+  hostCards: Card[];
+  challengerCards: Card[];
+  hostTurn: boolean;
   status: string;
   tiles: Tile[];
   view: View;
@@ -18,14 +18,14 @@ export interface State {
 
 export const initialState: State = {
   gameId: null,
-  playerOneCards: [],
-  playerTwoCards: [],
-  playerOneTurn: null,
+  hostCards: [],
+  challengerCards: [],
+  hostTurn: null,
   status: null,
   tiles: [],
   view: {
-    isPlayerOne: false,
-    isPlayerTwo: false
+    isHost: false,
+    isChallenger: false
   }
 };
 

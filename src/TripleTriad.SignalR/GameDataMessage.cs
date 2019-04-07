@@ -12,9 +12,9 @@ namespace TripleTriad.SignalR
 
         public ICollection<string> Log { get; set; } = new List<string>();
 
-        public bool? PlayerOneTurn { get; set; }
+        public bool? HostTurn { get; set; }
 
-        public bool? PlayerOneWonCoinToss { get; set; }
+        public bool? HostWonCoinToss { get; set; }
 
         public IEnumerable<Tile> Tiles { get; set; }
 

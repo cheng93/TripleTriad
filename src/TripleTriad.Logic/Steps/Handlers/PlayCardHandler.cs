@@ -15,8 +15,8 @@ namespace TripleTriad.Logic.Steps.Handlers
         private static Dictionary<Result, string> Messages
             = new Dictionary<Result, string>
             {
-                {Result.PlayerOneWin, "Player One has won."},
-                {Result.PlayerTwoWin, "Player Two has won."},
+                {Result.HostWin, "Player One has won."},
+                {Result.ChallengerWin, "Player Two has won."},
                 {Result.Tie, "There was a tie."}
             };
 
@@ -40,7 +40,7 @@ namespace TripleTriad.Logic.Steps.Handlers
                 {
                     if (x.TileId == step.TileId)
                     {
-                        x.Card = new TileCard(card, step.IsPlayerOne);
+                        x.Card = new TileCard(card, step.IsHost);
                     }
                     return x;
                 });
@@ -49,19 +49,19 @@ namespace TripleTriad.Logic.Steps.Handlers
                 .Create(step.Data.Rules)
                 .Apply(step.Data.Tiles, step.TileId);
 
-            if (step.IsPlayerOne)
+            if (step.IsHost)
             {
-                step.Data.PlayerOneCards = step.Data.PlayerOneCards
+                step.Data.HostCards = step.Data.HostCards
                     .Where(x => x.Name != step.Card);
             }
             else
             {
-                step.Data.PlayerTwoCards = step.Data.PlayerTwoCards
+                step.Data.ChallengerCards = step.Data.ChallengerCards
                     .Where(x => x.Name != step.Card);
             }
 
-            var player = $"Player {(step.IsPlayerOne ? "One" : "Two")}";
-            step.Data.PlayerOneTurn = !step.Data.PlayerOneTurn;
+            var player = $"Player {(step.IsHost ? "One" : "Two")}";
+            step.Data.HostTurn = !step.Data.HostTurn;
             step.Log($"{player} played {step.Card} on tile {step.TileId}");
 
             var result = this.gameResultService.GetResult(step.Data);
@@ -76,16 +76,16 @@ namespace TripleTriad.Logic.Steps.Handlers
 
         public void ValidateAndThrow(PlayCardStep step)
         {
-            if (step.IsPlayerOne != step.Data.PlayerOneTurn)
+            if (step.IsHost != step.Data.HostTurn)
             {
-                throw new NotPlayerTurnException(step.Data, step.IsPlayerOne);
+                throw new NotPlayerTurnException(step.Data, step.IsHost);
             }
 
-            var cards = step.IsPlayerOne ? step.Data.PlayerOneCards : step.Data.PlayerTwoCards;
+            var cards = step.IsHost ? step.Data.HostCards : step.Data.ChallengerCards;
 
             if (cards.All(x => x.Name != step.Card))
             {
-                throw new CardNotInHandException(step.Data, step.IsPlayerOne, step.Card);
+                throw new CardNotInHandException(step.Data, step.IsHost, step.Card);
             }
 
             var tile = step.Data.Tiles.Single(x => x.TileId == step.TileId);

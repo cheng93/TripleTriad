@@ -15,9 +15,9 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
 {
     public class CoinTossHandlerTests
     {
-        private static readonly string PlayerOneDisplay = "PlayerOne";
+        private static readonly string HostDisplay = "Host";
 
-        private static readonly string PlayerTwoDisplay = "PlayerTwo";
+        private static readonly string ChallengerDisplay = "Challenger";
 
         private static IEnumerable<Card> Cards = new[]
         {
@@ -29,7 +29,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         };
 
         private static CoinTossStep CreateStep(GameData gameData = null)
-            => new CoinTossStep(gameData ?? new GameData(), PlayerOneDisplay, PlayerTwoDisplay);
+            => new CoinTossStep(gameData ?? new GameData(), HostDisplay, ChallengerDisplay);
 
         [Theory]
         [InlineData(true)]
@@ -44,7 +44,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             var subject = new CoinTossHandler(coinTossService.Object);
             var data = subject.Run(CreateStep());
 
-            data.PlayerOneWonCoinToss.Should().Be(coinTossIsHeads);
+            data.HostWonCoinToss.Should().Be(coinTossIsHeads);
         }
 
         [Theory]
@@ -60,13 +60,13 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             var subject = new CoinTossHandler(coinTossService.Object);
             var data = subject.Run(CreateStep());
 
-            data.PlayerOneTurn.Should().Be(coinTossIsHeads);
+            data.HostTurn.Should().Be(coinTossIsHeads);
         }
 
         public static IEnumerable<object[]> ExpectedLogEntry => new[]
         {
-            new object[] { true, $"{PlayerOneDisplay} won the coin toss." },
-            new object[] { false, $"{PlayerTwoDisplay} won the coin toss." }
+            new object[] { true, $"{HostDisplay} won the coin toss." },
+            new object[] { false, $"{ChallengerDisplay} won the coin toss." }
         };
 
         [Theory]
@@ -87,11 +87,11 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_throw_CoinTossAlreadyHappenedException(bool playerOneWon)
+        public void Should_throw_CoinTossAlreadyHappenedException(bool hostWon)
         {
             var gameData = new GameData
             {
-                PlayerOneWonCoinToss = playerOneWon
+                HostWonCoinToss = hostWon
             };
 
             var coinTossService = new Mock<ICoinTossService>();
@@ -102,7 +102,7 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             act.Should()
                 .Throw<CoinTossAlreadyHappenedException>()
                 .Where(x => x.GameData == gameData
-                    && x.PlayerOneWonCoinToss == playerOneWon);
+                    && x.HostWonCoinToss == hostWon);
         }
 
         public static IEnumerable<object[]> StillSelectingCards = new[]
@@ -115,15 +115,15 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
         [Theory]
         [MemberData(nameof(StillSelectingCards))]
         public void Should_throw_PlayerStillSelectingCardsException(
-            IEnumerable<Card> playerOneCards,
-            IEnumerable<Card> playerTwoCards,
-            bool playerOneStillSelecting,
-            bool playerTwoStillSelecting)
+            IEnumerable<Card> hostCards,
+            IEnumerable<Card> challengerCards,
+            bool hostStillSelecting,
+            bool challengerStillSelecting)
         {
             var gameData = new GameData
             {
-                PlayerOneCards = playerOneCards,
-                PlayerTwoCards = playerTwoCards
+                HostCards = hostCards,
+                ChallengerCards = challengerCards
             };
 
             var coinTossService = new Mock<ICoinTossService>();
@@ -134,8 +134,8 @@ namespace TripleTriad.Logic.Tests.StepTests.HandlerTests
             act.Should()
                 .Throw<PlayerStillSelectingCardsException>()
                 .Where(x => x.GameData == gameData
-                    && x.PlayerOne == playerOneStillSelecting
-                    && x.PlayerTwo == playerTwoStillSelecting);
+                    && x.Host == hostStillSelecting
+                    && x.Challenger == challengerStillSelecting);
         }
     }
 }

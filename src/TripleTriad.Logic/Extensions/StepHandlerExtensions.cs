@@ -19,21 +19,21 @@ namespace TripleTriad.Logic.Extensions
         public static GameData Run(
             this IStepHandler<CoinTossStep> handler,
             GameData data,
-            string playerOneDispay,
-            string playerTwoDisplay)
+            string hostDispay,
+            string challengerDisplay)
         {
-            var step = new CoinTossStep(data, playerOneDispay, playerTwoDisplay);
+            var step = new CoinTossStep(data, hostDispay, challengerDisplay);
             return handler.ValidateAndRun(step);
         }
 
         public static GameData Run(
             this IStepHandler<SelectCardsStep> handler,
             GameData data,
-            bool isPlayerOne,
+            bool isHost,
             string playerDisplay,
             IEnumerable<string> cards)
         {
-            var step = new SelectCardsStep(data, isPlayerOne, playerDisplay, cards);
+            var step = new SelectCardsStep(data, isHost, playerDisplay, cards);
             return handler.ValidateAndRun(step);
         }
 
@@ -50,9 +50,9 @@ namespace TripleTriad.Logic.Extensions
             GameData data,
             string card,
             int tileId,
-            bool isPlayerOne)
+            bool isHost)
         {
-            var step = new PlayCardStep(data, card, tileId, isPlayerOne);
+            var step = new PlayCardStep(data, card, tileId, isHost);
             return handler.ValidateAndRun(step);
         }
     }

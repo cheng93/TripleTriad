@@ -18,10 +18,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         private static readonly int GameId = 2;
         private static readonly Guid PlayerId = Guid.NewGuid();
 
-        private static Game CreateGame(Guid? playerOneId = null) => new Game()
+        private static Game CreateGame(Guid? hostId = null) => new Game()
         {
             GameId = GameId,
-            PlayerOneId = playerOneId ?? Guid.NewGuid(),
+            HostId = hostId ?? Guid.NewGuid(),
             Data = JsonConvert.SerializeObject(new GameData())
         };
 
@@ -66,7 +66,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 
             game = await context.Games.SingleAsync(x => x.GameId == response.GameId);
 
-            game.PlayerTwoId.Should().Be(PlayerId);
+            game.ChallengerId.Should().Be(PlayerId);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
-            game.PlayerTwoId = Guid.NewGuid();
+            game.ChallengerId = Guid.NewGuid();
 
             await context.Games.AddAsync(game);
             await context.SaveChangesAsync();
