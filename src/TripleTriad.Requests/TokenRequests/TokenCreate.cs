@@ -62,11 +62,9 @@ namespace TripleTriad.Requests.TokenRequests
                     identity.Claims,
                     signingCredentials: credentials);
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-
                 return new Response
                 {
-                    Token = tokenHandler.WriteToken(token)
+                    Token = this.jwtWriter.Write(token)
                 };
             }
         }
