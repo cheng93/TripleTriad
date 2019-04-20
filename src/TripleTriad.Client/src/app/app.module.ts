@@ -12,6 +12,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { CoreModule } from './core/core.module';
+import { LobbyModule } from './lobby/lobby.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,9 +21,10 @@ import { CoreModule } from './core/core.module';
     NoopAnimationsModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true }),
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     CoreModule.forRoot(),
+    LobbyModule,
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [],
