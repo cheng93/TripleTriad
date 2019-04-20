@@ -1,14 +1,13 @@
 import { Action } from '@ngrx/store';
 
 export enum CoreActionTypes {
-  LoadCores = '[Core] Load Cores',
-  
-  
+  ReceiveSignalRMessage = '[Core] Receive SignalR Message'
 }
 
-export class LoadCores implements Action {
-  readonly type = CoreActionTypes.LoadCores;
+export class ReceiveSignalRMessage implements Action {
+  readonly type = CoreActionTypes.ReceiveSignalRMessage;
+
+  constructor(public message: string) {}
 }
 
-
-export type CoreActions = LoadCores;
+export type CoreActions = ReceiveSignalRMessage;

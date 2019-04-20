@@ -9,6 +9,8 @@ import { StoreModule } from '@ngrx/store';
 import * as fromCore from './reducers/core.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreEffects } from './effects/core.effects';
+import { SignalRFacade } from './services/signal-r.facade';
+import { SignalRService } from './services/signal-r.service';
 
 @NgModule({
   imports: [
@@ -16,6 +18,7 @@ import { CoreEffects } from './effects/core.effects';
     StoreModule.forFeature('core', fromCore.reducer),
     EffectsModule.forFeature([CoreEffects])
   ],
+  providers: [SignalRService],
   declarations: [ToolbarComponent],
   exports: [ToolbarComponent]
 })
@@ -25,6 +28,7 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         TokenService,
+        SignalRFacade,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: AuthenticationInterceptorService,

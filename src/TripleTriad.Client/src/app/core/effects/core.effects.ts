@@ -5,19 +5,14 @@ import { concatMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { CoreActionTypes, CoreActions } from '../actions/core.actions';
 
-
 @Injectable()
 export class CoreEffects {
-
-
-  @Effect()
-  loadCores$ = this.actions$.pipe(
-    ofType(CoreActionTypes.LoadCores),
-    /** An EMPTY observable only emits completion. Replace with your own observable API request */
-    concatMap(() => EMPTY)
-  );
-
+  // @Effect()
+  // loadCores$ = this.actions$.pipe(
+  //   ofType(CoreActionTypes.ReceiveSignalRMessage),
+  //   /** An EMPTY observable only emits completion. Replace with your own observable API request */
+  //   concatMap(() => EMPTY)
+  // );
 
   constructor(private actions$: Actions<CoreActions>) {}
-
 }
