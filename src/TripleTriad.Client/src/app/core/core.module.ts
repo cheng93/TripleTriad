@@ -5,9 +5,17 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenService } from './services/token.service';
 import { AuthenticationInterceptorService } from './services/authentication-interceptor.service';
 import { UnauthorizedInterceptorService } from './services/unauthorized-interceptor.service';
+import { StoreModule } from '@ngrx/store';
+import * as fromCore from './reducers/core.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { CoreEffects } from './effects/core.effects';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    StoreModule.forFeature('core', fromCore.reducer),
+    EffectsModule.forFeature([CoreEffects])
+  ],
   declarations: [ToolbarComponent],
   exports: [ToolbarComponent]
 })
