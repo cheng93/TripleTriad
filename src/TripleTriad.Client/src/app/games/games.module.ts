@@ -3,12 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { GameLobbyComponent } from './containers/game-lobby/game-lobby.component';
 import { routes } from './games.routes';
 import * as fromGames from './reducers';
-import { GameLobbyService } from './services/game-lobby.service';
-import { GameListComponent } from './components/game-list/game-list.component';
-import { GameLobbyEffects } from './effects/game-lobby.effects';
 import {
   MatTableModule,
   MatPaginatorModule,
@@ -33,25 +29,18 @@ import { GameCardComponent } from './components/game-card/game-card.component';
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('games', fromGames.reducers),
-    EffectsModule.forFeature([
-      GameLobbyEffects,
-      GameRoomEffects,
-      SelectCardsEffects
-    ]),
+    EffectsModule.forFeature([GameRoomEffects, SelectCardsEffects]),
     MatPaginatorModule,
     MatTableModule,
     MatCardModule
   ],
   providers: [
-    GameLobbyService,
     GameSignalRService,
     GameSignalRFacade,
     GameRoomService,
     SelectCardsService
   ],
   declarations: [
-    GameLobbyComponent,
-    GameListComponent,
     GameRoomComponent,
     SelectCardsComponent,
     CardListComponent,
