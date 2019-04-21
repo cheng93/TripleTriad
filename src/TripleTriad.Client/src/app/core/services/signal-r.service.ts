@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+  HubConnectionState
+} from '@aspnet/signalr';
 import { Store } from '@ngrx/store';
 
 import * as fromCore from '../reducers/core.reducer';
@@ -10,7 +15,7 @@ export class SignalRService {
   constructor(private store: Store<fromCore.State>) {}
 
   connect(accessToken: string): Promise<boolean> {
-    if (!this.hubConnection || !this.connected) {
+    if (!this.hubConnection) {
       this.hubConnection = new HubConnectionBuilder()
         .withUrl('/gameHub', {
           accessTokenFactory: () => accessToken
@@ -21,10 +26,10 @@ export class SignalRService {
       this.registerServerEvents();
     }
 
-    if (!this.connected) {
+    if (this.hubConnection.state === HubConnectionState.Disconnected) {
       return this.hubConnection
         .start()
-        .then(() => (this.connected = true))
+        .then(() => this.connected)
         .catch(err => {
           console.error(err.toString());
           return this.connected;
@@ -44,7 +49,12 @@ export class SignalRService {
 
   private hubConnection: HubConnection;
 
-  private connected: boolean;
+  private get connected(): boolean {
+    return (
+      this.hubConnection &&
+      this.hubConnection.state === HubConnectionState.Connected
+    );
+  }
 
   private registerServerEvents() {
     this.hubConnection.on('Send', (message: string) => {

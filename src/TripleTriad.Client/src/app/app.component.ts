@@ -10,7 +10,7 @@ export class AppComponent implements OnInit {
   constructor(private signalRFacade: SignalRFacade) {}
 
   ngOnInit(): void {
-    this.signalRFacade.connect();
+    //this.signalRFacade.connect();
   }
 
   title = 'app';
