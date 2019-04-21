@@ -57,9 +57,15 @@ export class SignalRService {
   }
 
   private registerServerEvents() {
-    this.hubConnection.on('Send', (message: string) => {
+    this.hubConnection.on('Send', (json: string) => {
+      const message = <Message>JSON.parse(json);
       this.store.dispatch(new ReceiveSignalRMessage(message));
-      console.log(message);
+      console.log(json);
     });
   }
+}
+
+export interface Message {
+  data: any;
+  type: string;
 }

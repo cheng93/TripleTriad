@@ -1,4 +1,8 @@
 import { LobbyActions, LobbyActionTypes } from '../actions/lobby.actions';
+import {
+  CoreActions,
+  CoreActionTypes
+} from 'src/app/core/actions/core.actions';
 
 export interface State {
   creating: boolean;
@@ -12,7 +16,10 @@ export const initialState: State = {
   loading: false
 };
 
-export function reducer(state = initialState, action: LobbyActions): State {
+export function reducer(
+  state = initialState,
+  action: LobbyActions | CoreActions
+): State {
   switch (action.type) {
     case LobbyActionTypes.CreateGame:
       return {
@@ -35,6 +42,13 @@ export function reducer(state = initialState, action: LobbyActions): State {
         gameIds: action.gameIds,
         loading: false
       };
+    case CoreActionTypes.ReceiveSignalRMessage:
+      if (action.message.type == 'GameList') {
+        return {
+          ...state,
+          gameIds: action.message.data
+        };
+      }
 
     default:
       return state;
