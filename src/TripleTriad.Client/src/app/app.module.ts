@@ -20,12 +20,12 @@ import { LobbyModule } from './lobby/lobby.module';
     BrowserModule,
     NoopAnimationsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, { useHash: true }),
     StoreModule.forRoot({}, { metaReducers }),
     EffectsModule.forRoot([]),
     CoreModule.forRoot(),
     LobbyModule,
-    !environment.production ? StoreDevtoolsModule.instrument() : []
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    RouterModule.forRoot(routes, { useHash: true })
   ],
   providers: [],
   bootstrap: [AppComponent]
