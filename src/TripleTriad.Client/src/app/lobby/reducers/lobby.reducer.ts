@@ -26,6 +26,7 @@ export function reducer(
         ...state,
         creating: true
       };
+    case LobbyActionTypes.CreateGameFail:
     case LobbyActionTypes.CreateGameSuccess:
       return {
         ...state,
@@ -35,6 +36,11 @@ export function reducer(
       return {
         ...state,
         loading: true
+      };
+    case LobbyActionTypes.LoadGamesFail:
+      return {
+        ...state,
+        loading: false
       };
     case LobbyActionTypes.LoadGamesSuccess:
       return {

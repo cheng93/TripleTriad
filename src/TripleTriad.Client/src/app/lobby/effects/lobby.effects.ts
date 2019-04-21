@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import {
   LobbyActionTypes,
   LobbyActions,
   LoadGamesSuccess,
   CreateGameSuccess,
-  JoinGame
+  JoinGame,
+  CreateGameFail,
+  JoinGameFail,
+  LoadGamesFail
 } from '../actions/lobby.actions';
 import { LobbyService } from '../services/lobby.service';
 
@@ -18,9 +22,10 @@ export class LobbyEffects {
   createGame$ = this.actions$.pipe(
     ofType(LobbyActionTypes.CreateGame),
     switchMap(() =>
-      this.lobbyService
-        .createGame()
-        .pipe(map(response => new CreateGameSuccess(response.gameId)))
+      this.lobbyService.createGame().pipe(
+        map(response => new CreateGameSuccess(response.gameId)),
+        catchError(error => of(new CreateGameFail(error)))
+      )
     )
   );
 
@@ -36,9 +41,10 @@ export class LobbyEffects {
   joinGame$ = this.actions$.pipe(
     ofType<JoinGame>(LobbyActionTypes.JoinGame),
     switchMap(action =>
-      this.lobbyService
-        .joinGame(action.gameId)
-        .pipe(tap(response => this.router.navigate([response.gameId])))
+      this.lobbyService.joinGame(action.gameId).pipe(
+        tap(response => this.router.navigate([response.gameId])),
+        catchError(error => of(new JoinGameFail(error)))
+      )
     )
   );
 
@@ -46,9 +52,10 @@ export class LobbyEffects {
   loadGames$ = this.actions$.pipe(
     ofType(LobbyActionTypes.LoadGames),
     switchMap(() =>
-      this.lobbyService
-        .getGames()
-        .pipe(map(response => new LoadGamesSuccess(response.gameIds)))
+      this.lobbyService.getGames().pipe(
+        map(response => new LoadGamesSuccess(response.gameIds)),
+        catchError(error => of(new LoadGamesFail(error)))
+      )
     )
   );
 

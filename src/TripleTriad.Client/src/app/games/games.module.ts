@@ -27,12 +27,12 @@ import { GameCardComponent } from './components/game-card/game-card.component';
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
     StoreModule.forFeature('games', fromGames.reducers),
     EffectsModule.forFeature([GameRoomEffects, SelectCardsEffects]),
     MatPaginatorModule,
     MatTableModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule.forChild(routes)
   ],
   providers: [
     GameSignalRService,

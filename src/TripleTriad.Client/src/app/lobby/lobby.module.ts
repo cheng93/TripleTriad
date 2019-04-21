@@ -16,10 +16,10 @@ import { routes } from './lobby.routes';
   declarations: [LobbyComponent, GameListComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
     StoreModule.forFeature('lobby', fromLobby.reducer),
     EffectsModule.forFeature([LobbyEffects]),
-    MatTableModule
+    MatTableModule,
+    RouterModule.forChild(routes)
   ],
   providers: [LobbyService]
 })
