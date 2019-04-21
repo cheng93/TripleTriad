@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { switchMap, map, tap } from 'rxjs/operators';
 
@@ -10,14 +11,12 @@ import {
   JoinGame
 } from '../actions/lobby.actions';
 import { LobbyService } from '../services/lobby.service';
-import { GameLobbyActionTypes } from 'src/app/games/actions/game-lobby.actions';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class LobbyEffects {
   @Effect()
   createGame$ = this.actions$.pipe(
-    ofType(GameLobbyActionTypes.CreateGame),
+    ofType(LobbyActionTypes.CreateGame),
     switchMap(() =>
       this.lobbyService
         .createGame()
@@ -27,7 +26,7 @@ export class LobbyEffects {
 
   @Effect({ dispatch: false })
   createGameSuccess$ = this.actions$.pipe(
-    ofType<CreateGameSuccess>(GameLobbyActionTypes.CreateGameSuccess),
+    ofType<CreateGameSuccess>(LobbyActionTypes.CreateGameSuccess),
     tap(action => {
       this.router.navigate([action.gameId]);
     })
@@ -35,7 +34,7 @@ export class LobbyEffects {
 
   @Effect({ dispatch: false })
   joinGame$ = this.actions$.pipe(
-    ofType<JoinGame>(GameLobbyActionTypes.JoinGame),
+    ofType<JoinGame>(LobbyActionTypes.JoinGame),
     switchMap(action =>
       this.lobbyService
         .joinGame(action.gameId)

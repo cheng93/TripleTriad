@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { SignalRFacade } from 'src/app/core/services/signal-r.facade';
 import { LoadGames, CreateGame, JoinGame } from '../../actions/lobby.actions';
-import * as fromLobby from '../../reducers/lobby.reducer';
+import * as fromLobby from '../../reducers';
 
 @Component({
   selector: 'app-lobby',

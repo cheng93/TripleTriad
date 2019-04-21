@@ -9,7 +9,7 @@ import { GameListComponent } from './components/game-list/game-list.component';
 import { LobbyComponent } from './containers/lobby/lobby.component';
 import { LobbyEffects } from './effects/lobby.effects';
 import { LobbyService } from './services/lobby.service';
-import * as fromLobby from './reducers/lobby.reducer';
+import * as fromLobby from './reducers';
 import { routes } from './lobby.routes';
 
 @NgModule({
