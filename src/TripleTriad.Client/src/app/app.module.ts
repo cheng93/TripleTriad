@@ -21,7 +21,7 @@ import { LobbyModule } from './lobby/lobby.module';
     NoopAnimationsModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true }),
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({}, { metaReducers }),
     EffectsModule.forRoot([]),
     CoreModule.forRoot(),
     LobbyModule,
