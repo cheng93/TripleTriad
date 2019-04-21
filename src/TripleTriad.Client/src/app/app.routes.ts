@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', loadChildren: './games/games.module#GamesModule' }
+  { path: '', loadChildren: './lobby/lobby.module#LobbyModule' },
+  { path: ':gameId', loadChildren: './games/games.module#GamesModule' }
 ];
