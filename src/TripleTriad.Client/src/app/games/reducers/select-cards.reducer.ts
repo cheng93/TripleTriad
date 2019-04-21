@@ -3,10 +3,6 @@ import {
   SelectCardsActionTypes,
   SelectCardsActions
 } from '../actions/select-cards.actions';
-import {
-  GameLobbyActions,
-  GameLobbyActionTypes
-} from '../actions/game-lobby.actions';
 
 export interface State {
   allCards: Card[];
@@ -24,7 +20,7 @@ export const initialState: State = {
 
 export function reducer(
   state = initialState,
-  action: SelectCardsActions | GameLobbyActions
+  action: SelectCardsActions
 ): State {
   switch (action.type) {
     case SelectCardsActionTypes.ChangePage: {
@@ -58,10 +54,6 @@ export function reducer(
         ...state,
         cardsSubmitted: true
       };
-    }
-    case GameLobbyActionTypes.CreateGameSuccess:
-    case GameLobbyActionTypes.JoinGameSuccess: {
-      return initialState;
     }
     default:
       return state;

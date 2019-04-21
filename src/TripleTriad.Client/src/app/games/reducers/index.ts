@@ -4,13 +4,11 @@ import {
   createSelector
 } from '@ngrx/store';
 
-import * as fromLobby from './game-lobby.reducer';
 import * as fromRoot from '../../reducers';
 import * as fromRoom from './game-room.reducer';
 import * as fromSelectCards from './select-cards.reducer';
 
 export interface GamesState {
-  lobby: fromLobby.State;
   room: fromRoom.State;
   selectCards: fromSelectCards.State;
 }
@@ -20,22 +18,11 @@ export interface State extends fromRoot.State {
 }
 
 export const reducers: ActionReducerMap<GamesState> = {
-  lobby: fromLobby.reducer,
   room: fromRoom.reducer,
   selectCards: fromSelectCards.reducer
 };
 
 export const getGameState = createFeatureSelector<GamesState>('games');
-
-export const getGameLobbyState = createSelector(
-  getGameState,
-  state => state.lobby
-);
-
-export const getLobbyGameIds = createSelector(
-  getGameLobbyState,
-  fromLobby.getGameIds
-);
 
 export const getGameRoomState = createSelector(
   getGameState,
