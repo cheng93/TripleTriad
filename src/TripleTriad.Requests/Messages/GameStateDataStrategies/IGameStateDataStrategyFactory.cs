@@ -1,6 +1,6 @@
 using TripleTriad.Data.Entities;
 
-namespace TripleTriad.Requests.Messages.GameStateStrategies
+namespace TripleTriad.Requests.Messages.GameStateDataStrategies
 {
     public interface IGameStateDataStrategyFactory
     {

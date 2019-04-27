@@ -5,7 +5,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using TripleTriad.Data.Entities;
 using TripleTriad.Requests.Messages;
-using TripleTriad.Requests.Messages.GameStateStrategies;
+using TripleTriad.Requests.Messages.GameStateDataStrategies;
 using TripleTriad.Requests.Tests.Utils;
 using Xunit;
 
@@ -27,7 +27,11 @@ namespace TripleTriad.Requests.Tests.MessageTests
             var dataStrategy = new Mock<IGameStateDataStrategy>();
             dataStrategy
                 .Setup(x => x.GetData(It.IsAny<Game>(), It.IsAny<Guid?>()))
-                .Returns(new { Foo = "Bar", Hello = "World" });
+                .Returns(new GameStateData
+                {
+                    GameId = game.GameId,
+                    Status = "Hello World"
+                });
 
             var dataStrategyFactory = new Mock<IGameStateDataStrategyFactory>();
             dataStrategyFactory
@@ -47,7 +51,7 @@ namespace TripleTriad.Requests.Tests.MessageTests
                         : null
                 });
 
-            var expected = "{ \"foo\": \"Bar\", \"hello\": \"World\" }";
+            var expected = "{ \"gameId\": 2, \"status\": \"Hello World\" }";
 
             JToken.Parse(message)["data"].Should().BeEquivalentTo(JToken.Parse(expected));
         }
@@ -66,7 +70,11 @@ namespace TripleTriad.Requests.Tests.MessageTests
             var dataStrategy = new Mock<IGameStateDataStrategy>();
             dataStrategy
                 .Setup(x => x.GetData(It.IsAny<Game>(), It.IsAny<Guid?>()))
-                .Returns(new { Foo = "Bar", Hello = "World" });
+                .Returns(new GameStateData
+                {
+                    GameId = game.GameId,
+                    Status = "Hello World"
+                });
 
             var dataStrategyFactory = new Mock<IGameStateDataStrategyFactory>();
             dataStrategyFactory

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using TripleTriad.Data;
 using TripleTriad.Requests.Extensions;
-using TripleTriad.Requests.Messages.GameStateStrategies;
+using TripleTriad.Requests.Messages.GameStateDataStrategies;
 
 namespace TripleTriad.Requests.Messages
 {
