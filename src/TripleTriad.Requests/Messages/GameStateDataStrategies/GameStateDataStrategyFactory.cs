@@ -12,9 +12,9 @@ namespace TripleTriad.Requests.Messages.GameStateDataStrategies
             {
                 case GameStatus.ChooseCards:
                     return new ChooseCards.GameStateDataStrategy();
+                default:
+                    return new DefaultGameStateDataStrategy();
             }
-
-            throw new InvalidOperationException();
         }
     }
 }
