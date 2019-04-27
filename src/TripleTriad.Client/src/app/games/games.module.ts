@@ -10,7 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { BoardComponent } from './components/board/board.component';
 import { CardListComponent } from './components/card-list/card-list.component';
-import { GameCardComponent } from './components/game-card/game-card.component';
+import { CardComponent } from './components/card/card.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
 import { TileComponent } from './components/tile/tile.component';
 import { RoomComponent } from './containers/room/room.component';
@@ -47,7 +47,7 @@ import { SelectCardsService } from './services/select-cards.service';
     SelectedCardListComponent,
     BoardComponent,
     TileComponent,
-    GameCardComponent
+    CardComponent
   ]
 })
 export class GamesModule {}
