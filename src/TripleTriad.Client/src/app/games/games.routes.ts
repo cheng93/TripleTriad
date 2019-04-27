@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { GameRoomComponent } from './containers/game-room/game-room.component';
+import { RoomComponent } from './containers/room/room.component';
 
-export const routes: Routes = [
-  { path: ':gameId', component: GameRoomComponent }
-];
+export const routes: Routes = [{ path: ':gameId', component: RoomComponent }];

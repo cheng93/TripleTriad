@@ -1,28 +1,28 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import {
+  MatCardModule,
+  MatPaginatorModule,
+  MatTableModule
+} from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { routes } from './games.routes';
-import * as fromGames from './reducers';
-import {
-  MatTableModule,
-  MatPaginatorModule,
-  MatCardModule
-} from '@angular/material';
-import { GameRoomComponent } from './containers/game-room/game-room.component';
-import { GameSignalRService } from './services/game-signal-r.service';
-import { GameSignalRFacade } from './services/game-signal-r.facade';
-import { GameRoomService } from './services/game-room.service';
-import { SelectCardsService } from './services/select-cards.service';
+import { CardListComponent } from './components/card-list/card-list.component';
+import { GameBoardComponent } from './components/game-board/game-board.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameTileComponent } from './components/game-tile/game-tile.component';
+import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
+import { RoomComponent } from './containers/room/room.component';
+import { SelectCardsComponent } from './containers/select-cards/select-cards.component';
 import { GameRoomEffects } from './effects/game-room.effects';
 import { SelectCardsEffects } from './effects/select-cards.effects';
-import { SelectCardsComponent } from './containers/select-cards/select-cards.component';
-import { CardListComponent } from './components/card-list/card-list.component';
-import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
-import { GameBoardComponent } from './components/game-board/game-board.component';
-import { GameTileComponent } from './components/game-tile/game-tile.component';
-import { GameCardComponent } from './components/game-card/game-card.component';
+import { routes } from './games.routes';
+import * as fromGames from './reducers';
+import { GameRoomService } from './services/game-room.service';
+import { GameSignalRFacade } from './services/game-signal-r.facade';
+import { GameSignalRService } from './services/game-signal-r.service';
+import { SelectCardsService } from './services/select-cards.service';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
     SelectCardsService
   ],
   declarations: [
-    GameRoomComponent,
+    RoomComponent,
     SelectCardsComponent,
     CardListComponent,
     SelectedCardListComponent,

@@ -1,35 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { ViewGame } from '../../actions/game-room.actions';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as fromStore from '../../reducers';
 import { map } from 'rxjs/operators';
+import { ViewGame } from '../../actions/game-room.actions';
 import { Tile } from '../../models/tile';
+import * as fromGame from '../../reducers';
 import { GameSignalRFacade } from '../../services/game-signal-r.facade';
 
 @Component({
-  selector: 'app-game-room',
-  templateUrl: './game-room.component.html',
-  styleUrls: ['./game-room.component.scss']
+  selector: 'app-room',
+  templateUrl: './room.component.html',
+  styleUrls: ['./room.component.scss']
 })
-export class GameRoomComponent implements OnInit {
+export class RoomComponent implements OnInit {
   constructor(
-    private store: Store<fromStore.GamesState>,
+    private store: Store<fromGame.State>,
     private route: ActivatedRoute,
-    private gameSignalRFacade: GameSignalRFacade
-  ) {
-    this.status$ = store.pipe(select(fromStore.getRoomStatus));
-    this.tiles$ = store.pipe(select(fromStore.getRoomTiles));
+    private signalR: GameSignalRFacade
+  ) {}
+
+  ngOnInit() {
+    this.status$ = this.store.pipe(select(fromGame.getRoomStatus));
+    this.tiles$ = this.store.pipe(select(fromGame.getRoomTiles));
     this.chooseCardStatus$ = this.status$.pipe(map(x => x === 'ChooseCards'));
     this.showBoard$ = this.status$.pipe(
       map(x => x === 'InProgress' || x === 'Finished')
     );
-  }
 
-  ngOnInit() {
     var gameId = +this.route.snapshot.paramMap.get('gameId');
-    this.gameSignalRFacade
+    this.signalR
       .viewGame(gameId)
       .then(() => this.store.dispatch(new ViewGame(gameId)));
   }
