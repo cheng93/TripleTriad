@@ -1,0 +1,7 @@
+<p>Status: {{ status$ | async }}</p>
+
+<app-select-cards *ngIf="(chooseCardStatus$ | async)"></app-select-cards>
+
+<ng-container *ngIf="(showBoard$ | async)">
+  <app-board [tiles]="tiles$ | async"></app-board>
+</ng-container>

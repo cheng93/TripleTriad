@@ -1,23 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../reducers';
-import { filter, tap, map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
-  LoadAllCards,
   ChangePage,
-  SelectCard,
+  LoadAllCards,
   RemoveCard,
+  SelectCard,
   SubmitCards
 } from '../../actions/select-cards.actions';
-import { Observable, Subscription, combineLatest } from 'rxjs';
 import { Card, CardListCard, SelectedCardListCard } from '../../models/card';
+import * as fromStore from '../../reducers';
 
 @Component({
   selector: 'app-select-cards',
   templateUrl: './select-cards.component.html',
   styleUrls: ['./select-cards.component.scss']
 })
-export class SelectCardsComponent implements OnInit, OnDestroy {
+export class SelectCardsComponent implements OnInit {
   constructor(private store: Store<fromStore.GamesState>) {
     this.cardListCards$ = combineLatest(
       store.select(fromStore.getLevelCards),
@@ -73,18 +73,6 @@ export class SelectCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.store
-      .select(fromStore.getAllCardsLoaded)
-      .pipe(
-        filter(x => !x),
-        tap(x => this.store.dispatch(new LoadAllCards()))
-      )
-      .subscribe();
+    this.store.dispatch(new LoadAllCards());
   }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  private subscription: Subscription;
 }

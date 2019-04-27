@@ -1,24 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { SelectCardsService } from '../services/select-cards.service';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  withLatestFrom
+} from 'rxjs/operators';
 import {
   LoadAllCards,
-  SelectCardsActionTypes,
-  LoadAllCardsSuccess,
   LoadAllCardsFail,
-  SubmitCardsSuccess,
-  SubmitCardsFail
+  LoadAllCardsSuccess,
+  SelectCardsActionTypes,
+  SubmitCardsFail,
+  SubmitCardsSuccess
 } from '../actions/select-cards.actions';
-import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
-import { of } from 'rxjs';
-import * as fromStore from '../reducers';
-import { Store } from '@ngrx/store';
+import * as fromGame from '../reducers';
+import { SelectCardsService } from '../services/select-cards.service';
 
 @Injectable()
 export class SelectCardsEffects {
   @Effect()
   loadAllCards$ = this.actions$.pipe(
     ofType<LoadAllCards>(SelectCardsActionTypes.LoadAllCards),
+    withLatestFrom(this.store.select(fromGame.getAllCardsLoaded)),
+    filter(([action, allCardsLoaded]) => !allCardsLoaded),
     switchMap(action =>
       this.selectCardsService.getAllCards().pipe(
         map(response => new LoadAllCardsSuccess(response.cards)),
@@ -32,8 +40,8 @@ export class SelectCardsEffects {
     ofType(SelectCardsActionTypes.SubmitCards),
     withLatestFrom(
       this.store
-        .select(fromStore.getSelectedCards)
-        .pipe(withLatestFrom(this.store.select(fromStore.getRoomGameId)))
+        .select(fromGame.getSelectedCards)
+        .pipe(withLatestFrom(this.store.select(fromGame.getRoomGameId)))
     ),
     switchMap(([action, [cards, gameId]]) =>
       this.selectCardsService.submitCards(gameId, cards).pipe(
@@ -45,7 +53,7 @@ export class SelectCardsEffects {
 
   constructor(
     private actions$: Actions,
-    private store: Store<fromStore.GamesState>,
+    private store: Store<fromGame.GamesState>,
     private selectCardsService: SelectCardsService
   ) {}
 }
