@@ -49,6 +49,5 @@ namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
                         && y.Message == Message),
                 It.IsAny<CancellationToken>()));
         }
-
     }
 }
