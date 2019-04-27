@@ -1,12 +1,16 @@
-import { Card } from '../models/card';
 import {
-  SelectCardsActionTypes,
-  SelectCardsActions
+  CoreActions,
+  CoreActionTypes
+} from 'src/app/core/actions/core.actions';
+import {
+  SelectCardsActions,
+  SelectCardsActionTypes
 } from '../actions/select-cards.actions';
+import { Card } from '../models/card';
 
 export interface State {
   allCards: Card[];
-  selectedCards: Card[];
+  selectedCards: string[];
   cardPage: number;
   cardsSubmitted: boolean;
 }
@@ -20,7 +24,7 @@ export const initialState: State = {
 
 export function reducer(
   state = initialState,
-  action: SelectCardsActions
+  action: SelectCardsActions | CoreActions
 ): State {
   switch (action.type) {
     case SelectCardsActionTypes.ChangePage: {
@@ -44,9 +48,7 @@ export function reducer(
     case SelectCardsActionTypes.RemoveCard: {
       return {
         ...state,
-        selectedCards: state.selectedCards.filter(
-          x => x.name !== action.payload.name
-        )
+        selectedCards: state.selectedCards.filter(x => x !== action.payload)
       };
     }
     case SelectCardsActionTypes.SubmitCardsSuccess: {
@@ -54,6 +56,18 @@ export function reducer(
         ...state,
         cardsSubmitted: true
       };
+    }
+    case CoreActionTypes.ReceiveSignalRMessage: {
+      if (
+        action.message.type == 'GameState' &&
+        action.message.data.status === 'ChooseCards'
+      ) {
+        return {
+          ...state,
+          selectedCards: action.message.data.selectedCards,
+          cardsSubmitted: action.message.data.selectedCards.length > 0
+        };
+      }
     }
     default:
       return state;

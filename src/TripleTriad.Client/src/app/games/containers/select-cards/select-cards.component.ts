@@ -29,21 +29,24 @@ export class SelectCardsComponent implements OnInit {
           ...x,
           canSelect:
             !hasSubmittedCards &&
-            selectedCards.every(y => y.name !== x.name) &&
+            selectedCards.every(y => y !== x.name) &&
             selectedCards.length < 5
         }))
       ])
     );
 
     this.selectedCardListCards$ = combineLatest(
+      store.select(fromStore.getAllCards),
       store.select(fromStore.getSelectedCards),
       store.select(fromStore.hasSubmittedCards)
     ).pipe(
-      map(([cards, hasSubmittedCards]) => [
-        ...cards.map(x => ({
-          ...x,
-          canRemove: !hasSubmittedCards
-        }))
+      map(([allCards, cards, hasSubmittedCards]) => [
+        ...allCards
+          .filter(x => cards.some(y => y === x.name))
+          .map(x => ({
+            ...x,
+            canRemove: !hasSubmittedCards
+          }))
       ])
     );
 
@@ -61,11 +64,11 @@ export class SelectCardsComponent implements OnInit {
   }
 
   removeCard($event: Card) {
-    this.store.dispatch(new RemoveCard($event));
+    this.store.dispatch(new RemoveCard($event.name));
   }
 
   selectCard($event: Card) {
-    this.store.dispatch(new SelectCard($event));
+    this.store.dispatch(new SelectCard($event.name));
   }
 
   submitCards() {

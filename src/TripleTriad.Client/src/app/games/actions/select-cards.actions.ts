@@ -38,13 +38,13 @@ export class LoadAllCardsFail implements Action {
 export class SelectCard implements Action {
   readonly type = SelectCardsActionTypes.SelectCard;
 
-  constructor(public payload: Card) {}
+  constructor(public payload: string) {}
 }
 
 export class RemoveCard implements Action {
   readonly type = SelectCardsActionTypes.RemoveCard;
 
-  constructor(public payload: Card) {}
+  constructor(public payload: string) {}
 }
 
 export class SubmitCards implements Action {
