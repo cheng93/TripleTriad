@@ -1,22 +1,22 @@
+using System;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using TripleTriad.SignalR;
 
 namespace TripleTriad.Requests.HubRequests
 {
-    public static class HubGroupNotify
+    public static class HubUserNotify
     {
         public class Request : HubNotify.Request
         {
-            public string Group { get; set; }
+            public Guid UserId { get; set; }
         }
 
         public class Validator : HubNotify.Validator<Request>
         {
             public Validator()
             {
-                base.RuleFor(x => x.Group).NotEmpty();
+                base.RuleFor(x => x.UserId).NotEmpty();
             }
         }
 
@@ -32,7 +32,7 @@ namespace TripleTriad.Requests.HubRequests
             protected override IGameClient GetGameClient(Request request)
                 => this.hubContext
                     .Clients
-                    .Group(request.Group);
+                    .User(request.UserId.ToString());
         }
     }
 }
