@@ -8,8 +8,8 @@ import {
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { BoardComponent } from './components/board/board.component';
 import { CardListComponent } from './components/card-list/card-list.component';
-import { GameBoardComponent } from './components/game-board/game-board.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
 import { GameTileComponent } from './components/game-tile/game-tile.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
@@ -45,7 +45,7 @@ import { SelectCardsService } from './services/select-cards.service';
     SelectCardsComponent,
     CardListComponent,
     SelectedCardListComponent,
-    GameBoardComponent,
+    BoardComponent,
     GameTileComponent,
     GameCardComponent
   ]

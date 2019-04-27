@@ -3,5 +3,5 @@
 <app-select-cards *ngIf="(chooseCardStatus$ | async)"></app-select-cards>
 
 <ng-container *ngIf="(showBoard$ | async)">
-  <app-game-board [tiles]="tiles$ | async"></app-game-board>
+  <app-board [tiles]="tiles$ | async"></app-board>
 </ng-container>
