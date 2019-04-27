@@ -11,8 +11,8 @@ import { StoreModule } from '@ngrx/store';
 import { BoardComponent } from './components/board/board.component';
 import { CardListComponent } from './components/card-list/card-list.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
-import { GameTileComponent } from './components/game-tile/game-tile.component';
 import { SelectedCardListComponent } from './components/selected-card-list/selected-card-list.component';
+import { TileComponent } from './components/tile/tile.component';
 import { RoomComponent } from './containers/room/room.component';
 import { SelectCardsComponent } from './containers/select-cards/select-cards.component';
 import { GameRoomEffects } from './effects/game-room.effects';
@@ -46,7 +46,7 @@ import { SelectCardsService } from './services/select-cards.service';
     CardListComponent,
     SelectedCardListComponent,
     BoardComponent,
-    GameTileComponent,
+    TileComponent,
     GameCardComponent
   ]
 })

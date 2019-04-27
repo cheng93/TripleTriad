@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { Tile } from '../../models/tile';
 
 @Component({
-  selector: 'app-game-tile',
-  templateUrl: './game-tile.component.html',
-  styleUrls: ['./game-tile.component.scss']
+  selector: 'app-tile',
+  templateUrl: './tile.component.html',
+  styleUrls: ['./tile.component.scss']
 })
-export class GameTileComponent {
+export class TileComponent {
   @Input()
   tile: Tile;
 
