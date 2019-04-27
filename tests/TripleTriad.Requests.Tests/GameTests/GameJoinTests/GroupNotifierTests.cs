@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -8,13 +7,11 @@ using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Messages;
 using Xunit;
 
-namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
+namespace TripleTriad.Requests.Tests.GameTests.GameJoinTests
 {
-    public class UserNotifierTests
+    public class GroupNotifierTests
     {
         private static readonly int GameId = 2;
-
-        private static readonly Guid PlayerId = Guid.NewGuid();
 
         private static readonly string Message = "Hello World";
 
@@ -24,7 +21,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
             var mediator = new Mock<IMediator>();
             mediator
                 .Setup(x => x.Send(
-                    It.IsAny<HubUserNotify.Request>(),
+                    It.IsAny<HubGroupNotify.Request>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Unit());
 
@@ -34,21 +31,20 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
                     It.IsAny<Messages.GameState.MessageData>()))
                 .ReturnsAsync(Message);
 
-            var subject = new GameView.UserNotifier(
+            var subject = new GameJoin.GroupNotifier(
                 mediator.Object,
                 messageFactory.Object);
 
-            var response = new GameView.Response
+            var response = new GameJoin.Response
             {
-                GameId = GameId,
-                PlayerId = PlayerId
+                GameId = GameId
             };
 
             await subject.Handle(response, default);
 
             mediator.Verify(x => x.Send(
-                It.Is<HubUserNotify.Request>(
-                    y => y.UserId == PlayerId
+                It.Is<HubGroupNotify.Request>(
+                    y => y.Group == GameId.ToString()
                         && y.Message == Message),
                 It.IsAny<CancellationToken>()));
         }
@@ -59,7 +55,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
             var mediator = new Mock<IMediator>();
             mediator
                 .Setup(x => x.Send(
-                    It.IsAny<HubUserNotify.Request>(),
+                    It.IsAny<HubGroupNotify.Request>(),
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Unit());
 
@@ -69,14 +65,13 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
                     It.IsAny<Messages.GameState.MessageData>()))
                 .ReturnsAsync(Message);
 
-            var subject = new GameView.UserNotifier(
+            var subject = new GameJoin.GroupNotifier(
                 mediator.Object,
                 messageFactory.Object);
 
-            var response = new GameView.Response
+            var response = new GameJoin.Response
             {
-                GameId = GameId,
-                PlayerId = PlayerId
+                GameId = GameId
             };
 
             await subject.Handle(response, default);
@@ -84,7 +79,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
             messageFactory.Verify(x => x.Create(
                 It.Is<Messages.GameState.MessageData>(
                     y => y.GameId == GameId
-                        && y.PlayerId == PlayerId)));
+                        && !y.PlayerId.HasValue)));
         }
     }
 }
