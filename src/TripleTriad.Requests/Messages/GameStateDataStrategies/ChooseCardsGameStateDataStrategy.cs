@@ -24,7 +24,9 @@ namespace TripleTriad.Requests.Messages.GameStateDataStrategies
                     var gameData = JsonConvert.DeserializeObject<GameData>(game.Data);
                     var cards = playerId == game.HostId
                         ? gameData.HostCards
-                        : gameData.ChallengerCards;
+                        : playerId == game.ChallengerId
+                            ? gameData.ChallengerCards
+                            : null;
 
                     if (cards != null)
                     {
