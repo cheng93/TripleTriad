@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-
 import { SignalRFacade } from 'src/app/core/services/signal-r.facade';
-import { LoadGames, CreateGame, JoinGame } from '../../actions/lobby.actions';
+import { CreateGame, JoinGame, LoadGames } from '../../actions/lobby.actions';
 import * as fromLobby from '../../reducers';
 
 @Component({

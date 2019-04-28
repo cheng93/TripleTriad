@@ -1,6 +1,6 @@
-import { reducer, initialState } from './game-room.reducer';
+import { initialState, reducer } from './room.reducer';
 
-describe('GameRoom Reducer', () => {
+describe('Room Reducer', () => {
   describe('unknown action', () => {
     it('should return the initial state', () => {
       const action = {} as any;

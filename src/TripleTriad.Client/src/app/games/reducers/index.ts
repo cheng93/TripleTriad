@@ -3,9 +3,8 @@ import {
   createFeatureSelector,
   createSelector
 } from '@ngrx/store';
-
 import * as fromRoot from '../../reducers';
-import * as fromRoom from './game-room.reducer';
+import * as fromRoom from './room.reducer';
 import * as fromSelectCards from './select-cards.reducer';
 
 export interface GamesState {
@@ -36,12 +35,12 @@ export const getRoomGameId = createSelector(
 
 export const getRoomStatus = createSelector(
   getGameRoomState,
-  fromRoom.getGameStatus
+  fromRoom.getStatus
 );
 
 export const getRoomTiles = createSelector(
   getGameRoomState,
-  fromRoom.getGameTiles
+  fromRoom.getTiles
 );
 
 export const getSelectCardsState = createSelector(

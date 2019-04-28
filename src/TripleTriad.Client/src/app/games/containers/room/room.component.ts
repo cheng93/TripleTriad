@@ -4,10 +4,9 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SignalRFacade } from 'src/app/core/services/signal-r.facade';
-import { ViewGame } from '../../actions/game-room.actions';
+import { ViewGame } from '../../actions/room.actions';
 import { Tile } from '../../models/tile';
 import * as fromGame from '../../reducers';
-import { GameSignalRFacade } from '../../services/game-signal-r.facade';
 
 @Component({
   selector: 'app-room',
@@ -18,7 +17,6 @@ export class RoomComponent implements OnInit {
   constructor(
     private store: Store<fromGame.State>,
     private route: ActivatedRoute,
-    private gameSignalR: GameSignalRFacade,
     private signalR: SignalRFacade
   ) {}
 
@@ -33,7 +31,6 @@ export class RoomComponent implements OnInit {
     var gameId = +this.route.snapshot.paramMap.get('gameId');
     this.signalR
       .viewGame(gameId)
-      .then(() => this.gameSignalR.viewGame(gameId))
       .then(() => this.store.dispatch(new ViewGame(gameId)));
   }
 

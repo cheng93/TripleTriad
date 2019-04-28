@@ -2,10 +2,7 @@ import {
   CoreActions,
   CoreActionTypes
 } from 'src/app/core/actions/core.actions';
-import {
-  GameRoomActions,
-  GameRoomActionTypes
-} from '../actions/game-room.actions';
+import { RoomActions, RoomActionTypes } from '../actions/room.actions';
 import { Card } from '../models/card';
 import { View } from '../models/room';
 import { Tile } from '../models/tile';
@@ -35,22 +32,22 @@ export const initialState: State = {
 
 export function reducer(
   state = initialState,
-  action: GameRoomActions | CoreActions
+  action: RoomActions | CoreActions
 ): State {
   switch (action.type) {
-    case GameRoomActionTypes.ViewGame: {
+    case RoomActionTypes.ViewGame: {
       return {
         ...state,
         gameId: action.payload
       };
     }
-    case GameRoomActionTypes.ViewGameSuccess: {
+    case RoomActionTypes.ViewGameSuccess: {
       return {
         ...state,
         view: action.payload
       };
     }
-    case GameRoomActionTypes.UpdateGame: {
+    case RoomActionTypes.UpdateGame: {
       return {
         ...state,
         status: action.payload.status,
@@ -72,6 +69,6 @@ export function reducer(
 
 export const getGameId = (state: State) => state.gameId;
 
-export const getGameStatus = (state: State) => state.status;
+export const getStatus = (state: State) => state.status;
 
-export const getGameTiles = (state: State) => state.tiles;
+export const getTiles = (state: State) => state.tiles;
