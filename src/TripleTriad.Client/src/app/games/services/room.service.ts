@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { View } from '../models/room';
 
 @Injectable()
-export class GameRoomService {
+export class RoomService {
   constructor(private http: HttpClient) {}
 
   viewGame(gameId: number): Observable<View> {

@@ -1,38 +1,38 @@
 import { Action } from '@ngrx/store';
 import { Room, View } from '../models/room';
 
-export enum GameRoomActionTypes {
-  ViewGame = '[GameRoom] View Game',
-  ViewGameSuccess = '[GameRoom] View Game Success',
-  ViewGameFail = '[GameRoom] View Game Fail',
-  UpdateGame = '[GameRoom] Update Game'
+export enum RoomActionTypes {
+  ViewGame = '[Room] View Game',
+  ViewGameSuccess = '[Room] View Game Success',
+  ViewGameFail = '[Room] View Game Fail',
+  UpdateGame = '[Room] Update Game'
 }
 
 export class ViewGame implements Action {
-  readonly type = GameRoomActionTypes.ViewGame;
+  readonly type = RoomActionTypes.ViewGame;
 
   constructor(public payload: number) {}
 }
 
 export class ViewGameSuccess implements Action {
-  readonly type = GameRoomActionTypes.ViewGameSuccess;
+  readonly type = RoomActionTypes.ViewGameSuccess;
 
   constructor(public payload: View) {}
 }
 
 export class ViewGameFail implements Action {
-  readonly type = GameRoomActionTypes.ViewGameFail;
+  readonly type = RoomActionTypes.ViewGameFail;
 
   constructor(public payload: any) {}
 }
 
 export class UpdateGame implements Action {
-  readonly type = GameRoomActionTypes.UpdateGame;
+  readonly type = RoomActionTypes.UpdateGame;
 
   constructor(public payload: Room) {}
 }
 
-export type GameRoomActions =
+export type RoomActions =
   | ViewGame
   | ViewGameSuccess
   | ViewGameFail
