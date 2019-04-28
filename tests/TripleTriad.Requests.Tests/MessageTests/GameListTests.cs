@@ -52,9 +52,9 @@ namespace TripleTriad.Requests.Tests.MessageTests
 
             var message = await subject.Create(new GameList.MessageData());
 
-            var expected = "\"GameList\"";
+            var expected = "GameList";
 
-            JToken.Parse(message)["type"].Should().BeEquivalentTo(JToken.Parse(expected));
+            JToken.Parse(message)["type"].Should().HaveValue(expected);
         }
     }
 }

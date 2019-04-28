@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using TripleTriad.Data.Entities;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.GameRequests;
@@ -57,8 +58,13 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
 
             var response = await subject.Handle(command, default);
 
-            response.IsHost.Should().Be(isHost);
-            response.IsChallenger.Should().Be(isChallenger);
+            using (new AssertionScope())
+            {
+                response.GameId.Should().Be(GameId);
+                response.IsHost.Should().Be(isHost);
+                response.IsChallenger.Should().Be(isChallenger);
+                response.PlayerId.Should().Be(playerId);
+            }
         }
 
         [Theory]

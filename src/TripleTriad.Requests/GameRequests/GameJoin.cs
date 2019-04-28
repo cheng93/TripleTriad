@@ -11,6 +11,7 @@ using TripleTriad.Data.Enums;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.HubRequests;
+using TripleTriad.Requests.Messages;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -88,17 +89,27 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class GameHubGroupNotifyNotificationHandler : MediatorNotificationHandler<Response, HubRequests.GameHubGroupNotify.Request, Unit>
+        public class GroupNotifier : AsyncMediatorNotificationHandler<Response, HubGroupNotify.Request, Unit>
         {
-            public GameHubGroupNotifyNotificationHandler(IMediator mediator)
+            private readonly IMessageFactory<GameState.MessageData> messageFactory;
+
+            public GroupNotifier(
+                IMediator mediator,
+                IMessageFactory<Messages.GameState.MessageData> messageFactory)
                 : base(mediator)
             {
+                this.messageFactory = messageFactory;
             }
 
-            protected override GameHubGroupNotify.Request GetRequest(Response notification)
-                => new HubRequests.GameHubGroupNotify.Request
+            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification)
+                => new HubGroupNotify.Request
                 {
-                    GameId = notification.GameId
+                    Group = notification.GameId.ToString(),
+                    Message = await this.messageFactory.Create(
+                        new Messages.GameState.MessageData
+                        {
+                            GameId = notification.GameId
+                        })
                 };
         }
     }

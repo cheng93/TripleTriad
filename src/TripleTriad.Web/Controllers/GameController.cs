@@ -93,12 +93,6 @@ namespace TripleTriad.Web.Controllers
         public async Task<IActionResult> View(int gameId)
         {
             var playerId = base.HttpContext.GetPlayerId();
-            var notifyRequest = new GameHubUserNotify.Request()
-            {
-                GameId = gameId,
-                UserId = playerId.ToString()
-            };
-            await this.mediator.Send(notifyRequest, default);
 
             var request = new GameView.Request()
             {
