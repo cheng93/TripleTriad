@@ -12,6 +12,7 @@ namespace TripleTriad.Requests.Tests.MessageTests.GameStateDataStrategiesTests
         [Theory]
         [InlineData(GameStatus.Waiting, typeof(DefaultGameStateDataStrategy))]
         [InlineData(GameStatus.ChooseCards, typeof(ChooseCards.GameStateDataStrategy))]
+        [InlineData(GameStatus.InProgress, typeof(InProgress.GameStateDataStrategy))]
         public void Should_be_of_type(GameStatus status, Type expected)
         {
             var game = new Game
