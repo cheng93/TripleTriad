@@ -33,8 +33,7 @@ namespace TripleTriad.Requests.Tests.MessageTests.GameStateDataStrategiesTests
             AllCards.Laguna,
             AllCards.Kiros,
             AllCards.Ward,
-            AllCards.Quistis,
-            AllCards.Selphie
+            AllCards.Quistis
         };
 
         private static Game CreateGame()
@@ -76,6 +75,76 @@ namespace TripleTriad.Requests.Tests.MessageTests.GameStateDataStrategiesTests
                     && x.Status == "InProgress"
                     && x.HostTurn == true
                     && x.HostWonCoinToss == false);
+        }
+
+        [Fact]
+        public void Should_return_host_cards_when_player_id_is_host()
+        {
+            var game = CreateGame();
+
+            var subject = new InProgress.GameStateDataStrategy();
+
+            var actual = subject.GetData(game, new Guid(HostId));
+
+            actual.Should().BeOfType(typeof(InProgress.Data));
+            ((InProgress.Data)actual).HostCards
+                .Should()
+                .BeEquivalentTo(HostCards.Select(x => x.Name));
+        }
+
+        [Fact]
+        public void Should_return_challenger_cards_when_player_id_is_challenger()
+        {
+            var game = CreateGame();
+
+            var subject = new InProgress.GameStateDataStrategy();
+
+            var actual = subject.GetData(game, new Guid(ChallengerId));
+
+            actual.Should().BeOfType(typeof(InProgress.Data));
+            ((InProgress.Data)actual).ChallengerCards
+                .Should()
+                .BeEquivalentTo(ChallengerCards.Select(x => x.Name));
+        }
+
+        [Theory]
+        [InlineData(ChallengerId)]
+        [InlineData(NonPlayerId)]
+        [InlineData(null)]
+        public void Should_not_return_host_cards(string playerId)
+        {
+            var game = CreateGame();
+
+            var subject = new InProgress.GameStateDataStrategy();
+
+            var actual = subject.GetData(game, Guid.TryParse(playerId, out var g) ? (Guid?)g : null);
+
+            actual.Should().BeOfType(typeof(InProgress.Data));
+            ((InProgress.Data)actual).HostCards
+                .Should()
+                .OnlyContain(x => x == "Hidden")
+                .And
+                .HaveCount(HostCards.Count());
+        }
+
+        [Theory]
+        [InlineData(HostId)]
+        [InlineData(NonPlayerId)]
+        [InlineData(null)]
+        public void Should_not_return_challenger_cards(string playerId)
+        {
+            var game = CreateGame();
+
+            var subject = new InProgress.GameStateDataStrategy();
+
+            var actual = subject.GetData(game, Guid.TryParse(playerId, out var g) ? (Guid?)g : null);
+
+            actual.Should().BeOfType(typeof(InProgress.Data));
+            ((InProgress.Data)actual).ChallengerCards
+                .Should()
+                .OnlyContain(x => x == "Hidden")
+                .And
+                .HaveCount(ChallengerCards.Count());
         }
     }
 }
