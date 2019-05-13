@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using TripleTriad.Data.Entities;
 using TripleTriad.Logic.Entities;
@@ -23,6 +24,12 @@ namespace TripleTriad.Requests.Messages.GameStateDataStrategies
                     Tiles = gameData.Tiles
                 };
 
+                data.HostCards = gameData.HostCards
+                    .Select(x => playerId == game.HostId ? x.Name : "Hidden");
+
+                data.ChallengerCards = gameData.ChallengerCards
+                    .Select(x => playerId == game.ChallengerId ? x.Name : "Hidden");
+
                 return data;
             }
         }
@@ -32,6 +39,10 @@ namespace TripleTriad.Requests.Messages.GameStateDataStrategies
             public bool HostTurn { get; set; }
 
             public bool HostWonCoinToss { get; set; }
+
+            public IEnumerable<string> HostCards { get; set; }
+
+            public IEnumerable<string> ChallengerCards { get; set; }
 
             public IEnumerable<Tile> Tiles { get; set; }
         }
