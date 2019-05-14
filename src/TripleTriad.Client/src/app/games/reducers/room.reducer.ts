@@ -55,7 +55,10 @@ export function reducer(
       };
     }
     case CoreActionTypes.ReceiveSignalRMessage: {
-      if (action.message.type == 'GameState') {
+      if (
+        action.message.type == 'GameState' &&
+        action.message.data.gameId == state.gameId
+      ) {
         return {
           ...state,
           ...action.message.data
