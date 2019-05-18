@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
@@ -10,6 +12,8 @@ namespace TripleTriad.Requests.HubRequests
         public class Request : HubNotify.Request
         {
             public string Group { get; set; }
+
+            public IEnumerable<string> Excluded { get; set; } = Enumerable.Empty<string>();
         }
 
         public class Validator : HubNotify.Validator<Request>
@@ -32,7 +36,7 @@ namespace TripleTriad.Requests.HubRequests
             protected override IGameClient GetGameClient(Request request)
                 => this.hubContext
                     .Clients
-                    .Group(request.Group);
+                    .GroupExcept(request.Group, request.Excluded.ToList().AsReadOnly());
         }
     }
 }
