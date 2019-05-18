@@ -113,26 +113,44 @@ namespace TripleTriad.Requests.GameRequests
 
         public class RoomNotifier : AsyncMediatorNotificationHandler<Response, HubGroupNotify.Request, Unit>
         {
+            private readonly TripleTriadDbContext context;
             private readonly IMessageFactory<Messages.GameState.MessageData> messageFactory;
+            private readonly IConnectionIdStore connectionIdStore;
 
             public RoomNotifier(
+                TripleTriadDbContext context,
                 IMediator mediator,
-                IMessageFactory<Messages.GameState.MessageData> messageFactory)
+                IMessageFactory<Messages.GameState.MessageData> messageFactory,
+                IConnectionIdStore connectionIdStore)
                 : base(mediator)
             {
+                this.context = context;
                 this.messageFactory = messageFactory;
+                this.connectionIdStore = connectionIdStore;
             }
 
             protected async override Task<HubGroupNotify.Request> GetRequest(Response notification, CancellationToken cancellationToken)
-                => new HubGroupNotify.Request
+            {
+                var game = await this.context.Games.GetGameOrThrowAsync(notification.GameId, cancellationToken);
+                var connectionIdTasks = Task.WhenAll(
+                    new[]
+                    {
+                        game.HostId.ToString(),
+                        game.ChallengerId.ToString()
+                    }
+                    .Select(x => this.connectionIdStore.GetConnectionIds(x)));
+
+                return new HubGroupNotify.Request
                 {
                     Group = notification.GameId.ToString(),
                     Message = await this.messageFactory.Create(
                         new Messages.GameState.MessageData
                         {
                             GameId = notification.GameId
-                        })
+                        }),
+                    Excluded = (await connectionIdTasks).SelectMany(x => x)
                 };
+            }
         }
     }
 }
