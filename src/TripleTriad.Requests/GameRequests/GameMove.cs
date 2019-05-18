@@ -142,7 +142,7 @@ namespace TripleTriad.Requests.GameRequests
                 this.messageFactory = messageFactory;
             }
 
-            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification)
+            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification, CancellationToken cancellationToken)
                 => new HubGroupNotify.Request
                 {
                     Group = notification.GameId.ToString(),

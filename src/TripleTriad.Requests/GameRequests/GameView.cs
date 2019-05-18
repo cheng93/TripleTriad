@@ -87,7 +87,7 @@ namespace TripleTriad.Requests.GameRequests
                 this.messageFactory = messageFactory;
             }
 
-            protected async override Task<HubUserNotify.Request> GetRequest(Response notification)
+            protected async override Task<HubUserNotify.Request> GetRequest(Response notification, CancellationToken cancellationToken)
                 => new HubUserNotify.Request
                 {
                     UserId = notification.PlayerId,
