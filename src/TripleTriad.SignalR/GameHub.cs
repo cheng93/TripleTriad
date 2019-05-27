@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -10,6 +11,13 @@ namespace TripleTriad.SignalR
     {
         public const string Lobby = "lobby";
 
+        private readonly IConnectionIdStore store;
+
+        public GameHub(IConnectionIdStore store)
+        {
+            this.store = store;
+        }
+
         public async Task JoinLobby()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, Lobby);
@@ -17,6 +25,18 @@ namespace TripleTriad.SignalR
         public async Task ViewGame(int gameId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            await this.store.Add(new ConnectionIdStoreEntry(Context.UserIdentifier, Context.ConnectionId));
+            await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            await this.store.Remove(new ConnectionIdStoreEntry(Context.UserIdentifier, Context.ConnectionId));
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
