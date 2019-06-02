@@ -25,6 +25,7 @@ namespace TripleTriad.Requests.GameRequests
             public int GameId { get; set; }
 
             public bool QueueTask => true;
+            internal Guid HostId { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -76,7 +77,8 @@ namespace TripleTriad.Requests.GameRequests
 
                 return new Response
                 {
-                    GameId = game.GameId
+                    GameId = game.GameId,
+                    HostId = game.HostId
                 };
             }
         }
@@ -91,7 +93,8 @@ namespace TripleTriad.Requests.GameRequests
 
             protected override void SendNotifications(Request request, Response response)
             {
-                this.Queue.QueueBackgroundTask(new RoomNotification(response.GameId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.HostId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, request.PlayerId));
                 this.Queue.QueueBackgroundTask(new LobbyNotification());
             }
         }

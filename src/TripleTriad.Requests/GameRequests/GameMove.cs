@@ -34,6 +34,10 @@ namespace TripleTriad.Requests.GameRequests
             public IEnumerable<Card> Cards { get; set; }
 
             bool ISendNotificationResponse.QueueTask => true;
+
+            internal Guid HostId { get; set; }
+
+            internal Guid ChallengerId { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -115,7 +119,9 @@ namespace TripleTriad.Requests.GameRequests
                 {
                     GameId = request.GameId,
                     Cards = isHost ? gameData.HostCards : gameData.ChallengerCards,
-                    Tiles = gameData.Tiles
+                    Tiles = gameData.Tiles,
+                    HostId = game.HostId,
+                    ChallengerId = game.ChallengerId.Value
                 };
             }
         }
@@ -130,6 +136,8 @@ namespace TripleTriad.Requests.GameRequests
             protected override void SendNotifications(Request request, Response response)
             {
                 this.Queue.QueueBackgroundTask(new RoomNotification(response.GameId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.HostId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.ChallengerId));
             }
         }
     }

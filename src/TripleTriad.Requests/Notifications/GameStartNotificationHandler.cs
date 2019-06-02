@@ -24,15 +24,14 @@ namespace TripleTriad.Requests.Notifications
             this.mediator = mediator;
         }
 
-        public Task Handle(GameStartNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(GameStartNotification notification, CancellationToken cancellationToken)
         {
             var request = new GameStart.Request
             {
                 GameId = notification.GameId
             };
 
-            this.mediator.Send(request);
-            return Task.CompletedTask;
+            await this.mediator.Send(request);
         }
     }
 }

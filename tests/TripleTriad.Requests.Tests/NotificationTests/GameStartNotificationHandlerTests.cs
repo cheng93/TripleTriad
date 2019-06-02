@@ -33,6 +33,5 @@ namespace TripleTriad.Requests.Tests.NotificationTests
                 It.Is<GameStart.Request>(y => y.GameId == GameId),
                 It.IsAny<CancellationToken>()));
         }
-
     }
 }
