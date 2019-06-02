@@ -14,12 +14,13 @@ using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Messages;
 using TripleTriad.SignalR;
+using TripleTriad.Requests.Notifications;
 
 namespace TripleTriad.Requests.GameRequests
 {
     public static class GameCreate
     {
-        public class Response : IGameResponse, IBackgroundQueueResponse, INotification
+        public class Response : IGameResponse, ISendNotificationResponse, INotification
         {
             public int GameId { get; set; }
 
@@ -66,33 +67,18 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : NotificationSenderPostProcessor<Request, Response>
         {
             public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
             }
-        }
 
-        public class LobbyNotifier : AsyncMediatorNotificationHandler<Response, HubGroupNotify.Request, Unit>
-        {
-            private readonly IMessageFactory<Messages.GameList.MessageData> messageFactory;
-
-            public LobbyNotifier(
-                IMediator mediator,
-                IMessageFactory<Messages.GameList.MessageData> messageFactory)
-                : base(mediator)
+            protected override void SendNotifications(Request request, Response response)
             {
-                this.messageFactory = messageFactory;
+                this.Queue.QueueBackgroundTask(new LobbyNotification());
             }
-
-            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification, CancellationToken cancellationToken)
-                => new HubGroupNotify.Request
-                {
-                    Group = GameHub.Lobby,
-                    Message = await this.messageFactory.Create(new Messages.GameList.MessageData())
-                };
         }
     }
 }

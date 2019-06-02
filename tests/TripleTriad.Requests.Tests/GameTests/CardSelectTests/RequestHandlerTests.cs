@@ -13,6 +13,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.Response;
 using TripleTriad.Requests.Tests.Utils;
 using Xunit;
 
@@ -131,7 +132,7 @@ namespace TripleTriad.Requests.Tests.GameTests.CardSelectTests
 
             var response = await subject.Handle(request, default);
 
-            response.QueueTask.Should().Be(queueTask);
+            ((ISendNotificationResponse)response).QueueTask.Should().Be(queueTask);
         }
 
         [Fact]

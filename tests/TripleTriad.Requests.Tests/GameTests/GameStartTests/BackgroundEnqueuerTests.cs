@@ -2,16 +2,17 @@ using System.Threading.Tasks;
 using Moq;
 using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.Notifications;
 using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
     public class BackgroundEnqueuerTests
     {
-        private static readonly int GameId = 2;
+        private const int GameId = 2;
 
         [Fact]
-        public async Task Should_queue_notification()
+        public async Task Should_queue_room_notification()
         {
             var backgroundTaskQueue = new Mock<IBackgroundTaskQueue>();
             backgroundTaskQueue
@@ -30,8 +31,8 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
             await subject.Process(request, response);
 
             backgroundTaskQueue.Verify(
-                x => x.QueueBackgroundTask(response));
+                x => x.QueueBackgroundTask(
+                    It.Is<RoomNotification>(y => y.GameId == GameId)));
         }
-
     }
 }

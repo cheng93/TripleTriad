@@ -8,24 +8,25 @@ using TripleTriad.Requests.Response;
 
 namespace TripleTriad.Requests.Pipeline
 {
-    public abstract class BackgroundQueuePostProcessor<TRequest, TResponse>
+    public abstract class NotificationSenderPostProcessor<TRequest, TResponse>
         : IRequestPostProcessor<TRequest, TResponse>
-        where TResponse : IBackgroundQueueResponse
     {
-        private readonly IBackgroundTaskQueue queue;
+        protected IBackgroundTaskQueue Queue { get; }
 
-        public BackgroundQueuePostProcessor(IBackgroundTaskQueue queue)
+        public NotificationSenderPostProcessor(IBackgroundTaskQueue queue)
         {
-            this.queue = queue;
+            this.Queue = queue;
         }
 
         public Task Process(TRequest request, TResponse response)
         {
-            if (response.QueueTask)
+            if (response is ISendNotificationResponse r && r.QueueTask)
             {
-                this.queue.QueueBackgroundTask(response);
+                this.SendNotifications(request, response);
             }
             return Task.CompletedTask;
         }
+
+        protected abstract void SendNotifications(TRequest request, TResponse response);
     }
 }

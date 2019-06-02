@@ -17,6 +17,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
+using TripleTriad.Requests.Notifications;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -24,13 +25,17 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class CardSelect
     {
-        public class Response : IBackgroundQueueResponse, IGameResponse, INotification
+        public class Response : ISendNotificationResponse, IGameResponse
         {
             public int GameId { get; set; }
 
             public IEnumerable<Card> Cards { get; set; }
 
-            public bool QueueTask { get; set; }
+            bool ISendNotificationResponse.QueueTask => this.queueTask;
+
+            private bool queueTask;
+
+            internal void SetQueueTask(bool queueTask) => this.queueTask = queueTask;
         }
 
         public class Request : IRequest<Response>
@@ -109,37 +114,32 @@ namespace TripleTriad.Requests.GameRequests
 
                 await this.context.SaveChangesAsync(cancellationToken);
 
-                return new Response
+                var response = new Response
                 {
                     GameId = request.GameId,
-                    Cards = isHost ? gameData.HostCards : gameData.ChallengerCards,
-                    QueueTask = ((isHost ? gameData.ChallengerCards : gameData.HostCards)
-                        ?.Count() ?? 0) == 5
+                    Cards = isHost ? gameData.HostCards : gameData.ChallengerCards
                 };
+
+                response.SetQueueTask(
+                    ((isHost ? gameData.ChallengerCards : gameData.HostCards)
+                        ?.Count() ?? 0) == 5);
+
+                return response;
             }
         }
 
-        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : NotificationSenderPostProcessor<Request, Response>
         {
             public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
             }
-        }
 
-        public class GameStartNotificationHandler : MediatorNotificationHandler<Response, GameStart.Request, GameStart.Response>
-        {
-            public GameStartNotificationHandler(IMediator mediator)
-                : base(mediator)
+            protected override void SendNotifications(Request request, Response response)
             {
+                this.Queue.QueueBackgroundTask(new GameStartNotification(response.GameId));
             }
-
-            protected override GameStart.Request GetRequest(Response notification)
-                => new GameStart.Request
-                {
-                    GameId = notification.GameId
-                };
         }
     }
 }
