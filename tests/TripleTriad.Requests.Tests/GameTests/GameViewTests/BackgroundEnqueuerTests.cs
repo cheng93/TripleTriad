@@ -3,14 +3,15 @@ using System.Threading.Tasks;
 using Moq;
 using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.Notifications;
 using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
 {
     public class BackgroundEnqueuerTests
     {
-        private static readonly int GameId = 2;
-        private static readonly Guid PlayerId = Guid.NewGuid();
+        private const int GameId = 2;
+        private static readonly Guid PlayerId = new Guid("a252edad-f81e-46ca-b6ba-53457383621e");
 
         [Theory]
         [InlineData(true, true)]
@@ -43,7 +44,10 @@ namespace TripleTriad.Requests.Tests.GameTests.GameViewTests
             await subject.Process(request, response);
 
             backgroundTaskQueue.Verify(
-                x => x.QueueBackgroundTask(response));
+                x => x.QueueBackgroundTask(
+                    It.Is<UserNotification>(
+                        y => y.GameId == GameId
+                            && y.UserId == PlayerId)));
         }
     }
 }

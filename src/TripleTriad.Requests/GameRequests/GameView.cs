@@ -8,6 +8,7 @@ using TripleTriad.Data;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Messages;
+using TripleTriad.Requests.Notifications;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -15,7 +16,7 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameView
     {
-        public class Response : IGameResponse, IBackgroundQueueResponse, INotification
+        public class Response : IGameResponse, ISendNotificationResponse
         {
             public int GameId { get; set; }
 
@@ -25,7 +26,7 @@ namespace TripleTriad.Requests.GameRequests
 
             public Guid PlayerId { get; set; }
 
-            public bool QueueTask => true;
+            bool ISendNotificationResponse.QueueTask => true;
         }
 
         public class Request : IRequest<Response>
@@ -67,37 +68,18 @@ namespace TripleTriad.Requests.GameRequests
             }
         }
 
-        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : NotificationSenderPostProcessor<Request, Response>
         {
             public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
             }
-        }
 
-        public class UserNotifier : AsyncMediatorNotificationHandler<Response, HubUserNotify.Request, Unit>
-        {
-            private readonly IMessageFactory<Messages.GameState.MessageData> messageFactory;
-            public UserNotifier(
-                IMediator mediator,
-                IMessageFactory<Messages.GameState.MessageData> messageFactory)
-                : base(mediator)
+            protected override void SendNotifications(Request request, Response response)
             {
-                this.messageFactory = messageFactory;
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.PlayerId));
             }
-
-            protected async override Task<HubUserNotify.Request> GetRequest(Response notification)
-                => new HubUserNotify.Request
-                {
-                    UserId = notification.PlayerId,
-                    Message = await this.messageFactory.Create(
-                        new Messages.GameState.MessageData
-                        {
-                            GameId = notification.GameId,
-                            PlayerId = notification.PlayerId
-                        })
-                };
         }
     }
 }

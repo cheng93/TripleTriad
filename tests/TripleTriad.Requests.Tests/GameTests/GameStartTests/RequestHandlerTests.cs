@@ -15,6 +15,7 @@ using TripleTriad.Requests.GameRequests;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Tests.Utils;
 using Xunit;
+using FluentAssertions.Execution;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 {
@@ -66,7 +67,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
         [Theory]
         [MemberData(nameof(ExpectedResponse))]
-        public async Task Should_return_correct_starting_player_id(bool coinTossIsHeads, Guid expectedStartingPlayerId)
+        public async Task Should_return_correct_response(bool coinTossIsHeads, Guid expectedStartingPlayerId)
         {
             var context = DbContextFactory.CreateTripleTriadContext();
             var game = CreateGame();
@@ -104,7 +105,12 @@ namespace TripleTriad.Requests.Tests.GameTests.GameStartTests
 
             var response = await subject.Handle(command, default);
 
-            response.StartPlayerId.Should().Be(expectedStartingPlayerId);
+            using (new AssertionScope())
+            {
+                response.StartPlayerId.Should().Be(expectedStartingPlayerId);
+                response.HostId.Should().Be(HostId);
+                response.ChallengerId.Should().Be(ChallengerId);
+            }
         }
 
         [Fact]

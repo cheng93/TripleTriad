@@ -17,8 +17,7 @@ using TripleTriad.Logic.Steps;
 using TripleTriad.Logic.Steps.Handlers;
 using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
-using TripleTriad.Requests.HubRequests;
-using TripleTriad.Requests.Messages;
+using TripleTriad.Requests.Notifications;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -26,7 +25,7 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameMove
     {
-        public class Response : IGameResponse, IBackgroundQueueResponse, INotification
+        public class Response : IGameResponse, ISendNotificationResponse
         {
             public int GameId { get; set; }
 
@@ -34,7 +33,11 @@ namespace TripleTriad.Requests.GameRequests
 
             public IEnumerable<Card> Cards { get; set; }
 
-            public bool QueueTask => true;
+            bool ISendNotificationResponse.QueueTask => true;
+
+            internal Guid HostId { get; set; }
+
+            internal Guid ChallengerId { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -116,42 +119,26 @@ namespace TripleTriad.Requests.GameRequests
                 {
                     GameId = request.GameId,
                     Cards = isHost ? gameData.HostCards : gameData.ChallengerCards,
-                    Tiles = gameData.Tiles
+                    Tiles = gameData.Tiles,
+                    HostId = game.HostId,
+                    ChallengerId = game.ChallengerId.Value
                 };
             }
         }
-
-        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : NotificationSenderPostProcessor<Request, Response>
         {
             public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
             }
-        }
 
-        public class RoomNotifier : AsyncMediatorNotificationHandler<Response, HubGroupNotify.Request, Unit>
-        {
-            private readonly IMessageFactory<Messages.GameState.MessageData> messageFactory;
-
-            public RoomNotifier(
-                IMediator mediator,
-                IMessageFactory<Messages.GameState.MessageData> messageFactory)
-                : base(mediator)
+            protected override void SendNotifications(Request request, Response response)
             {
-                this.messageFactory = messageFactory;
+                this.Queue.QueueBackgroundTask(new RoomNotification(response.GameId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.HostId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.ChallengerId));
             }
-
-            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification)
-                => new HubGroupNotify.Request
-                {
-                    Group = notification.GameId.ToString(),
-                    Message = await this.messageFactory.Create(
-                        new Messages.GameState.MessageData
-                        {
-                            GameId = notification.GameId
-                        })
-                };
         }
     }
 }

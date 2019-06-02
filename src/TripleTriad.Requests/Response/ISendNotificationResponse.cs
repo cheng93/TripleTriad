@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace TripleTriad.Requests.Response
 {
-    public interface IBackgroundQueueResponse
+    internal interface ISendNotificationResponse
     {
         bool QueueTask { get; }
     }

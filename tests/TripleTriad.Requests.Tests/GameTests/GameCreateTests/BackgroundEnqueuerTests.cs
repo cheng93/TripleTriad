@@ -3,17 +3,18 @@ using System.Threading.Tasks;
 using Moq;
 using TripleTriad.BackgroundTasks.Queue;
 using TripleTriad.Requests.GameRequests;
+using TripleTriad.Requests.Notifications;
 using Xunit;
 
 namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
 {
     public class BackgroundEnqueuerTests
     {
-        private static readonly int GameId = 2;
-        private static readonly Guid PlayerId = Guid.NewGuid();
+        private const int GameId = 2;
+        private static readonly Guid PlayerId = new Guid("9782407f-b28a-43cd-b5bc-c38873abea51");
 
         [Fact]
-        public async Task Should_queue_notification()
+        public async Task Should_queue_lobby_notification()
         {
             var backgroundTaskQueue = new Mock<IBackgroundTaskQueue>();
             backgroundTaskQueue
@@ -36,7 +37,7 @@ namespace TripleTriad.Requests.Tests.GameTests.GameCreateTests
             await subject.Process(request, response);
 
             backgroundTaskQueue.Verify(
-                x => x.QueueBackgroundTask(response));
+                x => x.QueueBackgroundTask(It.IsAny<LobbyNotification>()));
         }
     }
 }

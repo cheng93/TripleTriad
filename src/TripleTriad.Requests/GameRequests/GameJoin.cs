@@ -12,6 +12,7 @@ using TripleTriad.Requests.Exceptions;
 using TripleTriad.Requests.Extensions;
 using TripleTriad.Requests.HubRequests;
 using TripleTriad.Requests.Messages;
+using TripleTriad.Requests.Notifications;
 using TripleTriad.Requests.Pipeline;
 using TripleTriad.Requests.Response;
 
@@ -19,11 +20,12 @@ namespace TripleTriad.Requests.GameRequests
 {
     public static class GameJoin
     {
-        public class Response : IBackgroundQueueResponse, IGameResponse, INotification
+        public class Response : ISendNotificationResponse, IGameResponse
         {
             public int GameId { get; set; }
 
             public bool QueueTask => true;
+            internal Guid HostId { get; set; }
         }
 
         public class Request : IRequest<Response>
@@ -75,42 +77,26 @@ namespace TripleTriad.Requests.GameRequests
 
                 return new Response
                 {
-                    GameId = game.GameId
+                    GameId = game.GameId,
+                    HostId = game.HostId
                 };
             }
         }
 
-        public class BackgroundEnqueuer : BackgroundQueuePostProcessor<Request, Response>
+        public class BackgroundEnqueuer : NotificationSenderPostProcessor<Request, Response>
         {
             public BackgroundEnqueuer(IBackgroundTaskQueue queue)
                 : base(queue)
             {
 
             }
-        }
 
-        public class GroupNotifier : AsyncMediatorNotificationHandler<Response, HubGroupNotify.Request, Unit>
-        {
-            private readonly IMessageFactory<GameState.MessageData> messageFactory;
-
-            public GroupNotifier(
-                IMediator mediator,
-                IMessageFactory<Messages.GameState.MessageData> messageFactory)
-                : base(mediator)
+            protected override void SendNotifications(Request request, Response response)
             {
-                this.messageFactory = messageFactory;
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, response.HostId));
+                this.Queue.QueueBackgroundTask(new UserNotification(response.GameId, request.PlayerId));
+                this.Queue.QueueBackgroundTask(new LobbyNotification());
             }
-
-            protected async override Task<HubGroupNotify.Request> GetRequest(Response notification)
-                => new HubGroupNotify.Request
-                {
-                    Group = notification.GameId.ToString(),
-                    Message = await this.messageFactory.Create(
-                        new Messages.GameState.MessageData
-                        {
-                            GameId = notification.GameId
-                        })
-                };
         }
     }
 }

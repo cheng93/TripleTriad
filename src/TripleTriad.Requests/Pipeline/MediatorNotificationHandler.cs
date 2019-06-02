@@ -18,10 +18,10 @@ namespace TripleTriad.Requests.Pipeline
 
         public async Task Handle(TNotification notification, CancellationToken cancellationToken)
         {
-            await this.mediator.Send(await this.GetRequest(notification));
+            await this.mediator.Send(await this.GetRequest(notification, cancellationToken));
         }
 
-        protected abstract Task<TRequest> GetRequest(TNotification notification);
+        protected abstract Task<TRequest> GetRequest(TNotification notification, CancellationToken cancellationToken);
     }
 
     public abstract class MediatorNotificationHandler<TNotification, TRequest, TResponse>
